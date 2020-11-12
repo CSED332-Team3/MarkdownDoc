@@ -1,19 +1,17 @@
 <idea-plugin>
     <id>edu.postech.csed332.team3.MarkdownDoc</id>
-    <name>Plugin display name here</name>
-    <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+    <name>MarkdownDoc</name>
+    <vendor email="j.yoon@postech.ac.kr" url="https://csed332.postech.ac.kr/team3-2020/MarkdownDoc">Team3</vendor>
 
-    <description><![CDATA[
-    Enter short description for your plugin here.<br>
-    <em>most HTML tags may be used</em>
-    ]]></description>
+    <description>Add Markdown and live rendering capabilities to javadoc.</description>
 
     <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <!-- Add your extensions here -->
+        <toolWindow id="MarkdownDoc" anchor="right"
+                    factoryClass="edu.postech.csed332.team3.MarkdownDoc.JxBrowserWindowFactory"/>
     </extensions>
 
     <actions>
