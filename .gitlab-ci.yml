@@ -33,7 +33,7 @@ test:
   script: gradle test
   artifacts:
     paths:
-      - build/jacoco/jacoco.xml
+      - build/reports/jacoco/test/jacocoTestReport.xml
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: pull
