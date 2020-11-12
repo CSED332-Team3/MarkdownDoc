@@ -25,10 +25,28 @@ build:
 
 test:
   stage: test
-  script: gradle check
+  script: gradle test
+  artifacts:
+    paths:
+      - build/jacoco/jacoco.xml
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: pull
     paths:
       - build
       - .gradle
+
+coverage:
+  stage: visualize
+  image: haynes/jacoco2cobertura:1.0.3
+  script:
+    # convert report from jacoco to cobertura
+    - 'python /opt/cover2cover.py build/jacoco/jacoco.xml src/main/java > build/cobertura.xml'
+    # read the <source></source> tag and prepend the path to every filename attribute
+    - 'python /opt/source2filename.py build/cobertura.xml'
+  needs: ["test"]
+  dependencies:
+    - test
+  artifacts:
+    reports:
+      cobertura: build/cobertura.xml
