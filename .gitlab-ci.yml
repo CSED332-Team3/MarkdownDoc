@@ -27,9 +27,6 @@ build:
     paths:
       - build
       - .gradle
-  only:
-    changes:
-      - src/**/*
 
 test:
   stage: test
@@ -50,9 +47,6 @@ test:
     paths:
       - build
       - .gradle
-  only:
-    changes:
-      - src/**/*
 
 coverage:
   stage: coverage
@@ -68,6 +62,3 @@ coverage:
   artifacts:
     reports:
       cobertura: build/cobertura.xml
-  only:
-    changes:
-      - src/**/*
