@@ -7,6 +7,9 @@ plugins {
 group 'edu.postech.csed332.team3'
 version '0.1'
 
+sourceCompatibility = 11
+targetCompatibility = 11
+
 repositories {
     mavenCentral()
 
