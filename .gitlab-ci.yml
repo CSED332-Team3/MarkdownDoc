@@ -1,7 +1,7 @@
 # This is the Gradle build system for JVM applications
 # https://gradle.org/
 # https://github.com/gradle/gradle
-image: gradle:alpine
+image: gradle:jdk11
 
 # Disable the Gradle daemon for Continuous Integration servers as correctness
 # is usually a priority over speed in CI environments. Using a fresh
@@ -12,6 +12,11 @@ variables:
 
 before_script:
   - export GRADLE_USER_HOME=`pwd`/.gradle
+
+stages:
+  - build
+  - test
+  - coverage
 
 build:
   stage: build
@@ -25,10 +30,35 @@ build:
 
 test:
   stage: test
-  script: gradle check
+  script:
+    - gradle check
+    - echo `<build/reports/jacoco/test/html/index.html`
+  needs: ["build"]
+  dependencies:
+    - build
+  artifacts:
+    paths:
+      - build/reports/jacoco/test/jacocoTestReport.xml
+    reports:
+      junit: build/test-results/test/**/TEST-*.xml
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: pull
     paths:
       - build
       - .gradle
+
+coverage:
+  stage: coverage
+  image: haynes/jacoco2cobertura:1.0.3
+  script:
+    # convert report from jacoco to cobertura
+    - 'python /opt/cover2cover.py build/reports/jacoco/test/jacocoTestReport.xml src/main/java > build/cobertura.xml'
+    # read the <source></source> tag and prepend the path to every filename attribute
+    - 'python /opt/source2filename.py build/cobertura.xml'
+  needs: ["test"]
+  dependencies:
+    - test
+  artifacts:
+    reports:
+      cobertura: build/cobertura.xml
