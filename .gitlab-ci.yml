@@ -27,6 +27,9 @@ build:
     paths:
       - build
       - .gradle
+  only:
+    changes:
+      - src/**/*
 
 test:
   stage: test
