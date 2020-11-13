@@ -31,7 +31,7 @@ build:
 test:
   stage: test
   script:
-    - gradle test
+    - gradle check
     - echo `<build/reports/jacoco/test/html/index.html`
   artifacts:
     paths:
