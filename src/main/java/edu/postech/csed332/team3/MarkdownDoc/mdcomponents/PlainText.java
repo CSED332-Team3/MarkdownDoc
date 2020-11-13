@@ -1,15 +1,14 @@
 package edu.postech.csed332.team3.MarkdownDoc.mdcomponents;
 
-public class Emoji implements MarkdownString {
+public class PlainText implements MarkdownString {
     private final String str;
 
-    public Emoji(String str) {
+    public PlainText(String str){
         this.str = str;
     }
 
     @Override
     public String getHTMLString() {
-        // TODO: 11/14/2020 What should we do here?
-        return null;
+        return str;
     }
 }
