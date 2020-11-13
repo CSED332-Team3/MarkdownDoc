@@ -11,7 +11,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="MarkdownDoc" anchor="right"
-                    factoryClass="edu.postech.csed332.team3.MarkdownDoc.JxBrowserWindowFactory"/>
+                    factoryClass="edu.postech.csed332.team3.MarkdownDoc.BrowserWindowFactory"/>
     </extensions>
 
     <actions>
