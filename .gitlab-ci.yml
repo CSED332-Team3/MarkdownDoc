@@ -36,6 +36,8 @@ test:
   artifacts:
     paths:
       - build/reports/jacoco/test/jacocoTestReport.xml
+    reports:
+      junit: build/test-results/test/**/TEST-*.xml
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: pull
