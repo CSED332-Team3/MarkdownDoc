@@ -19,7 +19,8 @@ ext {
 }
 
 dependencies {
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
 
     // Cross-platform
     implementation "com.teamdev.jxbrowser:jxbrowser-cross-platform:${jxBrowserVersion}"
