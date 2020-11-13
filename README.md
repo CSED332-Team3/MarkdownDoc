@@ -1,5 +1,9 @@
 # Team3 MarkdownDoc
 
+[![pipeline status](https://csed332.postech.ac.kr/team3-2020/MarkdownDoc/badges/master/pipeline.svg)](https://csed332.postech.ac.kr/team3-2020/MarkdownDoc/-/commits/master)
+
+[![coverage report](https://csed332.postech.ac.kr/team3-2020/MarkdownDoc/badges/master/coverage.svg)](https://csed332.postech.ac.kr/team3-2020/MarkdownDoc/-/commits/master)
+
 This document is currently intended for development use only.
 
 
