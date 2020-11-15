@@ -5,12 +5,11 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
-public class MarkdownRendererTest {
-    MarkdownParser markdownParser = new MarkdownParser();
+public class MarkdownRendererTest{
 
     @Test
     public void testIsMarkdown() {
-        assertTrue(markdownParser.isMarkdown("Markdown"));
+        assertTrue(MarkdownParser.isMarkdown("!!mdDoc"));
     }
 
     @Test
@@ -41,13 +40,7 @@ public class MarkdownRendererTest {
 
     @Test
     public void testIsCodeBlock() {
-        assertTrue(MarkdownParser.parse("""
-                ```javascript\s
-                function test() {\s
-                 console.log("hello world!");\s
-                }\s
-                ```
-                """) instanceof CodeBlock);
+        assertTrue(MarkdownParser.parse("```javascript\nfunction test() {\n console.log(\"hello world!\");\n}\n```") instanceof CodeBlock);
     }
 
     @Test
@@ -57,7 +50,7 @@ public class MarkdownRendererTest {
 
     @Test
     public void testIsTable() {
-//        assertTrue(MarkdownParser.parse("**bold**") instanceof Bold);
+        assertTrue(MarkdownParser.parse("|a|b|c|\n|-|-|-|\n|d|e|f|") instanceof Table);
     }
 
     @Test
@@ -84,7 +77,7 @@ public class MarkdownRendererTest {
 
     @Test
     public void testIsBadge() {
-//        assertTrue(MarkdownParser.parse("<https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png>") instanceof Badge);
+        assertTrue(MarkdownParser.parse("<https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png>") instanceof Badge);
     }
 
     @Test
