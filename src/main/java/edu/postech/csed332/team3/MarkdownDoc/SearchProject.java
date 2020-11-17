@@ -4,7 +4,11 @@ import java.io.File;
 import java.io.IOException;
 
 public class ProjectSearcher {
-    public void ModifyDocument (){
+    public void SearchProject(){
+        return null;
+    }
+
+    public boolean ModifyDocument (){
         return null;
     }
 
@@ -20,15 +24,4 @@ public class ProjectSearcher {
         return true;
     }
 
-    public boolean isCreated (){
-        return true;
-    }
-
-    public boolean isDeleted (){
-        return true;
-    }
-
-    public boolean isModified (){
-        return true;
-    }
 }
