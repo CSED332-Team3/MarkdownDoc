@@ -14,7 +14,7 @@ public class SearchProjTest {
     public void testIsDocument() {
         File file = new File("./example.md");
         boolean result = file.createNewFile();
-        assertTrue(isDocument(file));
+        assertTrue(isDocument(file.getName()));
         file.delete();
     }
 
@@ -22,7 +22,7 @@ public class SearchProjTest {
     public void testIsJavaFile() {
         File file = new File("./example.java");
         boolean result = file.createNewFile();
-        assertTrue(isJavaFile(file));
+        assertTrue(isJavaFile(file.getName()));
         file.delete();
     }
 
@@ -30,7 +30,7 @@ public class SearchProjTest {
     public void testIsJavaDoc() {
         File file = new File("./example.html");
         boolean result = file.createNewFile();
-        assertTrue(isJavaDoc(file));
+        assertTrue(isJavaDoc(file.getName()));
         file.delete();
     }
 
