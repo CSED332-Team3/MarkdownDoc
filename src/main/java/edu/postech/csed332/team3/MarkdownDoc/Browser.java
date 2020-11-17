@@ -1,6 +1,9 @@
 package edu.postech.csed332.team3.MarkdownDoc;
 
+import com.intellij.openapi.externalSystem.service.execution.NotSupportedException;
+import com.intellij.ui.jcef.JBCefApp;
 import com.intellij.ui.jcef.JBCefBrowser;
+import com.intellij.ui.jcef.JBCefJSQuery;
 import org.cef.browser.CefBrowser;
 
 public class Browser {
@@ -9,6 +12,10 @@ public class Browser {
     private final CefBrowser cefBrowser;
 
     public Browser() {
+        if (!JBCefApp.isSupported()) {
+            throw new NotSupportedException("This IDE version is not supported.");
+        }
+
         browser = new JBCefBrowser();
         cefBrowser = browser.getCefBrowser();
     }
