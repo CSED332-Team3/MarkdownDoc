@@ -12,7 +12,6 @@ public class BrowserWindowFactory implements ToolWindowFactory {
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         BrowserWindow browser = new BrowserWindow();
-        browser.loadURL("https://google.com");
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
         Content content = contentFactory.createContent(browser.getContent(), "", false);
         toolWindow.getContentManager().addContent(content);
