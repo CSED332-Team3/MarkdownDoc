@@ -13,6 +13,11 @@ public class MarkdownRendererTest {
     }
 
     @Test
+    public void testEscape() {
+        assertEquals("<p><strike>test</strike></p>\n", MarkdownParser.parse("<strike>test</strike>"));
+    }
+
+    @Test
     public void testIsHeader() {
         assertEquals("<h1>header1</h1>\n", MarkdownParser.parse("# header1"));
         assertEquals("<h2>header2</h2>\n", MarkdownParser.parse("## header2"));
@@ -92,7 +97,7 @@ public class MarkdownRendererTest {
         assertEquals("<p><u>underline</u></p>\n", MarkdownParser.parse("<u>underline</u>"));
     }
 
-//    @Test
+    //    @Test
 //    public void testIsTable() {
 //        assertEquals("", MarkdownParser.parse("|a|b|c|\n|---|---|---|\n|d|e|f|"));
 //    }
@@ -104,13 +109,8 @@ public class MarkdownRendererTest {
 //                "</ul>\n", MarkdownParser.parse("- [ ] Test task list"));
 //    }
 
-//    @Test
-//    public void testIsStrikeThrough() {
-//        assertEquals("<strike>StrikeThrough</strike>\n", MarkdownParser.parse("~~StrikeThrough~~"));
-//    }
-
-//    @Test
-//    public void testIsEmoji() {
-//        assertEquals("", MarkdownParser.parse(":+1:"));
-//    }
+    @Test
+    public void testIsStrikeThrough() {
+        assertEquals("<p><strike>StrikeThrough</strike></p>\n", MarkdownParser.parse("~~StrikeThrough~~"));
+    }
 }
