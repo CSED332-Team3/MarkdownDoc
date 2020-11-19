@@ -1,11 +1,11 @@
 package edu.postech.csed332.team3.MarkdownDoc;
 
-import edu.postech.csed332.team3.MarkdownDoc.mdcomponents.*;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class MarkdownRendererTest{
+public class MarkdownRendererTest {
 
     @Test
     public void testIsMarkdown() {
@@ -14,91 +14,103 @@ public class MarkdownRendererTest{
 
     @Test
     public void testIsHeader() {
-        assertTrue(MarkdownParser.parse("# header1") instanceof Header);
-        assertTrue(MarkdownParser.parse("## header2") instanceof Header);
-        assertTrue(MarkdownParser.parse("### header3") instanceof Header);
-        assertTrue(MarkdownParser.parse("#### header4") instanceof Header);
-        assertTrue(MarkdownParser.parse("##### header5") instanceof Header);
-        assertTrue(MarkdownParser.parse("###### header6") instanceof Header);
+        assertEquals("<h1>header1</h1>\n", MarkdownParser.parse("# header1"));
+        assertEquals("<h2>header2</h2>\n", MarkdownParser.parse("## header2"));
+        assertEquals("<h3>header3</h3>\n", MarkdownParser.parse("### header3"));
+        assertEquals("<h4>header4</h4>\n", MarkdownParser.parse("#### header4"));
+        assertEquals("<h5>header5</h5>\n", MarkdownParser.parse("##### header5"));
+        assertEquals("<h6>header6</h6>\n", MarkdownParser.parse("###### header6"));
     }
 
     @Test
     public void testIsList() {
-        assertTrue(MarkdownParser.parse("* bold") instanceof List);
+        assertEquals("<ul>\n" +
+                "<li>list</li>\n" +
+                "</ul>\n", MarkdownParser.parse("* list"));
     }
 
     @Test
     public void testIsImage() {
-        assertTrue(MarkdownParser.parse("![Image]()") instanceof Image);
-        assertTrue(MarkdownParser.parse("<a href=\"#\"><img src=\"https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png\"></a> ") instanceof Image);
+        assertEquals("<p><img src=\"\" alt=\"Image\" /></p>\n", MarkdownParser.parse("![Image]()"));
+        assertEquals("<p><a href=\"#\"><img src=\"https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png\"></a></p>\n",
+                MarkdownParser.parse("<a href=\"#\"><img src=\"https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png\"></a> "));
     }
 
     @Test
     public void testIsLink() {
-        assertTrue(MarkdownParser.parse("[MarkdownDoc](https://csed332.postech.ac.kr/team3-2020/MarkdownDoc)") instanceof Link);
+        assertEquals("<p><a href=\"https://csed332.postech.ac.kr/team3-2020/MarkdownDoc\">MarkdownDoc</a></p>\n",
+                MarkdownParser.parse("[MarkdownDoc](https://csed332.postech.ac.kr/team3-2020/MarkdownDoc)"));
     }
 
     @Test
     public void testIsCodeBlock() {
-        assertTrue(MarkdownParser.parse("```javascript\nfunction test() {\n console.log(\"hello world!\");\n}\n```") instanceof CodeBlock);
+        assertEquals("<pre><code class=\"language-javascript\">function test() {\n" +
+                " console.log(&quot;hello world!&quot;);\n" +
+                "}\n" +
+                "</code></pre>\n", MarkdownParser.parse("```javascript\nfunction test() {\n console.log(\"hello world!\");\n}\n```"));
     }
 
     @Test
     public void testIsBlockquote() {
-        assertTrue(MarkdownParser.parse("> MarkdownDoc") instanceof Blockquote);
-    }
-
-    @Test
-    public void testIsTable() {
-        assertTrue(MarkdownParser.parse("|a|b|c|\n|-|-|-|\n|d|e|f|") instanceof Table);
-    }
-
-    @Test
-    public void testIsTaskList() {
-        assertTrue(MarkdownParser.parse("- [ ] Test task list") instanceof TaskList);
+        assertEquals("<blockquote>\n" +
+                "<p>MarkdownDoc</p>\n" +
+                "</blockquote>\n", MarkdownParser.parse("> MarkdownDoc"));
     }
 
     @Test
     public void testIsInlineCode() {
-        assertTrue(MarkdownParser.parse("`printf(\"Hello world!\")`") instanceof InlineCode);
+        assertEquals("<p><code>printf(&quot;Hello world!&quot;)</code></p>\n", MarkdownParser.parse("`printf(\"Hello world!\")`"));
     }
 
     @Test
     public void testIsHorizontal() {
-        assertTrue(MarkdownParser.parse("---") instanceof Horizontal);
-        assertTrue(MarkdownParser.parse("***") instanceof Horizontal);
-        assertTrue(MarkdownParser.parse("___") instanceof Horizontal);
-    }
-
-    @Test
-    public void testIsEmoji() {
-        assertTrue(MarkdownParser.parse(":+1:") instanceof Emoji);
+        assertEquals("<hr />\n", MarkdownParser.parse("---"));
+        assertEquals("<hr />\n", MarkdownParser.parse("***"));
+        assertEquals("<hr />\n", MarkdownParser.parse("___"));
     }
 
     @Test
     public void testIsBadge() {
-        assertTrue(MarkdownParser.parse("<https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png>") instanceof Badge);
+        assertEquals("<p><a href=\"https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png\">https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png</a></p>\n",
+                MarkdownParser.parse("<https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png>"));
     }
 
     @Test
     public void testIsBold() {
-        assertTrue(MarkdownParser.parse("**bold**") instanceof Bold);
-        assertTrue(MarkdownParser.parse("__bold__") instanceof Bold);
+        assertEquals("<p><strong>bold</strong></p>\n", MarkdownParser.parse("**bold**"));
+        assertEquals("<p><strong>bold</strong></p>\n", MarkdownParser.parse("__bold__"));
     }
 
     @Test
     public void testIsItalic() {
-        assertTrue(MarkdownParser.parse("*italic*") instanceof Italic);
-        assertTrue(MarkdownParser.parse("_italic_") instanceof Italic);
-    }
-
-    @Test
-    public void testIsStrikeThrough() {
-        assertTrue(MarkdownParser.parse("~~StrikeThrough~~") instanceof Strikethrough);
+        assertEquals("<p><em>italic</em></p>\n", MarkdownParser.parse("*italic*"));
+        assertEquals("<p><em>italic</em></p>\n", MarkdownParser.parse("_italic_"));
     }
 
     @Test
     public void testIsUnderline() {
-        assertTrue(MarkdownParser.parse("<u>underline</u>") instanceof Underline);
+        assertEquals("<p><u>underline</u></p>\n", MarkdownParser.parse("<u>underline</u>"));
     }
+
+//    @Test
+//    public void testIsTable() {
+//        assertEquals("", MarkdownParser.parse("|a|b|c|\n|---|---|---|\n|d|e|f|"));
+//    }
+
+//    @Test
+//    public void testIsTaskList() {
+//        assertEquals("<ul>\n" +
+//                "<li>[ ] Test task list</li>\n" +
+//                "</ul>\n", MarkdownParser.parse("- [ ] Test task list"));
+//    }
+
+//    @Test
+//    public void testIsStrikeThrough() {
+//        assertEquals("<strike>StrikeThrough</strike>\n", MarkdownParser.parse("~~StrikeThrough~~"));
+//    }
+
+//    @Test
+//    public void testIsEmoji() {
+//        assertEquals("", MarkdownParser.parse(":+1:"));
+//    }
 }

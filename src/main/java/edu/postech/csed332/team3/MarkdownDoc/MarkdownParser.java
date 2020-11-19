@@ -1,29 +1,28 @@
 package edu.postech.csed332.team3.MarkdownDoc;
 
-import edu.postech.csed332.team3.MarkdownDoc.mdcomponents.MarkdownString;
-import edu.postech.csed332.team3.MarkdownDoc.mdcomponents.PlainText;
-import edu.postech.csed332.team3.MarkdownDoc.mdcomponents.Underline;
-
-import java.util.ArrayDeque;
-import java.util.Deque;
+import com.teamdev.jxbrowser.deps.org.checkerframework.checker.nullness.qual.NonNull;
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 
 public class MarkdownParser {
-    private static final Deque<Character> stack = new ArrayDeque<>();
 
     private MarkdownParser() {
     }
 
-    public static MarkdownString parse(String comment) {
-        if (!isMarkdown(comment))
-            throw new IllegalArgumentException("Not a md comment.");
-        comment.chars().forEach(value -> {
-            stack.pop();
-            stack.pop();
-        });
-        return new Underline(PlainText.of("hi"));
+    @NonNull
+    public static String parse(@NonNull String comment) {
+//        if (!isMarkdown(comment))
+//            throw new IllegalArgumentException("Not a md comment.");
+
+        final Parser parser = Parser.builder().build();
+        final Node node = parser.parse(comment);
+        final HtmlRenderer htmlRenderer = HtmlRenderer.builder().build();
+
+        return htmlRenderer.render(node);
     }
 
-    public static boolean isMarkdown(String comment) {
+    public static boolean isMarkdown(@NonNull String comment) {
         try {
             return comment.subSequence(0, 7).equals("!!mdDoc");
         } catch (Exception e) {

@@ -30,6 +30,7 @@ dependencies {
 
     // Swing GUI toolkit
     implementation "com.teamdev.jxbrowser:jxbrowser-swing:${jxBrowserVersion}"
+    implementation "com.atlassian.commonmark:commonmark:0.15.2"
 }
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
