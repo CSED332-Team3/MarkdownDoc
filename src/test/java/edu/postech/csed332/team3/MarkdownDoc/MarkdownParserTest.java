@@ -2,14 +2,35 @@ package edu.postech.csed332.team3.MarkdownDoc;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
-public class MarkdownRendererTest {
+public class MarkdownParserTest {
 
     @Test
     public void testIsMarkdown() {
         assertTrue(MarkdownParser.isMarkdown("!!mdDoc"));
+    }
+
+    @Test
+    public void testHrRecognition() {
+        assertFalse("-".matches("-{3,}"));
+        assertFalse("--".matches("-{3,}"));
+        assertTrue("---".matches("-{3,}"));
+        assertTrue("----".matches("-{3,}"));
+    }
+
+    @Test
+    public void testTableRecognition() {
+        assertTrue("---".matches("\\|?-{3,}(\\|-{3,})*\\|?"));
+        assertTrue("|---".matches("\\|?-{3,}(\\|-{3,})*\\|?"));
+        assertTrue("---|".matches("\\|?-{3,}(\\|-{3,})*\\|?"));
+        assertTrue("|---|".matches("\\|?-{3,}(\\|-{3,})*\\|?"));
+        assertTrue("---|---|".matches("\\|?-{3,}(\\|-{3,})*\\|?"));
+        assertFalse("--|--|---|----|---".matches("\\|?-{3,}(\\|-{3,})*\\|?"));
+        assertFalse("-|--".matches("\\|?-{3,}(\\|-{3,})*\\|?"));
+        assertTrue("|---|----".matches("\\|?-{3,}(\\|-{3,})*\\|?"));
+        assertFalse("|---|--".matches("\\|?-{3,}(\\|-{3,})*\\|?"));
+        assertTrue("|---|---|----|---|----|---|".matches("\\|?-{3,}(\\|-{3,})*\\|?"));
     }
 
     @Test
