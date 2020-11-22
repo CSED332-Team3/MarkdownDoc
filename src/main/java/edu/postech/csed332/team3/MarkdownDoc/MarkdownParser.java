@@ -55,38 +55,75 @@ public class MarkdownParser {
     }
 
     @NonNull
-    private static String parseTable(@NonNull String comment) {
-
-
+    public static String parseTable(@NonNull String comment) {
         final BufferedReader bufferedReader = new BufferedReader(new StringReader(comment));
+        StringBuilder stringBuilder = new StringBuilder();
         try {
             String line;
             String prevLine = bufferedReader.readLine();
             while ((line = bufferedReader.readLine()) != null) {
-                if (line.matches("-{3,}")) {
-                    prevLine = line;
-                    continue;
-                }
-                if (line.matches("\\|?-{3,}(\\|-{3,})*\\|?")) {
-                    final int dividers = StringUtil.getOccurrenceCount(line, "-|-");
-                    final String regex = String.format("\\|?[^|]*(\\|[^|]*){%d}\\|?", dividers);
+                if (!line.matches("-{3,}") && line.matches("\\|?-{3,}(\\|-{3,})*\\|?")) {
+                    final int columnNum = StringUtil.getOccurrenceCount(line, "-|-") + 1;
+                    final String regex = String.format("\\|[^|]*(\\|[^|]*){%d}\\|", columnNum - 1);
                     if (prevLine.matches(regex)) {
-                        // Main code
-
-
-
+                        stringBuilder.append("<table>\n");
+                        stringBuilder.append("<thead>\n").append(parseTableHeader(prevLine)).append("</thead>\n");
+                        stringBuilder.append("<tbody>\n");
+                        while (!"".equals(line = bufferedReader.readLine()) && line != null) {
+                            stringBuilder.append(parseTableDetails(line, columnNum));
+                        }
+                        stringBuilder.append("</tbody>\n");
+                        stringBuilder.append("</table>\n");
+                        prevLine = line;
+                        continue;
                     }
                 }
+                stringBuilder.append(prevLine).append("\n");
                 prevLine = line;
             }
+            if (prevLine != null)
+                stringBuilder.append(prevLine).append("\n");
         } catch (IOException io) {
             return comment;
         }
 
+        return stringBuilder.toString();
+    }
 
+    @NonNull
+    public static String parseTableHeader(@NonNull String comment) {
+        StringBuilder stringBuilder = new StringBuilder().append("<tr>\n");
+        String[] header = comment.split("\\|");
+        for (String s : header) {
+            if (s.equals(""))
+                continue;
+            stringBuilder.append("<th>").append(s).append("</th>\n");
+        }
+        stringBuilder.append("</tr>\n");
 
+        return stringBuilder.toString();
+    }
 
-        return comment;
+    @NonNull
+    public static String parseTableDetails(@NonNull String comment, int columnNum) {
+        StringBuilder stringBuilder = new StringBuilder().append("<tr>\n");
+        String[] strings = comment.split("\\|");
+        int i = 0;
+        if (comment.indexOf("|") == 0) {
+            columnNum++;
+            i++;
+        }
+
+        for (; i < columnNum; i++) {
+            if (i >= strings.length)
+                break;
+
+            String detail = strings[i];
+            stringBuilder.append("<td>").append(detail).append("</td>\n");
+        }
+        stringBuilder.append("</tr>\n");
+
+        return stringBuilder.toString();
     }
 
     private static void checkValidity(@NonNull String comment) {

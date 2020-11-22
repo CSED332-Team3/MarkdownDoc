@@ -134,4 +134,171 @@ public class MarkdownParserTest {
     public void testIsStrikeThrough() {
         assertEquals("<p><strike>StrikeThrough</strike></p>\n", MarkdownParser.parse("~~StrikeThrough~~"));
     }
+
+    @Test
+    public void testParseTableHeader() {
+        assertEquals("<tr>\n<th>asdf</th>\n<th>qwer</th>\n<th>asdf</th>\n</tr>\n"
+                , MarkdownParser.parseTableHeader("asdf|qwer|asdf"));
+        assertEquals("<tr>\n<th>asdf</th>\n<th>qwer</th>\n<th>asdf</th>\n</tr>\n"
+                , MarkdownParser.parseTableHeader("|asdf|qwer|asdf"));
+        assertEquals("<tr>\n<th>asdf</th>\n<th>qwer</th>\n<th>asdf</th>\n</tr>\n"
+                , MarkdownParser.parseTableHeader("asdf|qwer|asdf|"));
+        assertEquals("<tr>\n<th>asdf</th>\n<th>qwer</th>\n<th>asdf</th>\n</tr>\n"
+                , MarkdownParser.parseTableHeader("|asdf|qwer|asdf|"));
+    }
+
+    @Test
+    public void testParseTableDetails() {
+        assertEquals("<tr>\n<td>asdf</td>\n<td>qwer</td>\n<td>asdf</td>\n</tr>\n"
+                , MarkdownParser.parseTableDetails("asdf|qwer|asdf", 3));
+        assertEquals("<tr>\n<td>asdf</td>\n<td>qwer</td>\n</tr>\n"
+                , MarkdownParser.parseTableDetails("asdf|qwer", 3));
+        assertEquals("<tr>\n<td>asdf</td>\n<td>qwer</td>\n</tr>\n"
+                , MarkdownParser.parseTableDetails("asdf|qwer|", 3));
+        assertEquals("<tr>\n<td>asdf</td>\n<td>qwer</td>\n</tr>\n"
+                , MarkdownParser.parseTableDetails("|asdf|qwer|", 3));
+        assertEquals("<tr>\n<td>asdf</td>\n<td>qwer</td>\n<td>asdf</td>\n</tr>\n"
+                , MarkdownParser.parseTableDetails("asdf|qwer|asdf|qwer|", 3));
+        assertEquals("<tr>\n<td>asdf</td>\n<td>qwer</td>\n<td>asdf</td>\n</tr>\n"
+                , MarkdownParser.parseTableDetails("asdf|qwer|asdf|qwer", 3));
+        assertEquals("<tr>\n<td>asdf</td>\n<td>qwer</td>\n<td>asdf</td>\n</tr>\n"
+                , MarkdownParser.parseTableDetails("|asdf|qwer|asdf|", 3));
+        assertEquals("<tr>\n<td>asdf</td>\n<td>qwer</td>\n</tr>\n"
+                , MarkdownParser.parseTableDetails("|asdf|qwer||", 3));
+        assertEquals("<tr>\n<td>asdf</td>\n<td></td>\n<td>qwer</td>\n</tr>\n"
+                , MarkdownParser.parseTableDetails("|asdf||qwer|", 3));
+        assertEquals("<tr>\n<td></td>\n<td>asdf</td>\n<td>qwer</td>\n</tr>\n"
+                , MarkdownParser.parseTableDetails("||asdf|qwer|", 3));
+        assertEquals("<tr>\n<td>asdf</td>\n<td>qwer</td>\n</tr>\n"
+                , MarkdownParser.parseTableDetails("|asdf|qwer||||", 3));
+        assertEquals("<tr>\n<td></td>\n<td></td>\n<td>asdf</td>\n</tr>\n"
+                , MarkdownParser.parseTableDetails("|||asdf|qwer||", 3));
+    }
+
+    @Test
+    public void testParseTable() {
+        assertEquals("<table>\n" +
+                "<thead>\n" +
+                "<tr>\n" +
+                "<th>asdf</th>\n" +
+                "<th>asdf</th>\n" +
+                "<th>asdf</th>\n" +
+                "</tr>\n" +
+                "</thead>\n" +
+                "<tbody>\n" +
+                "<tr>\n" +
+                "<td>asdf</td>\n" +
+                "<td>asdf</td>\n" +
+                "<td>asdf</td>\n" +
+                "</tr>\n" +
+                "<tr>\n" +
+                "<td>asdf</td>\n" +
+                "<td>asdf</td>\n" +
+                "<td>asdf</td>\n" +
+                "</tr>\n" +
+                "</tbody>\n" +
+                "</table>\n",
+                MarkdownParser.parseTable("|asdf|asdf|asdf|\n" +
+                "---|---|---\n" +
+                "asdf|asdf|asdf\n" +
+                "asdf|asdf|asdf"));
+        assertEquals("<table>\n" +
+                        "<thead>\n" +
+                        "<tr>\n" +
+                        "<th>asdf</th>\n" +
+                        "<th>asdf</th>\n" +
+                        "<th>asdf</th>\n" +
+                        "</tr>\n" +
+                        "</thead>\n" +
+                        "<tbody>\n" +
+                        "<tr>\n" +
+                        "<td>asdf</td>\n" +
+                        "<td>asdf</td>\n" +
+                        "<td>asdf</td>\n" +
+                        "</tr>\n" +
+                        "<tr>\n" +
+                        "<td>asdf</td>\n" +
+                        "<td>asdf</td>\n" +
+                        "</tr>\n" +
+                        "</tbody>\n" +
+                        "</table>\n",
+                MarkdownParser.parseTable("|asdf|asdf|asdf|\n" +
+                "---|---|---\n" +
+                "asdf|asdf|asdf\n" +
+                "asdf|asdf"));
+        assertEquals("|asdf|asdf|asdf|\n" +
+                        "---|---\n" +
+                        "asdf|asdf|asdf\n" +
+                        "asdf|asdf|asdf\n",
+                MarkdownParser.parseTable("|asdf|asdf|asdf|\n" +
+                        "---|---\n" +
+                        "asdf|asdf|asdf\n" +
+                        "asdf|asdf|asdf"));
+        assertEquals("|asdf|asdf|\n" +
+                "---|---|---\n" +
+                "asdf|asdf|asdf\n" +
+                "asdf|asdf|asdf\n",
+                MarkdownParser.parseTable("|asdf|asdf|\n" +
+                        "---|---|---\n" +
+                        "asdf|asdf|asdf\n" +
+                        "asdf|asdf|asdf"));
+        assertEquals("|asdf|asdf|asdf|\n" +
+                        "---||---\n" +
+                        "asdf|asdf|asdf\n" +
+                        "asdf|asdf|asdf\n",
+                MarkdownParser.parseTable("|asdf|asdf|asdf|\n" +
+                        "---||---\n" +
+                        "asdf|asdf|asdf\n" +
+                        "asdf|asdf|asdf"));
+        assertEquals("<table>\n" +
+                        "<thead>\n" +
+                        "<tr>\n" +
+                        "<th>asdf</th>\n" +
+                        "<th>asdf</th>\n" +
+                        "</tr>\n" +
+                        "</thead>\n" +
+                        "<tbody>\n" +
+                        "<tr>\n" +
+                        "<td>asdf</td>\n" +
+                        "<td>asdf</td>\n" +
+                        "</tr>\n" +
+                        "<tr>\n" +
+                        "<td>asdf</td>\n" +
+                        "<td>asdf</td>\n" +
+                        "</tr>\n" +
+                        "</tbody>\n" +
+                        "</table>\n",
+                MarkdownParser.parseTable("|asdf|asdf|\n" +
+                        "---|---|\n" +
+                        "asdf|asdf|asdf\n" +
+                        "asdf|asdf|asdf"));
+        assertEquals("<table>\n" +
+                        "<thead>\n" +
+                        "<tr>\n" +
+                        "<th>asdf</th>\n" +
+                        "<th>asdf</th>\n" +
+                        "<th>asdf</th>\n" +
+                        "</tr>\n" +
+                        "</thead>\n" +
+                        "<tbody>\n" +
+                        "<tr>\n" +
+                        "<td>asdf</td>\n" +
+                        "<td>asdf</td>\n" +
+                        "<td>asdf</td>\n" +
+                        "</tr>\n" +
+                        "<tr>\n" +
+                        "<td>asdf</td>\n" +
+                        "<td>asdf</td>\n" +
+                        "<td>asdf</td>\n" +
+                        "</tr>\n" +
+                        "</tbody>\n" +
+                        "</table>\n" +
+                        "\n" +
+                        "asdfasdfasdf\n",
+                MarkdownParser.parseTable("|asdf|asdf|asdf|\n" +
+                        "---|---|---\n" +
+                        "asdf|asdf|asdf\n" +
+                        "asdf|asdf|asdf\n\n" +
+                        "asdfasdfasdf"));
+    }
 }
