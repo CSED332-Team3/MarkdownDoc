@@ -1,28 +1,32 @@
 package edu.postech.csed332.team3.MarkdownDoc;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
-import edu.postech.csed332.team3.MarkdownDoc.SearchProject;
+import edu.postech.csed332.team3.MarkdownDoc.SearchProject.ManageComment;
+import edu.postech.csed332.team3.MarkdownDoc.SearchProject.SearchProject;
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.IOException;
+import java.io.FileWriter;
 
-public class SearchProjTest {
-    ProjectSearcher projectSearcher = new ProjectSearcher();
+public class ManageCommentTest{
+    ManageComment manageComment = new ManageComment();
 
     @Test
     public void testIsDocument() {
         File file = new File("./example.md");
         boolean result = file.createNewFile();
-        assertTrue(isDocument(file.getName()));
+        assertTrue(manageComment.isDocument(file.getName()));
         file.delete();
     }
+
 
     @Test
     public void testIsJavaFile() {
         File file = new File("./example.java");
         boolean result = file.createNewFile();
-        assertTrue(isJavaFile(file.getName()));
+        assertTrue(manageComment.isJavaFile(file.getName()));
         file.delete();
     }
 
@@ -30,7 +34,7 @@ public class SearchProjTest {
     public void testIsJavaDoc() {
         File file = new File("./example.html");
         boolean result = file.createNewFile();
-        assertTrue(isJavaDoc(file.getName()));
+        assertTrue(manageComment.isJavaDoc(file.getName()));
         file.delete();
     }
 
@@ -50,5 +54,10 @@ public class SearchProjTest {
         file.delete();
         markdown.delete();
     }
+
+}
+public class SearchProjTest {
+    ProjectSearcher projectSearcher = new ProjectSearcher();
+
 
 }
