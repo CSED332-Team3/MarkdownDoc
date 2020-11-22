@@ -5,16 +5,10 @@ import com.intellij.ui.jcef.JBCefApp;
 import com.intellij.ui.jcef.JBCefBrowser;
 import org.cef.browser.CefBrowser;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 public class BrowserController {
 
     private final JBCefBrowser model;
-    private BrowserView view;
-
+    private final BrowserView view;
     private final CefBrowser cefBrowser;
 
     /**
@@ -25,52 +19,38 @@ public class BrowserController {
             throw new NotSupportedException("This IDE version is not supported.");
         }
 
-        model = new JBCefBrowser();
+        // TODO: Replace URL with file URI
+        model = new JBCefBrowser("https://www.google.com");
         this.view = view;
         cefBrowser = model.getCefBrowser();
 
-        // Add the browser JComponent to the view
-        addComponents();
-    }
-
-    private void addComponents() {
-        JPanel buttons = new JPanel(new GridLayout(1, 2));
-        JButton backButton = new JButton();
-        JButton forwardButton = new JButton();
-
-        // Set text and actions
-        backButton.setText("<-");
-        forwardButton.setText("->");
-
-        backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
-
-        forwardButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
-
-        buttons.add(backButton);
-        buttons.add(forwardButton);
-
         // Finalize the view
         view.addComponent(model.getComponent(), "Center"); // Add browser
-        view.addComponent(buttons, "South"); // Add buttons
+
+        // Add the browser JComponent to the view
+        setListeners();
+    }
+
+    private void setListeners() {
+        // Set action listeners
+        view.getBackButton().addActionListener(e -> {
+            goBack();
+            updateView();
+        });
+
+        view.getForwardButton().addActionListener(e -> {
+            goForward();
+            updateView();
+        });
     }
 
     /**
      * Update the view (button status, etc.)
      */
     public void updateView() {
-        if (canGoBack()) {
-
-        }
+        // Change button enabled status
+        view.getBackButton().setEnabled(canGoBack());
+        view.getForwardButton().setEnabled(canGoForward());
     }
 
     /**
@@ -80,6 +60,7 @@ public class BrowserController {
      */
     public void loadURL(String url) {
         model.loadURL(url);
+        updateView();
     }
 
     /**
@@ -89,6 +70,7 @@ public class BrowserController {
      */
     public void loadHTML(String html) {
         model.loadHTML(html);
+        updateView();
     }
 
     /**
@@ -140,11 +122,10 @@ public class BrowserController {
      * reporting.
      *
      * @param code The code to be executed.
-     * @param url The URL where the script in question can be found.
-     * @param line line The base line number to use for error reporting.
      */
-    public void executeJavaScript(String code, String url, int line) {
-        cefBrowser.executeJavaScript(code, url, line);
+    public void executeJavaScript(String code) {
+        cefBrowser.executeJavaScript(code, getURL(), 0);
+        updateView();
     }
 
     /**

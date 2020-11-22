@@ -3,8 +3,6 @@ package edu.postech.csed332.team3.MarkdownDoc;
 import com.sun.istack.NotNull;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * Swing wrapper for Browser
@@ -12,7 +10,6 @@ import java.awt.event.ActionListener;
 public class BrowserView {
 
     private final JPanel panel;
-    private final JPanel buttons;
     private final JButton backButton;
     private final JButton forwardButton;
 
@@ -23,13 +20,17 @@ public class BrowserView {
         panel = new JPanel(new BorderLayout());
 
         // Button layout
-        buttons = new JPanel(new GridLayout(1, 2));
+        JPanel buttons = new JPanel(new GridLayout(1, 2));
         backButton = new JButton();
         forwardButton = new JButton();
 
         // Set text
         backButton.setText("<-");
         forwardButton.setText("->");
+
+        // Set enabled to false
+        backButton.setEnabled(false);
+        forwardButton.setEnabled(false);
 
         buttons.add(backButton);
         buttons.add(forwardButton);
