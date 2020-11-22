@@ -2,10 +2,8 @@ package edu.postech.csed332.team3.MarkdownDoc;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.WatchEvent;
+import java.nio.file.*;
 import java.nio.file.WatchEvent.Kind;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
 import java.util.List;
 
 public class ProjectSearcher {
@@ -13,7 +11,7 @@ public class ProjectSearcher {
     private static final String projPath = System.getProperty("user.dir");
     private WatchKey watchKey;
 
-    public void SearchProject() {
+    public void SearchProject() throws IOException, InterruptedException {
         WatchService watchService = FileSystems.getDefault().newWatchService();
 
         Path path = Paths.get(projPath);
@@ -28,21 +26,30 @@ public class ProjectSearcher {
             for (WatchEvent<?> event : eventList) {
                 Kind<?> kind = event.kind();
                 Path pth = (Path) event.context();
-                if (kind.equals(StandardWatchEventKinds.ENTRY_CREATE))
-                    ModifyDocument();
-                else if (kind.equals(StandardWatchEventKinds.ENTRY_DELETE))
-                    ModifyDocument();
-                else if (kind.equals(StandardWatchEventKinds.ENTRY_MODIFY))
-                    ModifyDocument();
+                if (kind.equals(StandardWatchEventKinds.ENTRY_CREATE)){
+                    File file = new File("./" + pth.getFileName() + ".md");
+                    boolean result = file.createNewFile();
+                    ModifyDocument(pth, file);
+                }
+                else if (kind.equals(StandardWatchEventKinds.ENTRY_DELETE)){
+                    File file = new File("./" + pth.getFileName() + ".md");
+                    file.delete();
+                }
+                else if (kind.equals(StandardWatchEventKinds.ENTRY_MODIFY)){
+                    File file = new File("./" + pth.getFileName() + ".md");
+                    ModifyDocument(pth, file);
+                }
                 else if (kind.equals(StandardWatchEventKinds.OVERFLOW))
-                    System.out.print
+                    System.out.printf("Overflow is occurred");
             }
         }
 
     }
 
-    public boolean ModifyDocument() {
-        return null;
+    public boolean ModifyDocument(Path pth, File file) {
+
+        pth.getFileName();
+        return true;
     }
 
     public static boolean isDocument(String file) {
