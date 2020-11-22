@@ -1,9 +1,0 @@
-
-o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(Ø¦‚Œ
-V
-java:S3516:"9Refactor this method to not always return the same value.(ÇøŞ×8¡±æÛŞ.
-f
-java:S2583]"DChange this condition so that it does not always evaluate to "false"(ı²‰ôúÿÿÿÿ8¡±æÛŞ.
-P
-java:S1172".Remove this unused method parameter "comment".(ÈÀŸäúÿÿÿÿ8¡±æÛŞ.
-]	java:S125!"<This block of commented-out lines of code should be removed.(ñ¥ùšøÿÿÿÿ8¡±æÛŞ.
