@@ -3,21 +3,74 @@ package edu.postech.csed332.team3.MarkdownDoc;
 import com.intellij.openapi.externalSystem.service.execution.NotSupportedException;
 import com.intellij.ui.jcef.JBCefApp;
 import com.intellij.ui.jcef.JBCefBrowser;
-import com.intellij.ui.jcef.JBCefJSQuery;
 import org.cef.browser.CefBrowser;
 
-public class Browser {
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-    private final JBCefBrowser browser;
+public class BrowserController {
+
+    private final JBCefBrowser model;
+    private BrowserView view;
+
     private final CefBrowser cefBrowser;
 
-    public Browser() {
+    /**
+     * Create an empty browser controller instance
+     */
+    public BrowserController(BrowserView view) {
         if (!JBCefApp.isSupported()) {
             throw new NotSupportedException("This IDE version is not supported.");
         }
 
-        browser = new JBCefBrowser();
-        cefBrowser = browser.getCefBrowser();
+        model = new JBCefBrowser();
+        this.view = view;
+        cefBrowser = model.getCefBrowser();
+
+        // Add the browser JComponent to the view
+        addComponents();
+    }
+
+    private void addComponents() {
+        JPanel buttons = new JPanel(new GridLayout(1, 2));
+        JButton backButton = new JButton();
+        JButton forwardButton = new JButton();
+
+        // Set text and actions
+        backButton.setText("<-");
+        forwardButton.setText("->");
+
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
+        forwardButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
+        buttons.add(backButton);
+        buttons.add(forwardButton);
+
+        // Finalize the view
+        view.addComponent(model.getComponent(), "Center"); // Add browser
+        view.addComponent(buttons, "South"); // Add buttons
+    }
+
+    /**
+     * Update the view (button status, etc.)
+     */
+    public void updateView() {
+        if (canGoBack()) {
+
+        }
     }
 
     /**
@@ -26,7 +79,7 @@ public class Browser {
      * @param url the URL
      */
     public void loadURL(String url) {
-        browser.loadURL(url);
+        model.loadURL(url);
     }
 
     /**
@@ -35,7 +88,7 @@ public class Browser {
      * @param html HTML content
      */
     public void loadHTML(String html) {
-        browser.loadHTML(html);
+        model.loadHTML(html);
     }
 
     /**
@@ -101,7 +154,7 @@ public class Browser {
      * @return the JBCefBrowser instance
      */
     public JBCefBrowser getJBCefBrowser() {
-        return browser;
+        return model;
     }
 
     /**
