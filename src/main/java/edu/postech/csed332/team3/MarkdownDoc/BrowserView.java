@@ -28,10 +28,6 @@ public class BrowserView {
         backButton.setText("<-");
         forwardButton.setText("->");
 
-        // Set enabled to false
-        backButton.setEnabled(false);
-        forwardButton.setEnabled(false);
-
         buttons.add(backButton);
         buttons.add(forwardButton);
         addComponent(buttons, "South"); // Add buttons

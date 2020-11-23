@@ -3,13 +3,17 @@ package edu.postech.csed332.team3.MarkdownDoc;
 import com.intellij.openapi.externalSystem.service.execution.NotSupportedException;
 import com.intellij.ui.jcef.JBCefApp;
 import com.intellij.ui.jcef.JBCefBrowser;
+import com.intellij.ui.jcef.JBCefJSQuery;
 import org.cef.browser.CefBrowser;
 
 public class BrowserController {
 
-    private final JBCefBrowser model;
+    private final JBCefBrowser browser;
     private final BrowserView view;
     private final CefBrowser cefBrowser;
+
+    // JSHandler for communication
+    private JBCefJSQuery linkQuery;
 
     /**
      * Create an empty browser controller instance
@@ -20,15 +24,15 @@ public class BrowserController {
         }
 
         // TODO: Replace URL with file URI
-        model = new JBCefBrowser("https://www.google.com");
+        browser = new JBCefBrowser("https://www.google.com");
         this.view = view;
-        cefBrowser = model.getCefBrowser();
+        cefBrowser = browser.getCefBrowser();
 
         // Finalize the view
-        view.addComponent(model.getComponent(), "Center"); // Add browser
+        view.addComponent(browser.getComponent(), "Center"); // Add browser
 
-        // Add the browser JComponent to the view
         setListeners();
+        setHandlers();
     }
 
     private void setListeners() {
@@ -44,11 +48,26 @@ public class BrowserController {
         });
     }
 
+    private void setHandlers() {
+        linkQuery = JBCefJSQuery.create(browser);
+        linkQuery.addHandler((link) -> {
+            // TODO: Open file according to the link
+
+
+            return null;
+        });
+
+        executeJavaScript(
+                ""
+        );
+    }
+
     /**
      * Update the view (button status, etc.)
      */
     public void updateView() {
         // Change button enabled status
+        // TODO: Update when window load finishes
         view.getBackButton().setEnabled(canGoBack());
         view.getForwardButton().setEnabled(canGoForward());
     }
@@ -59,7 +78,7 @@ public class BrowserController {
      * @param url the URL
      */
     public void loadURL(String url) {
-        model.loadURL(url);
+        browser.loadURL(url);
         updateView();
     }
 
@@ -69,7 +88,7 @@ public class BrowserController {
      * @param html HTML content
      */
     public void loadHTML(String html) {
-        model.loadHTML(html);
+        browser.loadHTML(html);
         updateView();
     }
 
@@ -86,14 +105,14 @@ public class BrowserController {
      * Go back in history if possible
      */
     public void goBack() {
-        if (cefBrowser.canGoBack()) cefBrowser.goBack();
+        cefBrowser.goBack();
     }
 
     /**
      * Go forward in history if possible
      */
     public void goForward() {
-        if (cefBrowser.canGoForward()) cefBrowser.goForward();
+        cefBrowser.goForward();
     }
 
     /**
@@ -135,7 +154,7 @@ public class BrowserController {
      * @return the JBCefBrowser instance
      */
     public JBCefBrowser getJBCefBrowser() {
-        return model;
+        return browser;
     }
 
     /**
