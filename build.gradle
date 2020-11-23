@@ -23,6 +23,9 @@ dependencies {
     // JSONParser, JSONObject
     implementation 'org.json:json:20190722'
 
+    // Java parser
+    implementation 'com.github.javaparser:javaparser-core-serialization:3.17.0'
+
     // Cross-platform
     implementation "com.teamdev.jxbrowser:jxbrowser-cross-platform:${jxBrowserVersion}"
 

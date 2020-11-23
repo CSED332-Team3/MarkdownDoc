@@ -1,11 +1,13 @@
 package edu.postech.csed332.team3.MarkdownDoc.SearchProject;
 
+import com.github.javaparser.ast.comments.Comment;
 import com.google.gson.JsonObject;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ModifyDocument {
     ManageComment manageComment = new ManageComment();
@@ -15,9 +17,7 @@ public class ModifyDocument {
         if(!manageComment.isJavaFile(fileWithComment.getName()))
             return false;
 
-        ArrayList<String> comment = manageComment.GetComment(fileWithComment);
-        JsonObject commentData = manageComment.ParsingComment(comment);
-
+        JsonObject commentAndElementInfo = manageComment.AllJavadocExtractor(fileWithComment);
 
         return true;
     }
