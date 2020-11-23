@@ -1,6 +1,7 @@
 package edu.postech.csed332.team3.MarkdownDoc.SearchProject;
 
 import com.github.javaparser.ast.comments.Comment;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.io.File;
@@ -17,7 +18,7 @@ public class ModifyDocument {
         if(!manageComment.isJavaFile(fileWithComment.getName()))
             return false;
 
-        JsonObject commentAndElementInfo = manageComment.AllJavadocExtractor(fileWithComment);
+        JsonArray commentAndElementInfo = manageComment.AllJavadocExtractor(fileWithComment);
 
         return true;
     }
