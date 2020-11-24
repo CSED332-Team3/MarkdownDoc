@@ -16,9 +16,10 @@ public class MarkdownParser {
 
     @Nonnull
     public static String parse(@Nonnull String comment) {
-//        if (!isMarkdown(comment))
-//            throw new IllegalArgumentException("Not a md comment.");
+        if (!isMarkdown(comment))
+            throw new IllegalArgumentException("Not a md comment.");
 
+        comment = comment.replaceFirst("!!mdDoc\n", "");
         comment = parseLoop(comment);
 
         final Parser parser = Parser.builder().build();

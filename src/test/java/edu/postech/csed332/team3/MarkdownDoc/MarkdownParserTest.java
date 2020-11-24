@@ -35,37 +35,37 @@ class MarkdownParserTest {
 
     @Test
     void testEscape() {
-        assertEquals("<p><strike>test</strike></p>\n", MarkdownParser.parse("<strike>test</strike>"));
+        assertEquals("<p><strike>test</strike></p>\n", MarkdownParser.parse("!!mdDoc\n<strike>test</strike>"));
     }
 
     @Test
     void testIsHeader() {
-        assertEquals("<h1>header1</h1>\n", MarkdownParser.parse("# header1"));
-        assertEquals("<h2>header2</h2>\n", MarkdownParser.parse("## header2"));
-        assertEquals("<h3>header3</h3>\n", MarkdownParser.parse("### header3"));
-        assertEquals("<h4>header4</h4>\n", MarkdownParser.parse("#### header4"));
-        assertEquals("<h5>header5</h5>\n", MarkdownParser.parse("##### header5"));
-        assertEquals("<h6>header6</h6>\n", MarkdownParser.parse("###### header6"));
+        assertEquals("<h1>header1</h1>\n", MarkdownParser.parse("!!mdDoc\n# header1"));
+        assertEquals("<h2>header2</h2>\n", MarkdownParser.parse("!!mdDoc\n## header2"));
+        assertEquals("<h3>header3</h3>\n", MarkdownParser.parse("!!mdDoc\n### header3"));
+        assertEquals("<h4>header4</h4>\n", MarkdownParser.parse("!!mdDoc\n#### header4"));
+        assertEquals("<h5>header5</h5>\n", MarkdownParser.parse("!!mdDoc\n##### header5"));
+        assertEquals("<h6>header6</h6>\n", MarkdownParser.parse("!!mdDoc\n###### header6"));
     }
 
     @Test
     void testIsList() {
         assertEquals("<ul>\n" +
                 "<li>list</li>\n" +
-                "</ul>\n", MarkdownParser.parse("* list"));
+                "</ul>\n", MarkdownParser.parse("!!mdDoc\n* list"));
     }
 
     @Test
     void testIsImage() {
-        assertEquals("<p><img src=\"\" alt=\"Image\" /></p>\n", MarkdownParser.parse("![Image]()"));
+        assertEquals("<p><img src=\"\" alt=\"Image\" /></p>\n", MarkdownParser.parse("!!mdDoc\n![Image]()"));
         assertEquals("<p><a href=\"#\"><img src=\"https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png\"></a></p>\n",
-                MarkdownParser.parse("<a href=\"#\"><img src=\"https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png\"></a> "));
+                MarkdownParser.parse("!!mdDoc\n<a href=\"#\"><img src=\"https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png\"></a> "));
     }
 
     @Test
     void testIsLink() {
         assertEquals("<p><a href=\"https://csed332.postech.ac.kr/team3-2020/MarkdownDoc\">MarkdownDoc</a></p>\n",
-                MarkdownParser.parse("[MarkdownDoc](https://csed332.postech.ac.kr/team3-2020/MarkdownDoc)"));
+                MarkdownParser.parse("!!mdDoc\n[MarkdownDoc](https://csed332.postech.ac.kr/team3-2020/MarkdownDoc)"));
     }
 
     @Test
@@ -73,54 +73,55 @@ class MarkdownParserTest {
         assertEquals("<pre><code class=\"language-javascript\">function test() {\n" +
                 " console.log(&quot;hello world!&quot;);\n" +
                 "}\n" +
-                "</code></pre>\n", MarkdownParser.parse("```javascript\nfunction test() {\n console.log(\"hello world!\");\n}\n```"));
+                "</code></pre>\n", MarkdownParser.parse("!!mdDoc\n```javascript\nfunction test() {\n console.log(\"hello world!\");\n}\n```"));
     }
 
     @Test
     void testIsBlockquote() {
         assertEquals("<blockquote>\n" +
                 "<p>MarkdownDoc</p>\n" +
-                "</blockquote>\n", MarkdownParser.parse("> MarkdownDoc"));
+                "</blockquote>\n", MarkdownParser.parse("!!mdDoc\n> MarkdownDoc"));
     }
 
     @Test
     void testIsInlineCode() {
-        assertEquals("<p><code>printf(&quot;Hello world!&quot;)</code></p>\n", MarkdownParser.parse("`printf(\"Hello world!\")`"));
+        assertEquals("<p><code>printf(&quot;Hello world!&quot;)</code></p>\n",
+                MarkdownParser.parse("!!mdDoc\n`printf(\"Hello world!\")`"));
     }
 
     @Test
     void testIsHorizontal() {
-        assertEquals("<hr />\n", MarkdownParser.parse("---"));
-        assertEquals("<hr />\n", MarkdownParser.parse("***"));
-        assertEquals("<hr />\n", MarkdownParser.parse("___"));
+        assertEquals("<hr />\n", MarkdownParser.parse("!!mdDoc\n---"));
+        assertEquals("<hr />\n", MarkdownParser.parse("!!mdDoc\n***"));
+        assertEquals("<hr />\n", MarkdownParser.parse("!!mdDoc\n___"));
     }
 
     @Test
     void testIsBadge() {
         assertEquals("<p><a href=\"https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png\">https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png</a></p>\n",
-                MarkdownParser.parse("<https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png>"));
+                MarkdownParser.parse("!!mdDoc\n<https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png>"));
     }
 
     @Test
     void testIsBold() {
-        assertEquals("<p><strong>bold</strong></p>\n", MarkdownParser.parse("**bold**"));
-        assertEquals("<p><strong>bold</strong></p>\n", MarkdownParser.parse("__bold__"));
+        assertEquals("<p><strong>bold</strong></p>\n", MarkdownParser.parse("!!mdDoc\n**bold**"));
+        assertEquals("<p><strong>bold</strong></p>\n", MarkdownParser.parse("!!mdDoc\n__bold__"));
     }
 
     @Test
     void testIsItalic() {
-        assertEquals("<p><em>italic</em></p>\n", MarkdownParser.parse("*italic*"));
-        assertEquals("<p><em>italic</em></p>\n", MarkdownParser.parse("_italic_"));
+        assertEquals("<p><em>italic</em></p>\n", MarkdownParser.parse("!!mdDoc\n*italic*"));
+        assertEquals("<p><em>italic</em></p>\n", MarkdownParser.parse("!!mdDoc\n_italic_"));
     }
 
     @Test
     void testIsUnderline() {
-        assertEquals("<p><u>underline</u></p>\n", MarkdownParser.parse("<u>underline</u>"));
+        assertEquals("<p><u>underline</u></p>\n", MarkdownParser.parse("!!mdDoc\n<u>underline</u>"));
     }
 
     @Test
     void testIsStrikeThrough() {
-        assertEquals("<p><strike>StrikeThrough</strike></p>\n", MarkdownParser.parse("~~StrikeThrough~~"));
+        assertEquals("<p><strike>StrikeThrough</strike></p>\n", MarkdownParser.parse("!!mdDoc\n~~StrikeThrough~~"));
     }
 
     @Test
