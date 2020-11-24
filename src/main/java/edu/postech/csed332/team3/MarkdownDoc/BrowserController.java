@@ -4,7 +4,12 @@ import com.intellij.openapi.externalSystem.service.execution.NotSupportedExcepti
 import com.intellij.ui.jcef.JBCefApp;
 import com.intellij.ui.jcef.JBCefBrowser;
 import com.intellij.ui.jcef.JBCefJSQuery;
+import org.cef.CefSettings;
 import org.cef.browser.CefBrowser;
+import org.cef.browser.CefFrame;
+import org.cef.handler.CefDisplayHandler;
+import org.cef.handler.CefLoadHandler;
+import org.cef.network.CefRequest;
 
 public class BrowserController {
 
@@ -39,27 +44,41 @@ public class BrowserController {
         // Set action listeners
         view.getBackButton().addActionListener(e -> {
             goBack();
-            updateView();
         });
 
         view.getForwardButton().addActionListener(e -> {
             goForward();
-            updateView();
         });
     }
 
     private void setHandlers() {
-        linkQuery = JBCefJSQuery.create(browser);
-        linkQuery.addHandler((link) -> {
-            // TODO: Open file according to the link
+        cefBrowser.getClient().addDisplayHandler(new CefDisplayHandler() {
+            @Override
+            public void onAddressChange(CefBrowser cefBrowser, CefFrame cefFrame, String s) {
+                updateView();
+            }
 
+            @Override
+            public void onTitleChange(CefBrowser cefBrowser, String s) {
+                updateView();
+            }
 
-            return null;
+            @Override
+            public boolean onTooltip(CefBrowser cefBrowser, String s) {
+                return false;
+            }
+
+            @Override
+            public void onStatusMessage(CefBrowser cefBrowser, String s) {
+
+            }
+
+            @Override
+            public boolean onConsoleMessage(CefBrowser cefBrowser, CefSettings.LogSeverity logSeverity, String s, String s1, int i) {
+                view.getResponseLabel().setText(s1);
+                return false;
+            }
         });
-
-        executeJavaScript(
-                ""
-        );
     }
 
     /**
@@ -67,7 +86,6 @@ public class BrowserController {
      */
     public void updateView() {
         // Change button enabled status
-        // TODO: Update when window load finishes
         view.getBackButton().setEnabled(canGoBack());
         view.getForwardButton().setEnabled(canGoForward());
     }
@@ -79,7 +97,6 @@ public class BrowserController {
      */
     public void loadURL(String url) {
         browser.loadURL(url);
-        updateView();
     }
 
     /**
@@ -89,7 +106,6 @@ public class BrowserController {
      */
     public void loadHTML(String html) {
         browser.loadHTML(html);
-        updateView();
     }
 
     /**
@@ -106,6 +122,7 @@ public class BrowserController {
      */
     public void goBack() {
         cefBrowser.goBack();
+        updateView();
     }
 
     /**
@@ -113,6 +130,7 @@ public class BrowserController {
      */
     public void goForward() {
         cefBrowser.goForward();
+        updateView();
     }
 
     /**
@@ -144,25 +162,5 @@ public class BrowserController {
      */
     public void executeJavaScript(String code) {
         cefBrowser.executeJavaScript(code, getURL(), 0);
-        updateView();
-    }
-
-    /**
-     * Return the JBCefBrowser instance
-     * This is a JetBrains wrapper for CefBrowser
-     *
-     * @return the JBCefBrowser instance
-     */
-    public JBCefBrowser getJBCefBrowser() {
-        return browser;
-    }
-
-    /**
-     * Return the CefBrowser instance
-     *
-     * @return the CefBrowser instance
-     */
-    public CefBrowser getCefBrowser() {
-        return cefBrowser;
     }
 }
