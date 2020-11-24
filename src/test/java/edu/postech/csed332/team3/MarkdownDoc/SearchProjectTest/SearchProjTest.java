@@ -1,4 +1,4 @@
-package edu.postech.csed332.team3.MarkdownDoc;
+package edu.postech.csed332.team3.MarkdownDoc.SearchProjectTest;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
@@ -12,5 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class SearchProjTest {
+    SearchProject searchProject = new SearchProject();
+
 
 }

@@ -59,14 +59,14 @@ public class ManageComment {
 
     public void explore(Node node, JsonArray jArray) {
         JsonObject jsonObject = new JsonObject();
-        try{
+        try {
             jsonObject.addProperty(ElementsInfo(node), (node.getComment()).toString());
-        }
-        catch (NullPointerException e){
+        } catch (NullPointerException e) {
             jsonObject.addProperty(ElementsInfo(node), false);
         }
-        jArray.add(jsonObject);
-        if(node.getChildNodes() != null){
+        if(IsElement(node))
+            jArray.add(jsonObject);
+        if (node.getChildNodes() != null) {
             for (Node child : node.getChildNodes()) {
                 explore(child, jArray);
             }
@@ -74,9 +74,29 @@ public class ManageComment {
     }
 
 
+    private boolean IsElement(Node node) {
+        if (node instanceof ClassOrInterfaceDeclaration) {
+            return true;
+        }
+        if (node instanceof ConstructorDeclaration) {
+            return true;
+        }
+        if (node instanceof FieldDeclaration) {
+            return true;
+        }
+        if (node instanceof MethodDeclaration) {
+            return true;
+        }
+        if (node instanceof EnumDeclaration) {
+            return true;
+        }
+
+        return false;
+    }
+
     private static String ElementsInfo(Node node) {
         if (node instanceof ClassOrInterfaceDeclaration) {
-            ClassOrInterfaceDeclaration classOrInterfaceDeclaration = (ClassOrInterfaceDeclaration)node;
+            ClassOrInterfaceDeclaration classOrInterfaceDeclaration = (ClassOrInterfaceDeclaration) node;
             if (classOrInterfaceDeclaration.isInterface()) {
                 return "Interface: " + classOrInterfaceDeclaration.getName();
             } else {
@@ -84,20 +104,20 @@ public class ManageComment {
             }
         }
         if (node instanceof ConstructorDeclaration) {
-            ConstructorDeclaration constructorDeclaration = (ConstructorDeclaration)node;
+            ConstructorDeclaration constructorDeclaration = (ConstructorDeclaration) node;
             return "Constructor: " + constructorDeclaration.getDeclarationAsString();
         }
         if (node instanceof FieldDeclaration) {
-            FieldDeclaration fieldDeclaration = (FieldDeclaration)node;
+            FieldDeclaration fieldDeclaration = (FieldDeclaration) node;
             List<String> varNames = fieldDeclaration.getVariables().stream().map(v -> v.getName().getId()).collect(Collectors.toList());
             return "Field: " + String.join(", ", varNames);
         }
         if (node instanceof MethodDeclaration) {
-            MethodDeclaration methodDeclaration = (MethodDeclaration)node;
+            MethodDeclaration methodDeclaration = (MethodDeclaration) node;
             return "Method: " + methodDeclaration.getDeclarationAsString();
         }
         if (node instanceof EnumDeclaration) {
-            EnumDeclaration enumDeclaration = (EnumDeclaration)node;
+            EnumDeclaration enumDeclaration = (EnumDeclaration) node;
             return "Enum: " + enumDeclaration.getName();
         }
         return node.toString();
