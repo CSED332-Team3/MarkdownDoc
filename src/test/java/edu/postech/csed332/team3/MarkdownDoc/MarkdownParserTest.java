@@ -1,18 +1,18 @@
 package edu.postech.csed332.team3.MarkdownDoc;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class MarkdownParserTest {
+class MarkdownParserTest {
 
     @Test
-    public void testIsMarkdown() {
+    void testIsMarkdown() {
         assertTrue(MarkdownParser.isMarkdown("!!mdDoc"));
     }
 
     @Test
-    public void testHrRecognition() {
+    void testHrRecognition() {
         assertFalse("-".matches("-{3,}"));
         assertFalse("--".matches("-{3,}"));
         assertTrue("---".matches("-{3,}"));
@@ -20,7 +20,7 @@ public class MarkdownParserTest {
     }
 
     @Test
-    public void testTableRecognition() {
+    void testTableRecognition() {
         assertTrue("---".matches("\\|?-{3,}(\\|-{3,})*\\|?"));
         assertTrue("|---".matches("\\|?-{3,}(\\|-{3,})*\\|?"));
         assertTrue("---|".matches("\\|?-{3,}(\\|-{3,})*\\|?"));
@@ -34,12 +34,12 @@ public class MarkdownParserTest {
     }
 
     @Test
-    public void testEscape() {
+    void testEscape() {
         assertEquals("<p><strike>test</strike></p>\n", MarkdownParser.parse("<strike>test</strike>"));
     }
 
     @Test
-    public void testIsHeader() {
+    void testIsHeader() {
         assertEquals("<h1>header1</h1>\n", MarkdownParser.parse("# header1"));
         assertEquals("<h2>header2</h2>\n", MarkdownParser.parse("## header2"));
         assertEquals("<h3>header3</h3>\n", MarkdownParser.parse("### header3"));
@@ -49,27 +49,27 @@ public class MarkdownParserTest {
     }
 
     @Test
-    public void testIsList() {
+    void testIsList() {
         assertEquals("<ul>\n" +
                 "<li>list</li>\n" +
                 "</ul>\n", MarkdownParser.parse("* list"));
     }
 
     @Test
-    public void testIsImage() {
+    void testIsImage() {
         assertEquals("<p><img src=\"\" alt=\"Image\" /></p>\n", MarkdownParser.parse("![Image]()"));
         assertEquals("<p><a href=\"#\"><img src=\"https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png\"></a></p>\n",
                 MarkdownParser.parse("<a href=\"#\"><img src=\"https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png\"></a> "));
     }
 
     @Test
-    public void testIsLink() {
+    void testIsLink() {
         assertEquals("<p><a href=\"https://csed332.postech.ac.kr/team3-2020/MarkdownDoc\">MarkdownDoc</a></p>\n",
                 MarkdownParser.parse("[MarkdownDoc](https://csed332.postech.ac.kr/team3-2020/MarkdownDoc)"));
     }
 
     @Test
-    public void testIsCodeBlock() {
+    void testIsCodeBlock() {
         assertEquals("<pre><code class=\"language-javascript\">function test() {\n" +
                 " console.log(&quot;hello world!&quot;);\n" +
                 "}\n" +
@@ -77,66 +77,61 @@ public class MarkdownParserTest {
     }
 
     @Test
-    public void testIsBlockquote() {
+    void testIsBlockquote() {
         assertEquals("<blockquote>\n" +
                 "<p>MarkdownDoc</p>\n" +
                 "</blockquote>\n", MarkdownParser.parse("> MarkdownDoc"));
     }
 
     @Test
-    public void testIsInlineCode() {
+    void testIsInlineCode() {
         assertEquals("<p><code>printf(&quot;Hello world!&quot;)</code></p>\n", MarkdownParser.parse("`printf(\"Hello world!\")`"));
     }
 
     @Test
-    public void testIsHorizontal() {
+    void testIsHorizontal() {
         assertEquals("<hr />\n", MarkdownParser.parse("---"));
         assertEquals("<hr />\n", MarkdownParser.parse("***"));
         assertEquals("<hr />\n", MarkdownParser.parse("___"));
     }
 
     @Test
-    public void testIsBadge() {
+    void testIsBadge() {
         assertEquals("<p><a href=\"https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png\">https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png</a></p>\n",
                 MarkdownParser.parse("<https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png>"));
     }
 
     @Test
-    public void testIsBold() {
+    void testIsBold() {
         assertEquals("<p><strong>bold</strong></p>\n", MarkdownParser.parse("**bold**"));
         assertEquals("<p><strong>bold</strong></p>\n", MarkdownParser.parse("__bold__"));
     }
 
     @Test
-    public void testIsItalic() {
+    void testIsItalic() {
         assertEquals("<p><em>italic</em></p>\n", MarkdownParser.parse("*italic*"));
         assertEquals("<p><em>italic</em></p>\n", MarkdownParser.parse("_italic_"));
     }
 
     @Test
-    public void testIsUnderline() {
+    void testIsUnderline() {
         assertEquals("<p><u>underline</u></p>\n", MarkdownParser.parse("<u>underline</u>"));
     }
 
-    //    @Test
-//    public void testIsTable() {
-//        assertEquals("", MarkdownParser.parse("|a|b|c|\n|---|---|---|\n|d|e|f|"));
-//    }
-
 //    @Test
-//    public void testIsTaskList() {
+//     void testIsTaskList() {
 //        assertEquals("<ul>\n" +
 //                "<li>[ ] Test task list</li>\n" +
 //                "</ul>\n", MarkdownParser.parse("- [ ] Test task list"));
 //    }
 
     @Test
-    public void testIsStrikeThrough() {
+    void testIsStrikeThrough() {
         assertEquals("<p><strike>StrikeThrough</strike></p>\n", MarkdownParser.parse("~~StrikeThrough~~"));
     }
 
     @Test
-    public void testParseTableHeader() {
+    void testParseTableHeader() {
         assertEquals("<tr>\n<th>asdf</th>\n<th>qwer</th>\n<th>asdf</th>\n</tr>\n"
                 , MarkdownParser.parseTableHeader("asdf|qwer|asdf"));
         assertEquals("<tr>\n<th>asdf</th>\n<th>qwer</th>\n<th>asdf</th>\n</tr>\n"
@@ -148,7 +143,7 @@ public class MarkdownParserTest {
     }
 
     @Test
-    public void testParseTableDetails() {
+    void testParseTableDetails() {
         assertEquals("<tr>\n<td>asdf</td>\n<td>qwer</td>\n<td>asdf</td>\n</tr>\n"
                 , MarkdownParser.parseTableDetails("asdf|qwer|asdf", 3));
         assertEquals("<tr>\n<td>asdf</td>\n<td>qwer</td>\n</tr>\n"
@@ -176,28 +171,28 @@ public class MarkdownParserTest {
     }
 
     @Test
-    public void testParseTable() {
+    void testParseTable() {
         assertEquals("<table>\n" +
-                "<thead>\n" +
-                "<tr>\n" +
-                "<th>asdf</th>\n" +
-                "<th>asdf</th>\n" +
-                "<th>asdf</th>\n" +
-                "</tr>\n" +
-                "</thead>\n" +
-                "<tbody>\n" +
-                "<tr>\n" +
-                "<td>asdf</td>\n" +
-                "<td>asdf</td>\n" +
-                "<td>asdf</td>\n" +
-                "</tr>\n" +
-                "<tr>\n" +
-                "<td>asdf</td>\n" +
-                "<td>asdf</td>\n" +
-                "<td>asdf</td>\n" +
-                "</tr>\n" +
-                "</tbody>\n" +
-                "</table>\n",
+                        "<thead>\n" +
+                        "<tr>\n" +
+                        "<th>asdf</th>\n" +
+                        "<th>asdf</th>\n" +
+                        "<th>asdf</th>\n" +
+                        "</tr>\n" +
+                        "</thead>\n" +
+                        "<tbody>\n" +
+                        "<tr>\n" +
+                        "<td>asdf</td>\n" +
+                        "<td>asdf</td>\n" +
+                        "<td>asdf</td>\n" +
+                        "</tr>\n" +
+                        "<tr>\n" +
+                        "<td>asdf</td>\n" +
+                        "<td>asdf</td>\n" +
+                        "<td>asdf</td>\n" +
+                        "</tr>\n" +
+                        "</tbody>\n" +
+                        "</table>\n",
                 MarkdownParser.parseTable("|asdf|asdf|asdf|\n" +
                 "---|---|---\n" +
                 "asdf|asdf|asdf\n" +
@@ -300,5 +295,23 @@ public class MarkdownParserTest {
                         "asdf|asdf|asdf\n" +
                         "asdf|asdf|asdf\n\n" +
                         "asdfasdfasdf"));
+    }
+
+    @Test
+    void parseCheckBox() {
+        assertEquals("- [ ]", MarkdownParser.parseCheckBox("- [ ]"));
+        assertEquals("- [x]", MarkdownParser.parseCheckBox("- [x]"));
+        assertEquals("- [ ]asdf", MarkdownParser.parseCheckBox("- [ ]asdf"));
+        assertEquals("- [x]asdf", MarkdownParser.parseCheckBox("- [x]asdf"));
+        assertEquals("<input type=\"checkbox\" disabled>asdf", MarkdownParser.parseCheckBox("- [ ] asdf"));
+        assertEquals("<input type=\"checkbox\" checked disabled>asdf", MarkdownParser.parseCheckBox("- [x] asdf"));
+        assertEquals("asdf - [ ] asdf", MarkdownParser.parseCheckBox("asdf - [ ] asdf"));
+        assertEquals("asdf - [x] asdf", MarkdownParser.parseCheckBox("asdf - [x] asdf"));
+        assertEquals("   - [ ]", MarkdownParser.parseCheckBox("   - [ ]"));
+        assertEquals("   - [x]", MarkdownParser.parseCheckBox("   - [x]"));
+        assertEquals("   - [ ]asdf", MarkdownParser.parseCheckBox("   - [ ]asdf"));
+        assertEquals("   - [x]asdf", MarkdownParser.parseCheckBox("   - [x]asdf"));
+        assertEquals("   - [ ] asdf", MarkdownParser.parseCheckBox("   - [ ] asdf"));
+        assertEquals("   - [x] asdf", MarkdownParser.parseCheckBox("   - [x] asdf"));
     }
 }

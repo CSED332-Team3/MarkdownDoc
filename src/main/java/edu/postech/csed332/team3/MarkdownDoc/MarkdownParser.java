@@ -6,6 +6,7 @@ import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 
+import javax.annotation.Nonnull;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -46,8 +47,9 @@ public class MarkdownParser {
         if (count % 2 == 1) count--;
 
         while (count > 0) {
-            comment = comment.replaceFirst(strikethroughToken, "<strike>");
-            comment = comment.replaceFirst(strikethroughToken, "</strike>");
+            comment = comment
+                    .replaceFirst(strikethroughToken, "<strike>")
+                    .replaceFirst(strikethroughToken, "</strike>");
             count -= 2;
         }
 
@@ -60,8 +62,9 @@ public class MarkdownParser {
         StringBuilder stringBuilder = new StringBuilder();
         try {
             String line;
-            String prevLine = bufferedReader.readLine();
+            String prevLine = parseCheckBox(bufferedReader.readLine());
             while ((line = bufferedReader.readLine()) != null) {
+                line = parseCheckBox(line);
                 if (!line.matches("-{3,}") && line.matches("\\|?-{3,}(\\|-{3,})*\\|?")) {
                     final int columnNum = StringUtil.getOccurrenceCount(line, "-|-") + 1;
                     final String regex = String.format("\\|[^|]*(\\|[^|]*){%d}\\|", columnNum - 1);
@@ -69,7 +72,7 @@ public class MarkdownParser {
                         stringBuilder.append("<table>\n");
                         stringBuilder.append("<thead>\n").append(parseTableHeader(prevLine)).append("</thead>\n");
                         stringBuilder.append("<tbody>\n");
-                        while (!"".equals(line = bufferedReader.readLine()) && line != null) {
+                        while ((line = bufferedReader.readLine()) != null && !line.equals("")) {
                             stringBuilder.append(parseTableDetails(line, columnNum));
                         }
                         stringBuilder.append("</tbody>\n");
@@ -129,5 +132,14 @@ public class MarkdownParser {
     private static void checkValidity(@NonNull String comment) {
         if (!isMarkdown(comment))
             throw new IllegalArgumentException("Not a md comment.");
+    }
+
+    @NonNull
+    public static String parseCheckBox(@NonNull String comment) {
+        if (comment.matches("^- \\[[ x]]\\s*"))
+            return comment;
+        return comment
+                .replaceAll("^- \\[ ]\\s+", "<input type=\"checkbox\" disabled>")
+                .replaceAll("^- \\[x]\\s+", "<input type=\"checkbox\" checked disabled>");
     }
 }
