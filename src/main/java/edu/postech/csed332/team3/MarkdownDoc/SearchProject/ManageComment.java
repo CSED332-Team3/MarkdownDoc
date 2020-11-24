@@ -59,7 +59,12 @@ public class ManageComment {
 
     public void explore(Node node, JsonArray jArray) {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty(ElementsInfo(node), String.valueOf(node.getComment()));
+        try{
+            jsonObject.addProperty(ElementsInfo(node), (node.getComment()).toString());
+        }
+        catch (NullPointerException e){
+            jsonObject.addProperty(ElementsInfo(node), false);
+        }
         jArray.add(jsonObject);
         if(node.getChildNodes() != null){
             for (Node child : node.getChildNodes()) {
