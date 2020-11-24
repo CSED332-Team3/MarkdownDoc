@@ -118,13 +118,6 @@ class MarkdownParserTest {
         assertEquals("<p><u>underline</u></p>\n", MarkdownParser.parse("<u>underline</u>"));
     }
 
-//    @Test
-//     void testIsTaskList() {
-//        assertEquals("<ul>\n" +
-//                "<li>[ ] Test task list</li>\n" +
-//                "</ul>\n", MarkdownParser.parse("- [ ] Test task list"));
-//    }
-
     @Test
     void testIsStrikeThrough() {
         assertEquals("<p><strike>StrikeThrough</strike></p>\n", MarkdownParser.parse("~~StrikeThrough~~"));
@@ -193,10 +186,10 @@ class MarkdownParserTest {
                         "</tr>\n" +
                         "</tbody>\n" +
                         "</table>\n",
-                MarkdownParser.parseTable("|asdf|asdf|asdf|\n" +
-                "---|---|---\n" +
-                "asdf|asdf|asdf\n" +
-                "asdf|asdf|asdf"));
+                MarkdownParser.parseLoop("|asdf|asdf|asdf|\n" +
+                        "---|---|---\n" +
+                        "asdf|asdf|asdf\n" +
+                        "asdf|asdf|asdf"));
         assertEquals("<table>\n" +
                         "<thead>\n" +
                         "<tr>\n" +
@@ -217,15 +210,15 @@ class MarkdownParserTest {
                         "</tr>\n" +
                         "</tbody>\n" +
                         "</table>\n",
-                MarkdownParser.parseTable("|asdf|asdf|asdf|\n" +
-                "---|---|---\n" +
-                "asdf|asdf|asdf\n" +
-                "asdf|asdf"));
+                MarkdownParser.parseLoop("|asdf|asdf|asdf|\n" +
+                        "---|---|---\n" +
+                        "asdf|asdf|asdf\n" +
+                        "asdf|asdf"));
         assertEquals("|asdf|asdf|asdf|\n" +
                         "---|---\n" +
                         "asdf|asdf|asdf\n" +
                         "asdf|asdf|asdf\n",
-                MarkdownParser.parseTable("|asdf|asdf|asdf|\n" +
+                MarkdownParser.parseLoop("|asdf|asdf|asdf|\n" +
                         "---|---\n" +
                         "asdf|asdf|asdf\n" +
                         "asdf|asdf|asdf"));
@@ -233,7 +226,7 @@ class MarkdownParserTest {
                 "---|---|---\n" +
                 "asdf|asdf|asdf\n" +
                 "asdf|asdf|asdf\n",
-                MarkdownParser.parseTable("|asdf|asdf|\n" +
+                MarkdownParser.parseLoop("|asdf|asdf|\n" +
                         "---|---|---\n" +
                         "asdf|asdf|asdf\n" +
                         "asdf|asdf|asdf"));
@@ -241,7 +234,7 @@ class MarkdownParserTest {
                         "---||---\n" +
                         "asdf|asdf|asdf\n" +
                         "asdf|asdf|asdf\n",
-                MarkdownParser.parseTable("|asdf|asdf|asdf|\n" +
+                MarkdownParser.parseLoop("|asdf|asdf|asdf|\n" +
                         "---||---\n" +
                         "asdf|asdf|asdf\n" +
                         "asdf|asdf|asdf"));
@@ -263,7 +256,7 @@ class MarkdownParserTest {
                         "</tr>\n" +
                         "</tbody>\n" +
                         "</table>\n",
-                MarkdownParser.parseTable("|asdf|asdf|\n" +
+                MarkdownParser.parseLoop("|asdf|asdf|\n" +
                         "---|---|\n" +
                         "asdf|asdf|asdf\n" +
                         "asdf|asdf|asdf"));
@@ -290,7 +283,7 @@ class MarkdownParserTest {
                         "</table>\n" +
                         "\n" +
                         "asdfasdfasdf\n",
-                MarkdownParser.parseTable("|asdf|asdf|asdf|\n" +
+                MarkdownParser.parseLoop("|asdf|asdf|asdf|\n" +
                         "---|---|---\n" +
                         "asdf|asdf|asdf\n" +
                         "asdf|asdf|asdf\n\n" +
@@ -298,7 +291,7 @@ class MarkdownParserTest {
     }
 
     @Test
-    void parseCheckBox() {
+    void testParseCheckBox() {
         assertEquals("- [ ]", MarkdownParser.parseCheckBox("- [ ]"));
         assertEquals("- [x]", MarkdownParser.parseCheckBox("- [x]"));
         assertEquals("- [ ]asdf", MarkdownParser.parseCheckBox("- [ ]asdf"));
