@@ -1,14 +1,15 @@
 package edu.postech.csed332.team3.MarkdownDoc;
 
-import org.junit.Test;
+import com.intellij.openapi.project.Project;
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
+public class ProjectNavigatorTest extends BasePlatformTestCase {
 
-public class ProjectNavigatorTest {
-    @Test
+    private ProjectNavigator pn;
+
     public void classExistsTest() {
+        Project mockProject = getProject();
 
+        pn = new ProjectNavigator();
     }
 }

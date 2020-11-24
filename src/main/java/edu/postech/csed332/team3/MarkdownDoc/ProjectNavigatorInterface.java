@@ -4,53 +4,49 @@ import com.intellij.psi.*;
 
 public interface ProjectNavigatorInterface {
     /**
-     * Check if a class with a given name exists
+     * Get the class instance with a given name
      *
      * @param name the class name
-     * @return true if the class exists
+     * @return the PsiClass instance
      */
-    Boolean classExists(String name);
-
     PsiClass getClass(String name);
 
     /**
      * Navigate to the class
      *
-     * @param name the class name
+     * @param psiClass the PsiClass instance
      */
-    void navigateToClass(String name);
+    void navigateToClass(PsiClass psiClass);
 
     /**
-     * Check if a method with a given name exists in a class
+     * Get the method with a given name exists in a class
      *
      * @param methodName the method name
      * @param className the class name
-     * @return true if the class exists
+     * @return the PsiMethod instance
      */
-    Boolean methodExists(String methodName, String className);
+    PsiMethod getMethod(String methodName, String className);
 
     /**
      * Navigate to the method
      *
-     * @param methodName the method name
-     * @param className the class name
+     * @param psiMethod the PsiMethod instance
      */
-    void navigateToMethod(String methodName, String className);
+    void navigateToMethod(PsiMethod psiMethod);
 
     /**
      * Check if a field with a given name exists in a class
      *
      * @param fieldName the field name
      * @param className the class name
-     * @return true if the class exists
+     * @return the PsiField instance
      */
-    Boolean fieldExists(String fieldName, String className);
+    PsiField getField(String fieldName, String className);
 
     /**
      * Navigate to the field
      *
-     * @param fieldName the field name
-     * @param className the class name
+     * @param psiField the PsiField instance
      */
-    void navigateToField(String fieldName, String className);
+    void navigateToField(PsiField psiField);
 }
