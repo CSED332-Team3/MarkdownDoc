@@ -1,10 +1,14 @@
 plugins {
     id 'java'
     id 'org.jetbrains.intellij' version '0.6.3'
+    id 'jacoco'
 }
 
 group 'edu.postech.csed332.team3'
 version '0.1'
+
+sourceCompatibility = 11
+targetCompatibility = 11
 
 repositories {
     mavenCentral()
@@ -20,6 +24,8 @@ ext {
 dependencies {
     implementation 'junit:junit:4.12'
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
 
     // JSONParser, JSONObject
     implementation 'org.json:json:20190722'
@@ -38,8 +44,21 @@ dependencies {
 intellij {
     version '2020.2.3'
 }
+
 patchPluginXml {
     changeNotes """
       Add change notes here.<br>
       <em>most HTML tags may be used</em>"""
+}
+
+test {
+    finalizedBy jacocoTestReport // report is always generated after tests run
+}
+
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+    reports {
+        xml.enabled true
+        csv.enabled true
+    }
 }
