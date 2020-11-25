@@ -24,8 +24,9 @@ public class example {
 class example2 {
     /**
      * Hello, this is example method2!
+     * @param a is example param
      */
-    public void example_method2(){
+    public void example_method2(int a){
         return;
     }
 }

@@ -34,20 +34,6 @@ public class ManageComment {
         }
     }
 
-    public JsonObject ParsingComment(List<Comment> comments) {
-        //leave only JavaDoc comments
-        List<Comment> JavaDocComments = comments.stream()
-                .filter(c -> c.isJavadocComment())
-                .collect(Collectors.toList());
-
-        //get method information
-
-        return null;
-
-    }
-
-    //문제1. 어떤 순서로 저장되는지 모른다
-    //문제2. 정상작동하는지 모른다
     public JsonArray AllJavadocExtractor(File filename) throws IOException {
 
         CompilationUnit cu = StaticJavaParser.parse(filename);
@@ -60,9 +46,12 @@ public class ManageComment {
     public void explore(Node node, JsonArray jArray) {
         JsonObject jsonObject = new JsonObject();
         try {
-            jsonObject.addProperty(ElementsInfo(node), (node.getComment()).toString());
+            if(node.getComment().isEmpty())
+                jsonObject.addProperty(ElementsInfo(node), "");
+            else
+                jsonObject.addProperty(ElementsInfo(node), String.valueOf(node.getComment().get()));
         } catch (NullPointerException e) {
-            jsonObject.addProperty(ElementsInfo(node), false);
+            jsonObject.addProperty(ElementsInfo(node), "");
         }
         if(IsElement(node))
             jArray.add(jsonObject);

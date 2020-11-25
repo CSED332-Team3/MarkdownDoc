@@ -13,6 +13,9 @@ import java.io.IOException;
 
 public class SearchProjTest {
     SearchProject searchProject = new SearchProject();
-
+    @Test
+    public void testSearchCreatedFile() throws IOException, InterruptedException {
+        searchProject.Search();
+    }
 
 }

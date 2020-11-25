@@ -29,16 +29,18 @@ public class SearchProject {
                 Kind<?> kind = event.kind();
                 Path pth = (Path) event.context();
                 if (kind.equals(StandardWatchEventKinds.ENTRY_CREATE)){
-                    File file = new File("./" + pth.getFileName() + ".md");
+                    File file = new File("./mdsaved/" + pth.getFileName() + ".md");
                     boolean result = file.createNewFile();
                     modifyDocument.ModifyDocument(pth, file);
                 }
                 else if (kind.equals(StandardWatchEventKinds.ENTRY_DELETE)){
-                    File file = new File("./" + pth.getFileName() + ".md");
+                    File file = new File("./mdsaved/" + pth.getFileName() + ".md");
                     file.delete();
                 }
                 else if (kind.equals(StandardWatchEventKinds.ENTRY_MODIFY)){
-                    File file = new File("./" + pth.getFileName() + ".md");
+                    File file = new File("./mdsaved/" + pth.getFileName() + ".md");
+                    file.delete();
+                    boolean result = file.createNewFile();
                     modifyDocument.ModifyDocument(pth, file);
                 }
                 else if (kind.equals(StandardWatchEventKinds.OVERFLOW))
