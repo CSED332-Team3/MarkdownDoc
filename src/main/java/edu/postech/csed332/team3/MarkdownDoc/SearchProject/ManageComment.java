@@ -34,9 +34,9 @@ public class ManageComment {
         }
     }
 
-    public JsonArray AllJavadocExtractor(File filename) throws IOException {
+    public JsonArray AllJavadocExtractor(File file) throws IOException {
 
-        CompilationUnit cu = StaticJavaParser.parse(filename);
+        CompilationUnit cu = StaticJavaParser.parse(file);
         JsonArray jArray = new JsonArray();
         explore(cu, jArray);
 

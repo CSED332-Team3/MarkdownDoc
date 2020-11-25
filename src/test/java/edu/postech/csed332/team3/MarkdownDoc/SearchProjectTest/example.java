@@ -13,6 +13,7 @@ public class example {
     /**
      * Hello, this is example method!
      */
+    private int d;
     public void example_method(){
         return;
     }
