@@ -63,10 +63,10 @@ public class SearchProject extends Thread {
                         boolean result = file.createNewFile();
                         modifyDocument.ModifyDocument(pth, file);
                     } else if (kind.equals(StandardWatchEventKinds.ENTRY_DELETE) && ManageComment.isJavaFile(pth.getFileName().toString())) {
-                        File file = new File("./mdsaved/" + pth.getFileName().toString().replace(".java", "") + ".md");
+                        File file = new File("./mdsaved" + pth.toString().replace(projPath.toString(), "").replace(".java", "") + ".md");
                         boolean result = file.delete();
                     } else if (kind.equals(StandardWatchEventKinds.ENTRY_MODIFY) && ManageComment.isJavaFile(pth.getFileName().toString())) {
-                        File file = new File("./mdsaved/" + pth.getFileName().toString().replace(".java", "") + ".md");
+                        File file = new File("./mdsaved" + pth.toString().replace(projPath.toString(), "").replace(".java", "") + ".md");
                         boolean result = file.delete();
                         result = file.createNewFile();
                         modifyDocument.ModifyDocument(pth, file);
