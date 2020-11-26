@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 
 public class ManageComment {
     public JsonArray AllJavadocExtractor(File file) throws IOException {
-
         CompilationUnit cu = StaticJavaParser.parse(file);
         JsonArray jArray = new JsonArray();
         explore(cu, jArray);
@@ -31,7 +30,7 @@ public class ManageComment {
         return jArray;
     }
 
-    public void explore(Node node, JsonArray jArray) {
+    private void explore(Node node, JsonArray jArray) {
         JsonObject jsonObject = new JsonObject();
         try {
             if(node.getComment().isEmpty())
@@ -51,7 +50,7 @@ public class ManageComment {
     }
 
 
-    private boolean IsElement(Node node) {
+    public static boolean IsElement(Node node) {
         if (node instanceof ClassOrInterfaceDeclaration) {
             return true;
         }
@@ -71,7 +70,7 @@ public class ManageComment {
         return false;
     }
 
-    private static String ElementsInfo(Node node) {
+    public static String ElementsInfo(Node node) {
         if (node instanceof ClassOrInterfaceDeclaration) {
             ClassOrInterfaceDeclaration classOrInterfaceDeclaration = (ClassOrInterfaceDeclaration) node;
             if (classOrInterfaceDeclaration.isInterface()) {

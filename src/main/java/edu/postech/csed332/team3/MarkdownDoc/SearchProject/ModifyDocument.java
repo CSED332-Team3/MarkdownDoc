@@ -46,7 +46,6 @@ public class ModifyDocument {
                     writer.write("+ " + str_name + "\n");
                     writer.write(str);
                 }
-
             }
             writer.close();
             return true;

@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class ModifyDocumentTest {
@@ -18,5 +19,11 @@ public class ModifyDocumentTest {
         assertTrue(file.createNewFile());
         assertTrue(modifyDocument.ModifyDocument(Path.of(pth), file));
         file.delete();
+    }
+
+    @Test
+    public void testModifyDocumentNotJavaFile() throws IOException {
+        Path pth = Path.of("./src/example.cpp");
+        assertFalse(modifyDocument.ModifyDocument(pth, null));
     }
 }
