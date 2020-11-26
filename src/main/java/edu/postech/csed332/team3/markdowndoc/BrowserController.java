@@ -7,11 +7,14 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.jcef.JBCefApp;
 import com.intellij.ui.jcef.JBCefBrowser;
 import com.intellij.ui.jcef.JBCefJSQuery;
+import edu.postech.csed332.team3.markdowndoc.SearchProject.SearchProject;
 import org.cef.CefSettings;
 import org.cef.browser.CefBrowser;
 import org.cef.browser.CefFrame;
 import org.cef.handler.CefDisplayHandler;
 import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
 
 public class BrowserController {
 
@@ -20,13 +23,15 @@ public class BrowserController {
     private final CefBrowser cefBrowser;
     private final ProjectNavigator navigator;
 
+    private final SearchProject searchProject;
+
     // JSHandler for communication
     private JBCefJSQuery linkQuery;
 
     /**
      * Create an empty browser controller instance
      */
-    public BrowserController(BrowserView view) {
+    public BrowserController(BrowserView view) throws IOException {
         if (!JBCefApp.isSupported()) {
             throw new NotSupportedException("This IDE version is not supported.");
         }
@@ -38,7 +43,7 @@ public class BrowserController {
                 ModuleManager.getInstance(navigator.getActiveProject()).getModules()[0]
         ).getContentRoots()[0];
 
-        browser = new JBCefBrowser("file://" + projectRoot.getCanonicalPath());
+        browser = new JBCefBrowser("file://" + projectRoot.getCanonicalPath() + "/mdsaved");
         this.view = view;
         cefBrowser = browser.getCefBrowser();
 
@@ -47,6 +52,11 @@ public class BrowserController {
 
         setListeners();
         setHandlers();
+
+        // Initialize SearchProject
+        searchProject = new SearchProject();
+        searchProject.init("./src");
+        searchProject.start();
     }
 
     private void setListeners() {
