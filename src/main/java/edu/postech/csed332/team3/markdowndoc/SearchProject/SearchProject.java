@@ -19,6 +19,17 @@ public class SearchProject extends Thread {
         File dir = new File(pth);
         File files[] = dir.listFiles();
 
+        File Folder = new File("./mdsaved");
+        if (!Folder.exists()) {
+            try{
+                Folder.mkdir();
+                System.out.println("폴더가 생성되었습니다.");
+            }
+            catch(Exception e){
+                e.getStackTrace();
+            }
+        }
+
         for (int i = 0; i < files.length; i++) {
             if(files[i].isDirectory()){
                 init(files[i].getCanonicalPath());
@@ -26,10 +37,12 @@ public class SearchProject extends Thread {
             else{
                 File file_ = new File(projPath.toString());
                 String p = files[i].getCanonicalPath().replace(file_.getCanonicalPath(), "");
-                File file = new File("./mdsaved" + p.toString().replace(".java", "") + ".md");
-                file.getParentFile().mkdirs();
-                boolean result = file.createNewFile();
-                modifyDocument.ModifyDocument(Path.of(files[i].getCanonicalPath()), file);
+                if(isJavaFile(p)) {
+                    File file = new File("./mdsaved" + p.toString().replace(".java", "") + ".md");
+                    file.getParentFile().mkdirs();
+                    boolean result = file.createNewFile();
+                    modifyDocument.ModifyDocument(Path.of(files[i].getCanonicalPath()), file);
+                }
             }
         }
     }
@@ -89,5 +102,9 @@ public class SearchProject extends Thread {
         } catch (InterruptedException | IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static boolean isJavaFile(String file) {
+        return file.endsWith(".java");
     }
 }
