@@ -1,5 +1,6 @@
 package edu.postech.csed332.team3.markdowndoc.SearchProjectTest;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -27,6 +28,7 @@ public class SearchProjTest {
 
         assertTrue(new File("./mdsaved/main/java/created.md").exists());
         file.delete();
+        FileUtils.deleteDirectory(new File("./mdsaved"));
     }
 
     @Test
@@ -48,6 +50,7 @@ public class SearchProjTest {
         Thread.sleep(10000);
         assertTrue(new File("./mdsaved/main/java/created.md").exists());
         file.delete();
+        FileUtils.deleteDirectory(new File("./mdsaved"));
     }
 
     @Test
@@ -61,10 +64,14 @@ public class SearchProjTest {
         String pth = "./src/main/java/created.java";
         File file = new File(pth);
         file.createNewFile();
+
+        Thread.sleep(10000);
+
         file.delete();
 
         Thread.sleep(10000);
         assertTrue(!new File("./mdsaved/main/java/created.md").exists());
+        FileUtils.deleteDirectory(new File("./mdsaved"));
     }
 
     @Test
@@ -74,5 +81,7 @@ public class SearchProjTest {
         String pth = "./mdsaved/main";
         File file = new File(pth);
         assertTrue(file.exists());
+
+        FileUtils.deleteDirectory(new File("./mdsaved"));
     }
 }
