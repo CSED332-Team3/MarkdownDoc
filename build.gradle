@@ -12,30 +12,18 @@ targetCompatibility = 11
 
 repositories {
     mavenCentral()
-
-    // The repository for JxBrowser binaries.
-    maven { url = 'https://europe-maven.pkg.dev/jxbrowser/releases' }
-}
-
-ext {
-    jxBrowserVersion = '7.12'
 }
 
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
-
     implementation "com.atlassian.commonmark:commonmark:0.15.2"
-    // Cross-platform
-    implementation "com.teamdev.jxbrowser:jxbrowser-cross-platform:${jxBrowserVersion}"
-
-    // Swing GUI toolkit
-    implementation "com.teamdev.jxbrowser:jxbrowser-swing:${jxBrowserVersion}"
 }
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
     version '2020.2.3'
+    plugins 'java'
 }
 
 patchPluginXml {
