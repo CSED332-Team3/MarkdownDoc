@@ -43,13 +43,13 @@ public class MarkdownParser {
         StringBuilder stringBuilder = new StringBuilder();
         try {
             String line;
-            String prevLine = parseStrikethrough(parseCheckBox(bufferedReader.readLine()));
+            @Nonnull String prevLine = parseStrikethrough(parseCheckBox(bufferedReader.readLine()));
             while ((line = bufferedReader.readLine()) != null) {
                 line = parseStrikethrough(parseCheckBox(line));
                 if (!line.matches("-{3,}") && line.matches("\\|?-{3,}(\\|-{3,})*\\|?")) {
                     final int columnNum = StringUtil.getOccurrenceCount(line, "-|-") + 1;
                     final String regex = String.format("\\|[^|]*(\\|[^|]*){%d}\\|", columnNum - 1);
-                    if (prevLine != null && prevLine.matches(regex)) {
+                    if (prevLine.matches(regex)) {
                         stringBuilder.append("<table>\n");
                         stringBuilder.append("<thead>\n").append(parseTableHeader(prevLine)).append("</thead>\n");
                         stringBuilder.append("<tbody>\n");
@@ -58,6 +58,8 @@ public class MarkdownParser {
                         }
                         stringBuilder.append("</tbody>\n");
                         stringBuilder.append("</table>\n");
+                        if (line == null)
+                            return stringBuilder.toString();
                         prevLine = line;
                         continue;
                     }
@@ -65,8 +67,7 @@ public class MarkdownParser {
                 stringBuilder.append(prevLine).append("\n");
                 prevLine = line;
             }
-            if (prevLine != null)
-                stringBuilder.append(prevLine).append("\n");
+            stringBuilder.append(prevLine).append("\n");
         } catch (IOException io) {
             return comment;
         }
