@@ -22,18 +22,6 @@ import java.util.logging.Filter;
 import java.util.stream.Collectors;
 
 public class ManageComment {
-
-    private FileHandler fileHandler;
-    private Filter filter;
-
-    private static class MethodNamePrinter extends VoidVisitorAdapter<Void> {
-        @Override
-        public void visit(MethodDeclaration md, Void arg) {
-            super.visit(md, arg);
-            System.out.println("Method Name Printed: " + md.getName());
-        }
-    }
-
     public JsonArray AllJavadocExtractor(File file) throws IOException {
 
         CompilationUnit cu = StaticJavaParser.parse(file);
@@ -67,16 +55,16 @@ public class ManageComment {
         if (node instanceof ClassOrInterfaceDeclaration) {
             return true;
         }
-        if (node instanceof ConstructorDeclaration) {
+        else if (node instanceof ConstructorDeclaration) {
             return true;
         }
-        if (node instanceof FieldDeclaration) {
+        else if (node instanceof FieldDeclaration) {
             return true;
         }
-        if (node instanceof MethodDeclaration) {
+        else if (node instanceof MethodDeclaration) {
             return true;
         }
-        if (node instanceof EnumDeclaration) {
+        else if (node instanceof EnumDeclaration) {
             return true;
         }
 
@@ -118,10 +106,6 @@ public class ManageComment {
 
     public static boolean isJavaFile(String file) {
         return file.endsWith(".java");
-    }
-
-    public static boolean isJavaDoc(String file) {
-        return file.endsWith(".html");
     }
 
 }

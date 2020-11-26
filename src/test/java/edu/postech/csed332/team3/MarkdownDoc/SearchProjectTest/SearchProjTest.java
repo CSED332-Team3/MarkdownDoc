@@ -20,13 +20,13 @@ public class SearchProjTest {
 
         Thread.sleep(10000);
 
-        String pth = "./src/created.java";
+        String pth = "./src/main/java/created.java";
         File file = new File(pth);
         file.createNewFile();
 
         Thread.sleep(10000);
 
-        assertTrue(new File("./mdsaved/created.md").exists());
+        assertTrue(new File("./mdsaved/main/java/created.md").exists());
     }
 
     @Test
@@ -36,14 +36,14 @@ public class SearchProjTest {
 
         Thread.sleep(10000);
 
-        String pth = "./src/created.java";
+        String pth = "./src/main/java/created.java";
         File file = new File(pth);
         BufferedWriter writer = new BufferedWriter(new FileWriter(file));
         writer.write("/**\n * Hello\n */\npublic class created {\n  int a;\n}");
         writer.close();
 
         Thread.sleep(10000);
-        assertTrue(new File("./mdsaved/created.md").exists());
+        assertTrue(new File("./mdsaved/main/java/created.md").exists());
     }
 
     @Test
@@ -53,11 +53,11 @@ public class SearchProjTest {
 
         Thread.sleep(10000);
 
-        String pth = "./src/created.java";
+        String pth = "./src/main/java/created.java";
         File file = new File(pth);
         file.delete();
 
         Thread.sleep(10000);
-        assertTrue(!new File("./mdsaved/created.md").exists());
+        assertTrue(!new File("./mdsaved/main/java/created.md").exists());
     }
 }

@@ -4,25 +4,50 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.WatchEvent.Kind;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SearchProject extends Thread {
     //Project path
     private FileSystem fs = FileSystems.getDefault();
     private final Path projPath = fs.getPath("./src");
     private WatchKey key;
+    private WatchService watchService;
     private final ModifyDocument modifyDocument = new ModifyDocument();
 
+    public void init() {
+        String path = System.getProperty("user.dir");
+        File dir = new File(path);
+        File files[] = dir.listFiles();
 
+        for (int i = 0; i < files.length; i++) {
+        }
+    }
+
+    private void RegisterAllDir(final Path start) throws IOException {
+        Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
+                    throws IOException {
+                dir.register(watchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
+                return FileVisitResult.CONTINUE;
+            }
+
+        });
+
+    }
     @Override
     public void run() {
         try {
-            WatchService watchService = fs.newWatchService();
-            key = projPath.register(watchService,
+            watchService = fs.newWatchService();
+            projPath.register(watchService,
                     StandardWatchEventKinds.ENTRY_CREATE,
                     StandardWatchEventKinds.ENTRY_DELETE,
                     StandardWatchEventKinds.ENTRY_MODIFY,
                     StandardWatchEventKinds.OVERFLOW);
+            RegisterAllDir(projPath);
 
             while (true) {
                 key = watchService.take();
@@ -31,15 +56,16 @@ public class SearchProject extends Thread {
                 for (WatchEvent<?> event : eventList) {
                     Kind<?> kind = event.kind();
                     Path pth = (Path) (event.context());
-                    pth = Path.of(projPath + "/" + pth.toString());
-                    if (kind.equals(StandardWatchEventKinds.ENTRY_CREATE)) {
-                        File file = new File("./mdsaved/" + pth.getFileName().toString().replace(".java", "") + ".md");
+                    pth = ((Path) key.watchable()).resolve(pth);
+                    if (kind.equals(StandardWatchEventKinds.ENTRY_CREATE) && ManageComment.isJavaFile(pth.getFileName().toString())) {
+                        File file = new File("./mdsaved" + pth.toString().replace(projPath.toString(), "").replace(".java", "") + ".md");
+                        file.getParentFile().mkdirs();
                         boolean result = file.createNewFile();
                         modifyDocument.ModifyDocument(pth, file);
-                    } else if (kind.equals(StandardWatchEventKinds.ENTRY_DELETE)) {
+                    } else if (kind.equals(StandardWatchEventKinds.ENTRY_DELETE) && ManageComment.isJavaFile(pth.getFileName().toString())) {
                         File file = new File("./mdsaved/" + pth.getFileName().toString().replace(".java", "") + ".md");
                         boolean result = file.delete();
-                    } else if (kind.equals(StandardWatchEventKinds.ENTRY_MODIFY)) {
+                    } else if (kind.equals(StandardWatchEventKinds.ENTRY_MODIFY) && ManageComment.isJavaFile(pth.getFileName().toString())) {
                         File file = new File("./mdsaved/" + pth.getFileName().toString().replace(".java", "") + ".md");
                         boolean result = file.delete();
                         result = file.createNewFile();
