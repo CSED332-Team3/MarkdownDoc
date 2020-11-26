@@ -45,7 +45,7 @@ public class SearchProject extends Thread {
 
         for (int i = 0; i < files.length; i++) {
             if(files[i].isDirectory()){
-                init(files[i].getCanonicalPath());
+                initDirectory(files[i].getCanonicalPath());
             }
             else{
                 File file_ = new File(projPath.toString());

@@ -14,6 +14,7 @@ public class SearchProjTest {
     @Test
     public void testSearchCreatedFile() throws IOException, InterruptedException {
         SearchProject searchProject = new SearchProject();
+        searchProject.init(".");
         searchProject.start();
 
         Thread.sleep(10000);
@@ -31,6 +32,7 @@ public class SearchProjTest {
     @Test
     public void testSearchModifiedFile() throws IOException, InterruptedException {
         SearchProject searchProject = new SearchProject();
+        searchProject.init(".");
         searchProject.start();
 
         Thread.sleep(10000);
@@ -51,6 +53,7 @@ public class SearchProjTest {
     @Test
     public void testSearchDeletedFile() throws IOException, InterruptedException {
         SearchProject searchProject = new SearchProject();
+        searchProject.init(".");
         searchProject.start();
 
         Thread.sleep(10000);
