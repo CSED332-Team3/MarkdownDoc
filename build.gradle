@@ -12,13 +12,6 @@ targetCompatibility = 11
 
 repositories {
     mavenCentral()
-
-    // The repository for JxBrowser binaries.
-    maven { url = 'https://europe-maven.pkg.dev/jxbrowser/releases' }
-}
-
-ext {
-    jxBrowserVersion = '7.12'
 }
 
 dependencies {
@@ -46,6 +39,7 @@ dependencies {
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
     version '2020.2.3'
+    plugins 'java'
 }
 
 patchPluginXml {
