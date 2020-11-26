@@ -17,12 +17,22 @@ public class SearchProject extends Thread {
     private WatchService watchService;
     private final ModifyDocument modifyDocument = new ModifyDocument();
 
-    public void init() {
-        String path = System.getProperty("user.dir");
-        File dir = new File(path);
+    public void init(String pth) throws IOException {
+        File dir = new File(pth);
         File files[] = dir.listFiles();
 
         for (int i = 0; i < files.length; i++) {
+            if(files[i].isDirectory()){
+                init(files[i].getCanonicalPath());
+            }
+            else{
+                File file_ = new File(projPath.toString());
+                String p = files[i].getCanonicalPath().replace(file_.getCanonicalPath(), "");
+                File file = new File("./mdsaved" + p.toString().replace(".java", "") + ".md");
+                file.getParentFile().mkdirs();
+                boolean result = file.createNewFile();
+                modifyDocument.ModifyDocument(Path.of(files[i].getCanonicalPath()), file);
+            }
         }
     }
 

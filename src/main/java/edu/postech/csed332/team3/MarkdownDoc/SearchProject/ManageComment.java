@@ -35,8 +35,10 @@ public class ManageComment {
         try {
             if(node.getComment().isEmpty())
                 jsonObject.addProperty(ElementsInfo(node), "");
-            else
-                jsonObject.addProperty(ElementsInfo(node), String.valueOf(node.getComment().get()));
+            else {
+                if(node.getComment().get() instanceof JavadocComment)
+                    jsonObject.addProperty(ElementsInfo(node), String.valueOf(node.getComment().get()));
+            }
         } catch (NullPointerException e) {
             jsonObject.addProperty(ElementsInfo(node), "");
         }

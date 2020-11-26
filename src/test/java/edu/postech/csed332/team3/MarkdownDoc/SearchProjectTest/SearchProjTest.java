@@ -60,4 +60,16 @@ public class SearchProjTest {
         Thread.sleep(10000);
         assertTrue(!new File("./mdsaved/main/java/created.md").exists());
     }
+
+    @Test
+    public void testInit() throws IOException, InterruptedException {
+        SearchProject searchProject = new SearchProject();
+        searchProject.init("./src");
+
+        Thread.sleep(10000);
+
+        String pth = "./mdsaved/main/java/edu/postech/csed332/team3/MarkdownDoc/SearchProject/ManageComment.md";
+        File file = new File(pth);
+        assertTrue(file.exists());
+    }
 }
