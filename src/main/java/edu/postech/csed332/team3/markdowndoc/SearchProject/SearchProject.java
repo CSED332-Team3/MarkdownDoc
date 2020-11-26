@@ -2,33 +2,46 @@ package edu.postech.csed332.team3.markdowndoc.SearchProject;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.*;
 import java.nio.file.WatchEvent.Kind;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 
 public class SearchProject extends Thread {
-    //Project path
     private FileSystem fs = FileSystems.getDefault();
-    private final Path projPath = fs.getPath("./src");
+    private Path projPath;
     private WatchKey key;
     private WatchService watchService;
     private final ModifyDocument modifyDocument = new ModifyDocument();
 
+    /**
+     * searching existing file and make .md file which contain javadoc comments and classes, methods info.
+     * @param pth path of project root directory
+     * @throws IOException
+     */
     public void init(String pth) throws IOException {
-        File dir = new File(pth);
-        File files[] = dir.listFiles();
+        //set projPath as input
+        projPath = Path.of(pth);
 
-        File Folder = new File("./mdsaved");
+        //make mdsaved directory
+        File Folder = new File(pth + "/mdsaved");
         if (!Folder.exists()) {
             try{
-                Folder.mkdir();
-                System.out.println("폴더가 생성되었습니다.");
+                Folder.mkdirs();
             }
             catch(Exception e){
                 e.getStackTrace();
             }
         }
+
+        //initialize mdsaved directory using recursion
+        initDirectory(pth + "/src");
+    }
+
+    private void initDirectory(String pth) throws IOException {
+        File dir = new File(pth);
+        File files[] = dir.listFiles();
 
         for (int i = 0; i < files.length; i++) {
             if(files[i].isDirectory()){
@@ -36,9 +49,9 @@ public class SearchProject extends Thread {
             }
             else{
                 File file_ = new File(projPath.toString());
-                String p = files[i].getCanonicalPath().replace(file_.getCanonicalPath(), "");
-                if(isJavaFile(p)) {
-                    File file = new File("./mdsaved" + p.toString().replace(".java", "") + ".md");
+                String p = files[i].getCanonicalPath().replace(file_.getCanonicalPath() + "/src", "");
+                if(ManageComment.isJavaFile(p)) {
+                    File file = new File(projPath + "/mdsaved" + p.replace(".java", "") + ".md");
                     file.getParentFile().mkdirs();
                     boolean result = file.createNewFile();
                     modifyDocument.ModifyDocument(Path.of(files[i].getCanonicalPath()), file);
@@ -59,6 +72,11 @@ public class SearchProject extends Thread {
         });
 
     }
+
+    /**
+     * Watching all created, deleted, modified files and update .md file which save all comments and classes, methods info.
+     * You have to use start() instead of run().
+     */
     @Override
     public void run() {
         try {
@@ -68,7 +86,7 @@ public class SearchProject extends Thread {
                     StandardWatchEventKinds.ENTRY_DELETE,
                     StandardWatchEventKinds.ENTRY_MODIFY,
                     StandardWatchEventKinds.OVERFLOW);
-            RegisterAllDir(projPath);
+            RegisterAllDir(Path.of(projPath.toString() + "/src"));
 
             while (true) {
                 key = watchService.take();
@@ -79,17 +97,18 @@ public class SearchProject extends Thread {
                     Path pth = (Path) (event.context());
                     pth = ((Path) key.watchable()).resolve(pth);
                     if (kind.equals(StandardWatchEventKinds.ENTRY_CREATE) && ManageComment.isJavaFile(pth.getFileName().toString())) {
-                        File file = new File("./mdsaved" + pth.toString().replace(projPath.toString(), "").replace(".java", "") + ".md");
+                        File file = new File(projPath + "/mdsaved" + pth.toString().replace(projPath.toString() + "/src", "").replace(".java", "") + ".md");
                         file.getParentFile().mkdirs();
                         boolean result = file.createNewFile();
                         modifyDocument.ModifyDocument(pth, file);
                     } else if (kind.equals(StandardWatchEventKinds.ENTRY_DELETE) && ManageComment.isJavaFile(pth.getFileName().toString())) {
-                        File file = new File("./mdsaved" + pth.toString().replace(projPath.toString(), "").replace(".java", "") + ".md");
+                        File file = new File(projPath + "/mdsaved" + pth.toString().replace(projPath.toString()+ "/src", "").replace(".java", "") + ".md");
                         boolean result = file.delete();
                     } else if (kind.equals(StandardWatchEventKinds.ENTRY_MODIFY) && ManageComment.isJavaFile(pth.getFileName().toString())) {
-                        File file = new File("./mdsaved" + pth.toString().replace(projPath.toString(), "").replace(".java", "") + ".md");
-                        boolean result = file.delete();
-                        result = file.createNewFile();
+                        File file = new File(projPath + "/mdsaved" + pth.toString().replace(projPath.toString()+ "/src", "").replace(".java", "") + ".md");
+                        PrintWriter writer = new PrintWriter(file);
+                        writer.print("");
+                        writer.close();
                         modifyDocument.ModifyDocument(pth, file);
                     } else if (kind.equals(StandardWatchEventKinds.OVERFLOW))
                         System.out.print("Overflow is occurred");
@@ -102,9 +121,5 @@ public class SearchProject extends Thread {
         } catch (InterruptedException | IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static boolean isJavaFile(String file) {
-        return file.endsWith(".java");
     }
 }
