@@ -1,13 +1,11 @@
-package edu.postech.csed332.team3.MarkdownDoc.SearchProject;
+package edu.postech.csed332.team3.markdowndoc.SearchProject;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.WatchEvent.Kind;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class SearchProject extends Thread {
     //Project path

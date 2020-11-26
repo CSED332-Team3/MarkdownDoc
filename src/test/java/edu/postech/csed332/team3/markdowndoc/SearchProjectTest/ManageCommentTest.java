@@ -1,16 +1,12 @@
-package edu.postech.csed332.team3.MarkdownDoc.SearchProjectTest;
+package edu.postech.csed332.team3.markdowndoc.SearchProjectTest;
 
 import com.github.javaparser.ast.body.*;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import edu.postech.csed332.team3.MarkdownDoc.SearchProject.ManageComment;
-import org.apache.commons.io.FileUtils;
+import edu.postech.csed332.team3.markdowndoc.SearchProject.ManageComment;
 import org.json.JSONObject;
 import org.junit.Test;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 
 import static org.junit.Assert.*;

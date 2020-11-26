@@ -1,5 +1,5 @@
-package edu.postech.csed332.team3.MarkdownDoc.SearchProjectTest;
-import edu.postech.csed332.team3.MarkdownDoc.SearchProject.ModifyDocument;
+package edu.postech.csed332.team3.markdowndoc.SearchProjectTest;
+import edu.postech.csed332.team3.markdowndoc.SearchProject.ModifyDocument;
 import org.junit.Test;
 
 import java.io.File;

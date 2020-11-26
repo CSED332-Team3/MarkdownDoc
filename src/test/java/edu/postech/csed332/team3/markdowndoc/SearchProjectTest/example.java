@@ -1,4 +1,4 @@
-package edu.postech.csed332.team3.MarkdownDoc.SearchProjectTest;
+package edu.postech.csed332.team3.markdowndoc.SearchProjectTest;
 
 /**
  * Hello, this is example class!

@@ -1,19 +1,16 @@
-package edu.postech.csed332.team3.MarkdownDoc.SearchProject;
+package edu.postech.csed332.team3.markdowndoc.SearchProject;
 
 import com.github.javaparser.ast.comments.Comment;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 public class ModifyDocument {

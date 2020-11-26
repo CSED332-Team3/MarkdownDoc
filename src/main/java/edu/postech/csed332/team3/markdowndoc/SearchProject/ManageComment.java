@@ -1,4 +1,4 @@
-package edu.postech.csed332.team3.MarkdownDoc.SearchProject;
+package edu.postech.csed332.team3.markdowndoc.SearchProject;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.StaticJavaParser;
@@ -8,17 +8,12 @@ import com.github.javaparser.ast.body.*;
 import com.github.javaparser.ast.comments.Comment;
 import com.github.javaparser.ast.comments.JavadocComment;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
-import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import kotlin.reflect.jvm.internal.impl.utils.DFS;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.FileHandler;
-import java.util.logging.Filter;
 import java.util.stream.Collectors;
 
 public class ManageComment {
