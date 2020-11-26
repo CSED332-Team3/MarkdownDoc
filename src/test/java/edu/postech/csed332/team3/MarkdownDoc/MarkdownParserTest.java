@@ -9,6 +9,15 @@ class MarkdownParserTest {
     @Test
     void testIsMarkdown() {
         assertTrue(MarkdownParser.isMarkdown("!!mdDoc"));
+        assertTrue(MarkdownParser.isMarkdown("!!mdDoc\nCSED332"));
+        assertFalse(MarkdownParser.isMarkdown("??mdDoc"));
+        assertFalse(MarkdownParser.isMarkdown("??md"));
+    }
+
+    @Test
+    void testParseFilter() {
+        assertThrows(IllegalArgumentException.class, () -> MarkdownParser.parse("Not a md comment!"));
+        assertDoesNotThrow(() -> MarkdownParser.parse("!!mdDoc\nThis is a md comment!"));
     }
 
     @Test
@@ -122,6 +131,12 @@ class MarkdownParserTest {
     @Test
     void testIsStrikeThrough() {
         assertEquals("<p><strike>StrikeThrough</strike></p>\n", MarkdownParser.parse("!!mdDoc\n~~StrikeThrough~~"));
+    }
+
+    @Test
+    void testOddStrikeThrough() {
+        assertEquals("<p><strike>StrikeThrough</strike>odd tilde~~</p>\n", MarkdownParser.parse("!!mdDoc\n~~StrikeThrough~~odd tilde~~"));
+        assertEquals("<p>odd tilde~~</p>\n", MarkdownParser.parse("!!mdDoc\nodd tilde~~"));
     }
 
     @Test
@@ -289,6 +304,26 @@ class MarkdownParserTest {
                         "asdf|asdf|asdf\n" +
                         "asdf|asdf|asdf\n\n" +
                         "asdfasdfasdf"));
+    }
+
+    @Test
+    void testParseTableBranching() {
+        assertEquals("dummy!\n" +
+                        "---\n",
+                MarkdownParser.parseLoop("dummy!\n---"));
+        assertEquals("dummy!\n" +
+                        "|---|\n",
+                MarkdownParser.parseLoop("dummy!\n|---|"));
+        assertEquals("<table>\n" +
+                        "<thead>\n" +
+                        "<tr>\n" +
+                        "<th>dummy!</th>\n" +
+                        "</tr>\n" +
+                        "</thead>\n" +
+                        "<tbody>\n" +
+                        "</tbody>\n" +
+                        "</table>\n",
+                MarkdownParser.parseLoop("|dummy!|\n|---|"));
     }
 
     @Test

@@ -17,7 +17,7 @@ import com.intellij.util.messages.MessageBus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.SystemIndependent;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.picocontainer.PicoContainer;
 
 import javax.swing.*;
@@ -25,21 +25,15 @@ import java.awt.*;
 import java.awt.event.InputEvent;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class JxBrowserTest {
+class JxBrowserTest {
     @Test
-    public void smokeTest() {
-        assertEquals(3, 1 + 2);
-    }
-
-    @Test
-    public void windowFactoryTest() {
+    void windowFactoryTest() {
         final JxBrowserWindowFactory jxBrowserWindowFactory = new JxBrowserWindowFactory();
         assertThrows(IllegalArgumentException.class, () -> jxBrowserWindowFactory.createToolWindowContent(null, null));
-        assertDoesNotThrow(()-> jxBrowserWindowFactory.createToolWindowContent(new Project() {
+        assertDoesNotThrow(() -> jxBrowserWindowFactory.createToolWindowContent(new Project() {
             @Override
             public @NotNull String getName() {
                 return null;
