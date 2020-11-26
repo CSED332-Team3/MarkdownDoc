@@ -1,4 +1,4 @@
-package edu.postech.csed332.team3.MarkdownDoc;
+package edu.postech.csed332.team3.markdowndoc;
 
 import com.intellij.openapi.util.text.StringUtil;
 import org.commonmark.node.Node;
