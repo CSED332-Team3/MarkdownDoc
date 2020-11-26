@@ -1,6 +1,9 @@
 package edu.postech.csed332.team3.MarkdownDoc;
 
 import com.intellij.openapi.externalSystem.service.execution.NotSupportedException;
+import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.jcef.JBCefApp;
 import com.intellij.ui.jcef.JBCefBrowser;
 import com.intellij.ui.jcef.JBCefJSQuery;
@@ -8,14 +11,14 @@ import org.cef.CefSettings;
 import org.cef.browser.CefBrowser;
 import org.cef.browser.CefFrame;
 import org.cef.handler.CefDisplayHandler;
-import org.cef.handler.CefLoadHandler;
-import org.cef.network.CefRequest;
+import org.jetbrains.annotations.NotNull;
 
 public class BrowserController {
 
     private final JBCefBrowser browser;
     private final BrowserView view;
     private final CefBrowser cefBrowser;
+    private final ProjectNavigator navigator;
 
     // JSHandler for communication
     private JBCefJSQuery linkQuery;
@@ -28,8 +31,14 @@ public class BrowserController {
             throw new NotSupportedException("This IDE version is not supported.");
         }
 
-        // TODO: Replace URL with file URI
-        browser = new JBCefBrowser("https://www.google.com");
+        navigator = new ProjectNavigator();
+
+        // Get project root directory and load it in the browser
+        @NotNull VirtualFile projectRoot = ModuleRootManager.getInstance(
+                ModuleManager.getInstance(navigator.getActiveProject()).getModules()[0]
+        ).getContentRoots()[0];
+
+        browser = new JBCefBrowser("file://" + projectRoot.getCanonicalPath());
         this.view = view;
         cefBrowser = browser.getCefBrowser();
 
