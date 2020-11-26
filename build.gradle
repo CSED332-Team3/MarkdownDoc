@@ -28,7 +28,6 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
 
-<<<<<<< build.gradle
     // JSONParser, JSONObject
     implementation 'org.json:json:20190722'
 
@@ -37,9 +36,6 @@ dependencies {
     
     implementation "com.atlassian.commonmark:commonmark:0.15.2"
 
-=======
-    implementation "com.atlassian.commonmark:commonmark:0.15.2"
->>>>>>> build.gradle
     // Cross-platform
     implementation "com.teamdev.jxbrowser:jxbrowser-cross-platform:${jxBrowserVersion}"
 
