@@ -1,11 +1,11 @@
-package edu.postech.csed332.team3.markdowndoc.SearchProjectTest;
+package edu.postech.csed332.team3.markdowndoc.searchprojtest;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertTrue;
 
-import edu.postech.csed332.team3.markdowndoc.SearchProject.SearchProject;
+import edu.postech.csed332.team3.markdowndoc.searchproject.SearchProject;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
