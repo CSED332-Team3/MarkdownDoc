@@ -7,7 +7,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.jcef.JBCefApp;
 import com.intellij.ui.jcef.JBCefBrowser;
 import com.intellij.ui.jcef.JBCefJSQuery;
-import edu.postech.csed332.team3.markdowndoc.SearchProject.SearchProject;
+import edu.postech.csed332.team3.markdowndoc.searchproject.SearchProject;
 import org.cef.CefSettings;
 import org.cef.browser.CefBrowser;
 import org.cef.browser.CefFrame;
@@ -54,7 +54,7 @@ public class BrowserController {
         setHandlers();
 
         // Initialize SearchProject
-        searchProject = new SearchProject();
+        searchProject = new SearchProject(this);
         searchProject.init(projectRoot.getCanonicalPath());
         searchProject.start();
     }
@@ -168,6 +168,13 @@ public class BrowserController {
      */
     public boolean canGoForward() {
         return cefBrowser.canGoForward();
+    }
+
+    /**
+     * Reload the current page
+     */
+    public void reload() {
+        cefBrowser.reload();
     }
 
     /**

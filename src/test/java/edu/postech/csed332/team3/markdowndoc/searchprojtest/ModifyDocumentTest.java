@@ -1,5 +1,5 @@
-package edu.postech.csed332.team3.markdowndoc.SearchProjectTest;
-import edu.postech.csed332.team3.markdowndoc.SearchProject.ModifyDocument;
+package edu.postech.csed332.team3.markdowndoc.searchprojtest;
+import edu.postech.csed332.team3.markdowndoc.searchproject.ModifyDocument;
 import org.junit.Test;
 
 import java.io.File;
@@ -17,13 +17,13 @@ public class ModifyDocumentTest {
         String pth = new File("").getAbsolutePath() + "/src/test/java/edu/postech/csed332/team3/MarkdownDoc/SearchProjectTest/example.java";
         File file = new File("./mdsaved/" + Path.of(pth).getFileName().toString().replace(".java", "") + ".md");
         assertTrue(file.createNewFile());
-        assertTrue(modifyDocument.ModifyDocument(Path.of(pth), file));
+        assertTrue(modifyDocument.modifyDocument(Path.of(pth), file));
         file.delete();
     }
 
     @Test
     public void testModifyDocumentNotJavaFile() throws IOException {
         Path pth = Path.of("./src/example.cpp");
-        assertFalse(modifyDocument.ModifyDocument(pth, null));
+        assertFalse(modifyDocument.modifyDocument(pth, null));
     }
 }
