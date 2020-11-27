@@ -14,6 +14,12 @@ public class MarkdownParser {
     private MarkdownParser() {
     }
 
+    /**
+     * Parses mdDoc string.
+     *
+     * @param comment The comment to be parsed.
+     * @return Parsed comment in HTML form.
+     */
     @Nonnull
     public static String parse(@Nonnull String comment) {
         if (!isMarkdown(comment))
@@ -29,6 +35,10 @@ public class MarkdownParser {
         return htmlRenderer.render(node);
     }
 
+    /**
+     * @param comment Comment text to check whether it is mdDoc.
+     * @return The result.
+     */
     public static boolean isMarkdown(@Nonnull String comment) {
         try {
             return comment.subSequence(0, 7).equals("!!mdDoc");
@@ -37,6 +47,14 @@ public class MarkdownParser {
         }
     }
 
+    /**
+     * Main parser loop.
+     *
+     * @param comment The comment to be parsed.
+     * @return Parsed strikethrough, table, and checkbox md only.
+     * @deprecated Planned change to private.
+     */
+    @Deprecated(since = "This function will be private soon.")
     @Nonnull
     public static String parseLoop(@Nonnull String comment) {
         final BufferedReader bufferedReader = new BufferedReader(new StringReader(comment));
@@ -91,6 +109,12 @@ public class MarkdownParser {
         return comment;
     }
 
+    /**
+     * Parses a table header.
+     *
+     * @param comment One line string to be parsed.
+     * @return Comment in a table header HTML form.
+     */
     @Nonnull
     public static String parseTableHeader(@Nonnull String comment) {
         StringBuilder stringBuilder = new StringBuilder().append("<tr>\n");
@@ -105,6 +129,12 @@ public class MarkdownParser {
         return stringBuilder.toString();
     }
 
+    /**
+     * Parses a table detail.
+     *
+     * @param comment One line string to be parsed.
+     * @return Comment in a table detail HTML form.
+     */
     @Nonnull
     public static String parseTableDetails(@Nonnull String comment, int columnNum) {
         StringBuilder stringBuilder = new StringBuilder().append("<tr>\n");
@@ -127,6 +157,12 @@ public class MarkdownParser {
         return stringBuilder.toString();
     }
 
+    /**
+     * Parses a checkbox.
+     *
+     * @param comment One line string to be parsed.
+     * @return Comment with checkbox HTMLs.
+     */
     @Nonnull
     public static String parseCheckBox(@Nonnull String comment) {
         if (comment.matches("^- \\[[ x]]\\s*"))
