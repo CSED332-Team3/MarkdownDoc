@@ -22,10 +22,10 @@ public class MarkdownParser {
      */
     @Nonnull
     public static String parse(@Nonnull String comment) {
-        if (!isMarkdown(comment))
-            throw new IllegalArgumentException("Not a md comment.");
+//        if (!isMarkdown(comment))
+//            throw new IllegalArgumentException("Not a md comment.");
 
-        comment = comment.replaceFirst("!!mdDoc\n", "");
+//        comment = comment.replaceFirst("!!mdDoc\n", "");
         comment = parseLoop(comment);
 
         final Parser parser = Parser.builder().build();
@@ -71,7 +71,7 @@ public class MarkdownParser {
                         stringBuilder.append("<table>\n");
                         stringBuilder.append("<thead>\n").append(parseTableHeader(prevLine)).append("</thead>\n");
                         stringBuilder.append("<tbody>\n");
-                        while ((line = bufferedReader.readLine()) != null && !line.equals("")) {
+                        while ((line = bufferedReader.readLine()) != null && !line.matches("\n?")) {
                             stringBuilder.append(parseTableDetails(line, columnNum));
                         }
                         stringBuilder.append("</tbody>\n");

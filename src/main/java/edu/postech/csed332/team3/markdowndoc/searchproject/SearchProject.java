@@ -15,7 +15,7 @@ public class SearchProject extends Thread {
     private static final String MD_SAVED = "mdsaved";
     private static final String JAVA_EXT = ".java";
     private static final String SRC_DIR = "src";
-    private static final String MD_EXT = ".md";
+    private static final String HTML_EXT = ".html";
     private final FileSystem fs = FileSystems.getDefault();
     private final ModifyDocument modifyDocument = new ModifyDocument();
     private final BrowserController controller;
@@ -73,10 +73,10 @@ public class SearchProject extends Thread {
                 File projectFile = projPath.toFile();
                 String p = value.getCanonicalPath().replace(Path.of(projectFile.getCanonicalPath(), SRC_DIR).toString(), "");
                 if (ManageComment.isJavaFile(p)) {
-                    File file = Path.of(projPath.toString(), MD_SAVED, p.replace(JAVA_EXT, ""), MD_EXT).toFile();
+                    File file = Path.of(projPath.toString(), MD_SAVED, p.replace(JAVA_EXT, ""), HTML_EXT).toFile();
                     file.getParentFile().mkdirs();
                     file.createNewFile();
-                    modifyDocument.ModifyDocument(Path.of(value.getCanonicalPath()), file);
+                    modifyDocument.modifyDocument(Path.of(value.getCanonicalPath()), file);
                 }
             }
         }
@@ -121,7 +121,7 @@ public class SearchProject extends Thread {
                         File file = getFile(pth);
                         file.getParentFile().mkdirs();
                         file.createNewFile();
-                        modifyDocument.ModifyDocument(pth, file);
+                        modifyDocument.modifyDocument(pth, file);
                     } else if (kind.equals(StandardWatchEventKinds.ENTRY_DELETE) && ManageComment.isJavaFile(pth.getFileName().toString())) {
                         File file = getFile(pth);
                         file.delete();
@@ -130,7 +130,7 @@ public class SearchProject extends Thread {
                         PrintWriter writer = new PrintWriter(file);
                         writer.print("");
                         writer.close();
-                        modifyDocument.ModifyDocument(pth, file);
+                        modifyDocument.modifyDocument(pth, file);
                     } else if (kind.equals(StandardWatchEventKinds.OVERFLOW))
                         System.out.print("Overflow is occurred");
 
@@ -153,6 +153,6 @@ public class SearchProject extends Thread {
     @NotNull
     private File getFile(Path path) {
         final String replacedPath = path.toString().replace(Path.of(projPath.toString(), SRC_DIR).toString(), "").replace(JAVA_EXT, "");
-        return Path.of(projPath.toString(), MD_SAVED, replacedPath, MD_EXT).toFile();
+        return Path.of(projPath.toString(), MD_SAVED, replacedPath, HTML_EXT).toFile();
     }
 }

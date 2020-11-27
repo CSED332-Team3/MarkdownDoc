@@ -3,63 +3,60 @@ package edu.postech.csed332.team3.markdowndoc.searchproject;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import edu.postech.csed332.team3.markdowndoc.MarkdownParser;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Iterator;
 import java.util.Set;
 
 public class ModifyDocument {
-    ManageComment manageComment = new ManageComment();
-
     /**
      * Given Java file and Markdown file, we extract JavaDoc comments from Java file,
      * and add that to Markdown file
      *
-     * @param pth path of javafile that contains JavaDoc comments
+     * @param path  path of java file that contains JavaDoc comments
      * @param file Markdown file to be modified
      * @return if it works correctly then return true, else return false
-     * @throws IOException
+     * @throws IOException When IO error occurs.
      */
-    public boolean ModifyDocument(Path pth, File file) throws IOException {
-        File fileWithComment = new File(String.valueOf(pth));
+    public boolean modifyDocument(Path path, File file) throws IOException {
+        File fileWithComment = new File(path.toString());
 
         //if path of file is not JavaFile than return false
-        if (!manageComment.isJavaFile(fileWithComment.getName()))
+        if (!ManageComment.isJavaFile(fileWithComment.getName()))
             return false;
 
         //extract all JavaDoc comments from java file
-        JsonArray commentAndElementInfo = manageComment.AllJavadocExtractor(fileWithComment);
+        JsonArray commentAndElementInfo = ManageComment.allJavadocExtractor(fileWithComment);
 
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            StringBuilder builder = new StringBuilder();
 
             //iterate json array
             for (JsonElement jsonElement : commentAndElementInfo) {
                 JsonObject jsonObject = jsonElement.getAsJsonObject();
 
                 Set<String> keys = jsonObject.keySet();
-                Iterator<String> itr = keys.iterator();
-                while (itr.hasNext()) {
-                    String str_name = itr.next();
-
+                for (String str_name : keys) {
                     // change javaDoc grammar to markdown grammar
                     String str = jsonObject.get(str_name).getAsString();
                     str = str.replace("/**\n", "");
                     str = str.replace(" */\n", "");
-                    str = str.replace(" *", "   - ");
+                    str = str.replace(" * ", "");
 
-                    writer.write("+ " + str_name + "\n");
-                    writer.write(str);
+                    builder.append("+ ").append(str_name).append('\n');
+                    builder.append(str).append('\n');
                 }
             }
-            writer.close();
+            String res = MarkdownParser.parse(builder.toString());
+            writer.write(res);
             return true;
         } catch (IOException e) {
-            return false;
+            e.printStackTrace();
         }
+        return false;
     }
 }
