@@ -17,9 +17,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ManageComment {
+    /**
+     * Extract javadoc comments and classes, methods info etc. from given file
+     *
+     * @param file file to be extracted
+     * @return JsonArray that contains comments and classes, methods info etc.
+     */
     public JsonArray AllJavadocExtractor(File file) throws IOException {
+        //parsing java file using java parser
         CompilationUnit cu = StaticJavaParser.parse(file);
         JsonArray jArray = new JsonArray();
+
+        //add classes, methods info. to jArray using recursion
         explore(cu, jArray);
 
         return jArray;
@@ -46,7 +55,11 @@ public class ManageComment {
         }
     }
 
-
+    /**
+     * Check whether Node is element or not
+     * @param node node to be checked
+     * @return is element or not
+     */
     public static boolean IsElement(Node node) {
         if (node instanceof ClassOrInterfaceDeclaration) {
             return true;
@@ -67,7 +80,7 @@ public class ManageComment {
         return false;
     }
 
-    public static String ElementsInfo(Node node) {
+    private String ElementsInfo(Node node) {
         if (node instanceof ClassOrInterfaceDeclaration) {
             ClassOrInterfaceDeclaration classOrInterfaceDeclaration = (ClassOrInterfaceDeclaration) node;
             if (classOrInterfaceDeclaration.isInterface()) {
@@ -96,10 +109,11 @@ public class ManageComment {
         return node.toString();
     }
 
-    public static boolean isDocument(String file) {
-        return file.endsWith(".md");
-    }
-
+    /**
+     * check file is Javafile
+     * @param file file to be checked
+     * @return if file is Javafile then return true, else return false
+     */
     public static boolean isJavaFile(String file) {
         return file.endsWith(".java");
     }

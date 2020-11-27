@@ -55,7 +55,7 @@ public class BrowserController {
 
         // Initialize SearchProject
         searchProject = new SearchProject();
-        searchProject.init("./src");
+        searchProject.init(projectRoot.getCanonicalPath());
         searchProject.start();
     }
 
