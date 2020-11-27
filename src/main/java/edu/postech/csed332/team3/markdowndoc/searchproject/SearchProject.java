@@ -1,6 +1,7 @@
-package edu.postech.csed332.team3.markdowndoc.SearchProject;
+package edu.postech.csed332.team3.markdowndoc.searchproject;
 
 import edu.postech.csed332.team3.markdowndoc.BrowserController;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,12 +12,15 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 
 public class SearchProject extends Thread {
-    private FileSystem fs = FileSystems.getDefault();
-    private Path projPath;
-    private WatchKey key;
-    private WatchService watchService;
+    private static final String MD_SAVED = "mdsaved";
+    private static final String JAVA_EXT = ".java";
+    private static final String SRC_DIR = "src";
+    private static final String MD_EXT = ".md";
+    private final FileSystem fs = FileSystems.getDefault();
     private final ModifyDocument modifyDocument = new ModifyDocument();
     private final BrowserController controller;
+    private Path projPath;
+    private WatchService watchService;
 
     /**
      * Default constructor
@@ -36,58 +40,56 @@ public class SearchProject extends Thread {
 
     /**
      * searching existing file and make .md file which contain javadoc comments and classes, methods info.
-     * @param pth path of project root directory
-     * @throws IOException
+     *
+     * @param path path of project root directory
+     * @throws IOException For IO errors.
      */
-    public void init(String pth) throws IOException {
-        //set projPath as input
-        projPath = Path.of(pth);
+    public void init(String path) throws IOException {
+        // Set projPath as input
+        projPath = Path.of(path);
 
-        //make mdsaved directory
-        File Folder = new File(pth + "/mdsaved");
-        if (!Folder.exists()) {
-            try{
-                Folder.mkdirs();
-            }
-            catch(Exception e){
+        // Make mdsaved directory
+        File folder = new File(path, MD_SAVED);
+        if (!folder.exists()) {
+            try {
+                folder.mkdirs();
+            } catch (Exception e) {
                 e.getStackTrace();
             }
         }
 
         //initialize mdsaved directory using recursion
-        initDirectory(pth + "/src");
+        initDirectory(Path.of(path, SRC_DIR).toString());
     }
 
     private void initDirectory(String pth) throws IOException {
         File dir = new File(pth);
-        File files[] = dir.listFiles();
+        File[] files = dir.listFiles();
 
-        for (int i = 0; i < files.length; i++) {
-            if(files[i].isDirectory()){
-                initDirectory(files[i].getCanonicalPath());
-            }
-            else{
-                File file_ = new File(projPath.toString());
-                String p = files[i].getCanonicalPath().replace(file_.getCanonicalPath() + "/src", "");
-                if(ManageComment.isJavaFile(p)) {
-                    File file = new File(projPath + "/mdsaved" + p.replace(".java", "") + ".md");
+        for (File value : files) {
+            if (value.isDirectory()) {
+                initDirectory(value.getCanonicalPath());
+            } else {
+                File projectFile = projPath.toFile();
+                String p = value.getCanonicalPath().replace(Path.of(projectFile.getCanonicalPath(), SRC_DIR).toString(), "");
+                if (ManageComment.isJavaFile(p)) {
+                    File file = Path.of(projPath.toString(), MD_SAVED, p.replace(JAVA_EXT, ""), MD_EXT).toFile();
                     file.getParentFile().mkdirs();
-                    boolean result = file.createNewFile();
-                    modifyDocument.ModifyDocument(Path.of(files[i].getCanonicalPath()), file);
+                    file.createNewFile();
+                    modifyDocument.ModifyDocument(Path.of(value.getCanonicalPath()), file);
                 }
             }
         }
     }
 
-    private void RegisterAllDir(final Path start) throws IOException {
-        Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
+    private void registerAllDir(final Path start) throws IOException {
+        Files.walkFileTree(start, new SimpleFileVisitor<>() {
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
                     throws IOException {
                 dir.register(watchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
                 return FileVisitResult.CONTINUE;
             }
-
         });
 
     }
@@ -105,10 +107,10 @@ public class SearchProject extends Thread {
                     StandardWatchEventKinds.ENTRY_DELETE,
                     StandardWatchEventKinds.ENTRY_MODIFY,
                     StandardWatchEventKinds.OVERFLOW);
-            RegisterAllDir(Path.of(projPath.toString() + "/src"));
+            registerAllDir(Path.of(projPath.toString(), SRC_DIR));
 
             while (true) {
-                key = watchService.take();
+                WatchKey key = watchService.take();
 
                 List<WatchEvent<?>> eventList = key.pollEvents();
                 for (WatchEvent<?> event : eventList) {
@@ -116,15 +118,15 @@ public class SearchProject extends Thread {
                     Path pth = (Path) (event.context());
                     pth = ((Path) key.watchable()).resolve(pth);
                     if (kind.equals(StandardWatchEventKinds.ENTRY_CREATE) && ManageComment.isJavaFile(pth.getFileName().toString())) {
-                        File file = new File(projPath + "/mdsaved" + pth.toString().replace(projPath.toString() + "/src", "").replace(".java", "") + ".md");
+                        File file = getFile(pth);
                         file.getParentFile().mkdirs();
-                        boolean result = file.createNewFile();
+                        file.createNewFile();
                         modifyDocument.ModifyDocument(pth, file);
                     } else if (kind.equals(StandardWatchEventKinds.ENTRY_DELETE) && ManageComment.isJavaFile(pth.getFileName().toString())) {
-                        File file = new File(projPath + "/mdsaved" + pth.toString().replace(projPath.toString()+ "/src", "").replace(".java", "") + ".md");
-                        boolean result = file.delete();
+                        File file = getFile(pth);
+                        file.delete();
                     } else if (kind.equals(StandardWatchEventKinds.ENTRY_MODIFY) && ManageComment.isJavaFile(pth.getFileName().toString())) {
-                        File file = new File(projPath + "/mdsaved" + pth.toString().replace(projPath.toString()+ "/src", "").replace(".java", "") + ".md");
+                        File file = getFile(pth);
                         PrintWriter writer = new PrintWriter(file);
                         writer.print("");
                         writer.close();
@@ -140,8 +142,17 @@ public class SearchProject extends Thread {
                     watchService.close();
                 }
             }
-        } catch (InterruptedException | IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            interrupt();
         }
+    }
+
+    @NotNull
+    private File getFile(Path path) {
+        final String replacedPath = path.toString().replace(Path.of(projPath.toString(), SRC_DIR).toString(), "").replace(JAVA_EXT, "");
+        return Path.of(projPath.toString(), MD_SAVED, replacedPath, MD_EXT).toFile();
     }
 }

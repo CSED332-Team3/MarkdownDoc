@@ -1,6 +1,5 @@
-package edu.postech.csed332.team3.markdowndoc.SearchProject;
+package edu.postech.csed332.team3.markdowndoc.searchproject;
 
-import com.github.javaparser.ast.comments.Comment;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

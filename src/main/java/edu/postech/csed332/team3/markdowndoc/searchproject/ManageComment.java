@@ -1,13 +1,10 @@
-package edu.postech.csed332.team3.markdowndoc.SearchProject;
+package edu.postech.csed332.team3.markdowndoc.searchproject;
 
-import com.github.javaparser.JavaParser;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.*;
-import com.github.javaparser.ast.comments.Comment;
 import com.github.javaparser.ast.comments.JavadocComment;
-import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
