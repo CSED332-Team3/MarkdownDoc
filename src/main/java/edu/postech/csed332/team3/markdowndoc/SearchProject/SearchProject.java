@@ -1,5 +1,7 @@
 package edu.postech.csed332.team3.markdowndoc.SearchProject;
 
+import edu.postech.csed332.team3.markdowndoc.BrowserController;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,6 +16,23 @@ public class SearchProject extends Thread {
     private WatchKey key;
     private WatchService watchService;
     private final ModifyDocument modifyDocument = new ModifyDocument();
+    private final BrowserController controller;
+
+    /**
+     * Default constructor
+     */
+    public SearchProject() {
+        controller = null;
+    }
+
+    /**
+     * Initialize with BrowserController
+     *
+     * @param controller the BrowserController instance
+     */
+    public SearchProject(BrowserController controller) {
+        this.controller = controller;
+    }
 
     /**
      * searching existing file and make .md file which contain javadoc comments and classes, methods info.
@@ -112,6 +131,9 @@ public class SearchProject extends Thread {
                         modifyDocument.ModifyDocument(pth, file);
                     } else if (kind.equals(StandardWatchEventKinds.OVERFLOW))
                         System.out.print("Overflow is occurred");
+
+                    // Reload the browser
+                    if (controller != null) controller.reload();
                 }
                 boolean valid = key.reset();
                 if (!valid) {

@@ -54,7 +54,7 @@ public class BrowserController {
         setHandlers();
 
         // Initialize SearchProject
-        searchProject = new SearchProject();
+        searchProject = new SearchProject(this);
         searchProject.init(projectRoot.getCanonicalPath());
         searchProject.start();
     }
@@ -168,6 +168,13 @@ public class BrowserController {
      */
     public boolean canGoForward() {
         return cefBrowser.canGoForward();
+    }
+
+    /**
+     * Reload the current page
+     */
+    public void reload() {
+        cefBrowser.reload();
     }
 
     /**
