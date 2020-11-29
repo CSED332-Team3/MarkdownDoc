@@ -5,6 +5,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
+import com.intellij.psi.javadoc.PsiDocComment;
+import com.intellij.psi.javadoc.PsiDocToken;
 import edu.postech.csed332.team3.markdowndoc.MarkdownParser;
 import org.jetbrains.annotations.NotNull;
 
@@ -78,9 +80,8 @@ public class ProjectModel {
                 stack.getFirst().add(newChild);
                 stack.push(newChild);
                 if (aClass.getName() != null) {
-                    stringBuilder.append("Class: ").append(aClass.getName()).append("\n");
-                    if (aClass.getDocComment() != null)
-                        stringBuilder.append(modifyComment(aClass.getDocComment().getText()));
+                    stringBuilder.append("Class: ").append(aClass.getName()).append("\n\n");
+                    appendComment(aClass.getDocComment());
                 }
 
                 Arrays.stream(aClass.getInnerClasses()).forEach(psiClass -> psiClass.accept(this));
@@ -93,18 +94,26 @@ public class ProjectModel {
             public void visitMethod(PsiMethod method) {
                 final DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(method);
                 stack.getFirst().add(newChild);
-                stringBuilder.append("Method: ").append(method.getName()).append("\n");
-                if (method.getDocComment() != null)
-                    stringBuilder.append(modifyComment(method.getDocComment().getText()));
+                stringBuilder.append("Method: ").append(method.getName()).append("\n\n");
+                appendComment(method.getDocComment());
             }
 
             @Override
             public void visitField(PsiField field) {
                 final DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(field);
                 stack.getFirst().add(newChild);
-                stringBuilder.append("Field: ").append(field.getName()).append("\n");
-                if (field.getDocComment() != null)
-                    stringBuilder.append(modifyComment(field.getDocComment().getText()));
+                stringBuilder.append("Field: ").append(field.getName()).append("\n\n");
+                appendComment(field.getDocComment());
+            }
+
+            private void appendComment(PsiDocComment docComment) {
+                if (docComment != null) {
+                    stringBuilder.append("```\n");
+                    for (PsiElement descriptionElement : docComment.getDescriptionElements())
+                        if (descriptionElement instanceof PsiDocToken)
+                            stringBuilder.append(modifyComment(descriptionElement.getText())).append('\n');
+                    stringBuilder.append("```\n\n");
+                }
             }
 
             private void write(String str) throws IOException {
