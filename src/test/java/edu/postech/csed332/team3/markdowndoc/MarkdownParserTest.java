@@ -9,15 +9,11 @@ class MarkdownParserTest {
     @Test
     void testIsMarkdown() {
         assertTrue(MarkdownParser.isMarkdown("!!mdDoc"));
-        assertTrue(MarkdownParser.isMarkdown("!!mdDoc\nCSED332"));
+        assertTrue(MarkdownParser.isMarkdown("  \n" +
+                "!!mdDoc"));
+        assertTrue(MarkdownParser.isMarkdown("!!mdDoc\nCSED332\nWOMBO COMBO\n!!!!!"));
         assertFalse(MarkdownParser.isMarkdown("??mdDoc"));
-        assertFalse(MarkdownParser.isMarkdown("??md"));
-    }
-
-    @Test
-    void testParseFilter() {
-        assertThrows(IllegalArgumentException.class, () -> MarkdownParser.parse("Not a md comment!"));
-        assertDoesNotThrow(() -> MarkdownParser.parse("!!mdDoc\nThis is a md comment!"));
+        assertFalse(MarkdownParser.isMarkdown("!! mdDoc"));
     }
 
     @Test
@@ -239,9 +235,9 @@ class MarkdownParserTest {
                         "asdf|asdf|asdf\n" +
                         "asdf|asdf|asdf"));
         assertEquals("|asdf|asdf|\n" +
-                "---|---|---\n" +
-                "asdf|asdf|asdf\n" +
-                "asdf|asdf|asdf\n",
+                        "---|---|---\n" +
+                        "asdf|asdf|asdf\n" +
+                        "asdf|asdf|asdf\n",
                 MarkdownParser.parseLoop("|asdf|asdf|\n" +
                         "---|---|---\n" +
                         "asdf|asdf|asdf\n" +
