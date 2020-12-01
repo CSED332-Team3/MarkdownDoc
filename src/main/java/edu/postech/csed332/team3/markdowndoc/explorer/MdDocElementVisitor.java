@@ -36,7 +36,7 @@ public class MdDocElementVisitor extends JavaElementVisitor {
         Arrays.stream(pack.getClasses()).forEach(psiClass -> {
             VirtualFile virtualFile = psiClass.getContainingFile().getVirtualFile();
             String path = Objects.requireNonNull(virtualFile.getCanonicalPath())
-                    .replace(SRC_DIR, HTML).replace(JAVA_EXT, "") + HTML_EXT;
+                    .replace(SRC_DIR, HTML).replace(JAVA_EXT, HTML_EXT);
             File file = new File(path);
             try {
                 file.getParentFile().mkdirs();
