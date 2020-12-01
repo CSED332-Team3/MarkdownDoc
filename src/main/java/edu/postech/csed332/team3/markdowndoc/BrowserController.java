@@ -128,7 +128,7 @@ public class BrowserController {
     }
 
     /**
-     * Return the URL
+     * Returns the current URL
      *
      * @return the URL
      */
