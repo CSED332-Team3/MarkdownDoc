@@ -1,24 +1,47 @@
 package edu.postech.csed332.team3.markdowndoc.explorer;
 
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiTreeChangeAdapter;
-import com.intellij.psi.PsiTreeChangeEvent;
-import com.intellij.psi.util.PsiUtil;
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.*;
+import edu.postech.csed332.team3.markdowndoc.BrowserController;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import static edu.postech.csed332.team3.markdowndoc.explorer.ActiveProjectModel.getActiveProject;
+
 public class UpdateListener extends PsiTreeChangeAdapter {
+
+    private final BrowserController controller;
+
+    public UpdateListener(BrowserController controller) {
+        this.controller = controller;
+    }
+
     @Override
     public void childrenChanged(@NotNull PsiTreeChangeEvent event) {
-        final PsiElement element = event.getElement();
-        if (element == null) return;
+        Project activeProject = getActiveProject();
+        PsiFile file = event.getFile();
+        if (file == null) return;
+        PsiDirectory directory = file.getContainingDirectory();
+        PsiPackage psiPackage = JavaDirectoryService.getInstance().getPackage(directory);
+        if (psiPackage == null) return;
+        psiPackage.accept(new MdDocElementVisitor(new DefaultMutableTreeNode(activeProject)));
 
-        final PsiClass topLevelClass = PsiUtil.getTopLevelClass(element);
-        if (topLevelClass == null) return;
+        controller.reload();
+    }
 
-        final DefaultMutableTreeNode root = new DefaultMutableTreeNode(topLevelClass.getParent());
-        element.accept(new MdDocElementVisitor(root));
+    @Override
+    public void childAdded(@NotNull PsiTreeChangeEvent event) {
+        childrenChanged(event);
+    }
+
+    @Override
+    public void childRemoved(@NotNull PsiTreeChangeEvent event) {
+        childrenChanged(event);
+    }
+
+    @Override
+    public void childReplaced(@NotNull PsiTreeChangeEvent event) {
+        childrenChanged(event);
     }
 }

@@ -18,6 +18,7 @@ import java.util.Set;
 import static edu.postech.csed332.team3.markdowndoc.explorer.ActiveProjectModel.getActiveProject;
 
 public class ProjectModel {
+
     private static final String HTML = "html";
 
     private ProjectModel() {
@@ -30,8 +31,6 @@ public class ProjectModel {
             return null;
 
         Project activeProject = getActiveProject();
-        PsiManager.getInstance(activeProject).addPsiTreeChangeListener(new UpdateListener(), () -> {
-        });
         final DefaultMutableTreeNode root = new DefaultMutableTreeNode(activeProject);
 
         final JavaElementVisitor visitor = new MdDocElementVisitor(root);
