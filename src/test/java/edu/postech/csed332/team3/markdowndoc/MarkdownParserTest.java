@@ -366,8 +366,8 @@ class MarkdownParserTest {
         assertEquals("<ul>\n" +
                 "<li><input type=\"checkbox\" checked disabled>asdf</li>\n" +
                 "</ul>\n", parseReroute("- [x] asdf"));
-        assertEquals("<p>asdf - [ ] asdf</p>", parseReroute("asdf - [ ] asdf"));
-        assertEquals("<p>asdf - [x] asdf</p>", parseReroute("asdf - [x] asdf"));
+        assertEquals("<p>asdf - [ ] asdf</p>\n", parseReroute("asdf - [ ] asdf"));
+        assertEquals("<p>asdf - [x] asdf</p>\n", parseReroute("asdf - [x] asdf"));
         assertEquals("<ul>\n" +
                 "<li>[ ]</li>\n" +
                 "</ul>\n", parseReroute("   - [ ]"));
@@ -381,7 +381,7 @@ class MarkdownParserTest {
                 "<li>[x]asdf</li>\n" +
                 "</ul>\n", parseReroute("   - [x]asdf"));
         assertEquals("<ul>\n" +
-                "<li><input type=\"checkbox\" checked>asdf</li>\n" +
+                "<li><input type=\"checkbox\" disabled>asdf</li>\n" +
                 "</ul>\n", parseReroute("   - [ ] asdf"));
         assertEquals("<ul>\n" +
                 "<li><input type=\"checkbox\" checked disabled>asdf</li>\n" +

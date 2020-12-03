@@ -51,11 +51,9 @@ public class MarkdownParser {
      *
      * @param comment The comment to be parsed.
      * @return Parsed strikethrough, table, and checkbox md only.
-     * @deprecated Planned change to private.
      */
-    @Deprecated(since = "This function will be private soon.")
     @NotNull
-    public static String parseLoop(@NotNull String comment) {
+    private static String parseLoop(@NotNull String comment) {
         final BufferedReader bufferedReader = new BufferedReader(new StringReader(comment));
         StringBuilder stringBuilder = new StringBuilder();
         try {
@@ -172,10 +170,12 @@ public class MarkdownParser {
      */
     @NotNull
     public static String parseCheckBox(@NotNull String comment) {
-        if (comment.matches("^- \\[[ x]]\\s*"))
-            return comment;
-        return comment
-                .replaceAll("^- \\[ ]\\s+", "<input type=\"checkbox\" disabled>")
-                .replaceAll("^- \\[x]\\s+", "<input type=\"checkbox\" checked disabled>");
+        if (comment.matches("^\\s*-\\s+\\[ ] [^\\s]+")) {
+            return comment.replaceFirst("\\[ ] ","<input type=\"checkbox\" disabled>");
+        }
+        if (comment.matches("^\\s*-\\s+\\[x] [^\\s]+")) {
+            return comment.replaceFirst("\\[x] ","<input type=\"checkbox\" checked disabled>");
+        }
+        return comment;
     }
 }
