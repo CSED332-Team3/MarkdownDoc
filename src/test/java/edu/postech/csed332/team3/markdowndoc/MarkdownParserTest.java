@@ -166,50 +166,91 @@ class MarkdownParserTest {
         assertEquals("<p>odd tilde~~</p>\n", parseReroute("odd tilde~~"));
     }
 
-    /**
-     * Test parseTableHeader method in MarkdownParser.
-     */
     @Test
-    void testParseTableHeader() {
-        assertEquals("asdf|qwer|asdf"
-                , MarkdownParser.parseTableHeader("asdf|qwer|asdf"));
-        assertEquals("|asdf|qwer|asdf"
-                , MarkdownParser.parseTableHeader("|asdf|qwer|asdf"));
-        assertEquals("asdf|qwer|asdf|"
-                , MarkdownParser.parseTableHeader("asdf|qwer|asdf|"));
-        assertEquals("<tr>\n<th>asdf</th>\n<th>qwer</th>\n<th>asdf</th>\n</tr>\n"
-                , MarkdownParser.parseTableHeader("|asdf|qwer|asdf|"));
-    }
+    void testTableBarRecognition() {
+        // Header.
+        assertEquals("<p>asdf|asdf|asdf|\n" +
+                        "|---|---|---|\n" +
+                        "|asdf|asdf|asdf|</p>\n",
+                parseReroute("asdf|asdf|asdf|\n" +
+                        "|---|---|---|\n" +
+                        "|asdf|asdf|asdf|\n"));
+        assertEquals("<p>|asdf|asdf|asdf\n" +
+                        "|---|---|---|\n" +
+                        "|asdf|asdf|asdf|</p>\n",
+                parseReroute("|asdf|asdf|asdf\n" +
+                        "|---|---|---|\n" +
+                        "|asdf|asdf|asdf|\n"));
+        // Divider.
+        assertEquals("<p>|asdf|asdf|asdf|\n" +
+                        "---|---|---|\n" +
+                        "|asdf|asdf|asdf|\n" +
+                        "|asdf|asdf|asdf|</p>\n",
+                parseReroute("|asdf|asdf|asdf|\n" +
+                        "---|---|---|\n" +
+                        "|asdf|asdf|asdf|\n" +
+                        "|asdf|asdf|asdf|"));
+        assertEquals("<p>|asdf|asdf|asdf|\n" +
+                        "|---|---|---\n" +
+                        "|asdf|asdf|asdf|\n" +
+                        "|asdf|asdf|asdf|</p>\n",
+                parseReroute("|asdf|asdf|asdf|\n" +
+                        "|---|---|---\n" +
+                        "|asdf|asdf|asdf|\n" +
+                        "|asdf|asdf|asdf|"));
 
-    /**
-     * Test parseTableDetails method in MarkdownParser.
-     */
-    @Test
-    void testParseTableDetails() {
-        assertEquals("asdf|qwer|asdf"
-                , MarkdownParser.parseTableDetails("asdf|qwer|asdf", 3));
-        assertEquals("asdf|qwer"
-                , MarkdownParser.parseTableDetails("asdf|qwer", 3));
-        assertEquals("asdf|qwer|"
-                , MarkdownParser.parseTableDetails("asdf|qwer|", 3));
-        assertEquals("<tr>\n<td>asdf</td>\n<td>qwer</td>\n</tr>\n"
-                , MarkdownParser.parseTableDetails("|asdf|qwer|", 3));
-        assertEquals("asdf|qwer|asdf|qwer|"
-                , MarkdownParser.parseTableDetails("asdf|qwer|asdf|qwer|", 3));
-        assertEquals("asdf|qwer|asdf|qwer"
-                , MarkdownParser.parseTableDetails("asdf|qwer|asdf|qwer", 3));
-        assertEquals("<tr>\n<td>asdf</td>\n<td>qwer</td>\n<td>asdf</td>\n</tr>\n"
-                , MarkdownParser.parseTableDetails("|asdf|qwer|asdf|", 3));
-        assertEquals("<tr>\n<td>asdf</td>\n<td>qwer</td>\n</tr>\n"
-                , MarkdownParser.parseTableDetails("|asdf|qwer||", 3));
-        assertEquals("<tr>\n<td>asdf</td>\n<td></td>\n<td>qwer</td>\n</tr>\n"
-                , MarkdownParser.parseTableDetails("|asdf||qwer|", 3));
-        assertEquals("<tr>\n<td></td>\n<td>asdf</td>\n<td>qwer</td>\n</tr>\n"
-                , MarkdownParser.parseTableDetails("||asdf|qwer|", 3));
-        assertEquals("<tr>\n<td>asdf</td>\n<td>qwer</td>\n</tr>\n"
-                , MarkdownParser.parseTableDetails("|asdf|qwer||||", 3));
-        assertEquals("<tr>\n<td></td>\n<td></td>\n<td>asdf</td>\n</tr>\n"
-                , MarkdownParser.parseTableDetails("|||asdf|qwer||", 3));
+        // Details.
+        assertEquals("<table>\n" +
+                        "<thead>\n" +
+                        "<tr>\n" +
+                        "<th>asdf</th>\n" +
+                        "<th>asdf</th>\n" +
+                        "<th>asdf</th>\n" +
+                        "</tr>\n" +
+                        "</thead>\n" +
+                        "<tbody>\n" +
+                        "</tbody>\n" +
+                        "</table>\n" +
+                        "asdf|asdf|asdf|\n",
+                parseReroute("|asdf|asdf|asdf|\n" +
+                        "|---|---|---|\n" +
+                        "asdf|asdf|asdf|\n"));
+        assertEquals("<table>\n" +
+                        "<thead>\n" +
+                        "<tr>\n" +
+                        "<th>asdf</th>\n" +
+                        "<th>asdf</th>\n" +
+                        "<th>asdf</th>\n" +
+                        "</tr>\n" +
+                        "</thead>\n" +
+                        "<tbody>\n" +
+                        "</tbody>\n" +
+                        "</table>\n" +
+                        "|asdf|asdf|asdf\n",
+                parseReroute("|asdf|asdf|asdf|\n" +
+                        "|---|---|---|\n" +
+                        "|asdf|asdf|asdf\n"));
+
+        // Complete form.
+        assertEquals("<table>\n" +
+                        "<thead>\n" +
+                        "<tr>\n" +
+                        "<th>asdf</th>\n" +
+                        "<th>asdf</th>\n" +
+                        "<th>asdf</th>\n" +
+                        "</tr>\n" +
+                        "</thead>\n" +
+                        "<tbody>\n" +
+                        "<tr>\n" +
+                        "<td>asdf</td>\n" +
+                        "<td>asdf</td>\n" +
+                        "<td>asdf</td>\n" +
+                        "</tr>\n" +
+                        "</tbody>\n" +
+                        "</table>\n",
+                parseReroute("|asdf|asdf|asdf|\n" +
+                        "|---|---|---|\n" +
+                        "|asdf|asdf|asdf|\n"));
     }
 
     /**
@@ -266,26 +307,26 @@ class MarkdownParserTest {
                         "|---|---|---|\n" +
                         "|asdf|asdf|asdf|\n" +
                         "|asdf|asdf|"));
-        assertEquals("|asdf|asdf|asdf|\n" +
+        assertEquals("<p>|asdf|asdf|asdf|\n" +
                         "|---|---|\n" +
                         "|asdf|asdf|asdf|\n" +
-                        "|asdf|asdf|asdf|",
+                        "|asdf|asdf|asdf|</p>\n",
                 parseReroute("|asdf|asdf|asdf|\n" +
                         "|---|---|\n" +
                         "|asdf|asdf|asdf|\n" +
                         "|asdf|asdf|asdf|"));
-        assertEquals("|asdf|asdf|\n" +
+        assertEquals("<p>|asdf|asdf|\n" +
                         "|---|---|---|\n" +
                         "|asdf|asdf|asdf|\n" +
-                        "|asdf|asdf|asdf|",
+                        "|asdf|asdf|asdf|</p>\n",
                 parseReroute("|asdf|asdf|\n" +
                         "|---|---|---|\n" +
                         "|asdf|asdf|asdf|\n" +
                         "|asdf|asdf|asdf|"));
-        assertEquals("|asdf|asdf|asdf|\n" +
+        assertEquals("<p>|asdf|asdf|asdf|\n" +
                         "---||---\n" +
                         "|asdf|asdf|asdf|\n" +
-                        "|asdf|asdf|asdf|",
+                        "|asdf|asdf|asdf|</p>\n",
                 parseReroute("|asdf|asdf|asdf|\n" +
                         "---||---\n" +
                         "|asdf|asdf|asdf|\n" +
@@ -333,8 +374,7 @@ class MarkdownParserTest {
                         "</tr>\n" +
                         "</tbody>\n" +
                         "</table>\n" +
-                        "\n" +
-                        "asdfasdfasdf\n",
+                        "<p>asdfasdfasdf</p>\n",
                 parseReroute("|asdf|asdf|asdf|\n" +
                         "|---|---|---|\n" +
                         "|asdf|asdf|asdf|\n" +

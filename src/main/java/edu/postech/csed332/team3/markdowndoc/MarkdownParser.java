@@ -61,14 +61,14 @@ public class MarkdownParser {
             @NotNull String prevLine = preprocess(bufferedReader.readLine());
             while ((line = bufferedReader.readLine()) != null) {
                 line = preprocess(line);
-                if (!line.matches("-{3,}") && line.matches("\\|?-{3,}(\\|-{3,})*\\|?")) {
+                if (!line.matches("-{3,}") && line.matches("\\|-{3,}(\\|-{3,})*\\|")) {
                     final int columnNum = StringUtil.getOccurrenceCount(line, "-|-") + 1;
                     final String regex = String.format("\\|[^|]*(\\|[^|]*){%d}\\|", columnNum - 1);
                     if (prevLine.matches(regex)) {
                         stringBuilder.append("<table>\n");
                         stringBuilder.append("<thead>\n").append(parseTableHeader(prevLine)).append("</thead>\n");
                         stringBuilder.append("<tbody>\n");
-                        while ((line = bufferedReader.readLine()) != null && !line.matches("\n?")) {
+                        while ((line = bufferedReader.readLine()) != null && line.matches("^\\|.*\\|")) {
                             stringBuilder.append(parseTableDetails(line, columnNum));
                         }
                         stringBuilder.append("</tbody>\n");
@@ -121,7 +121,7 @@ public class MarkdownParser {
      * @return Comment in a table header HTML form.
      */
     @NotNull
-    public static String parseTableHeader(@NotNull String comment) {
+    private static String parseTableHeader(@NotNull String comment) {
         StringBuilder stringBuilder = new StringBuilder().append("<tr>\n");
         String[] header = comment.split("\\|");
         for (String s : header) {
@@ -141,7 +141,7 @@ public class MarkdownParser {
      * @return Comment in a table detail HTML form.
      */
     @NotNull
-    public static String parseTableDetails(@NotNull String comment, int columnNum) {
+    private static String parseTableDetails(@NotNull String comment, int columnNum) {
         StringBuilder stringBuilder = new StringBuilder().append("<tr>\n");
         String[] strings = comment.split("\\|");
         int i = 0;
@@ -169,7 +169,7 @@ public class MarkdownParser {
      * @return Comment with checkbox HTMLs.
      */
     @NotNull
-    public static String parseCheckBox(@NotNull String comment) {
+    private static String parseCheckBox(@NotNull String comment) {
         if (comment.matches("^\\s*-\\s+\\[ ] [^\\s]+")) {
             return comment.replaceFirst("\\[ ] ","<input type=\"checkbox\" disabled>");
         }
