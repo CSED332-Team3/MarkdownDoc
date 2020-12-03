@@ -10,7 +10,10 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Deque;
 
 import static edu.postech.csed332.team3.markdowndoc.explorer.ModifyComment.modifyComment;
 
@@ -27,16 +30,23 @@ public class MdDocElementVisitor extends JavaElementVisitor {
         stack = new ArrayDeque<>(Collections.singleton(root));
     }
 
+    /**
+     * Visits a package.
+     * <p/>
+     * Note that a file is created here; when the visitor visits a class from the package.
+     *
+     * @param aPackage Target package.
+     */
     @Override
-    public void visitPackage(PsiPackage pack) {
-        final DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(pack);
+    public void visitPackage(PsiPackage aPackage) {
+        final DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(aPackage);
         stack.getFirst().add(newChild);
         stack.push(newChild);
-        Arrays.stream(pack.getSubPackages()).forEach(psiPackage -> psiPackage.accept(this));
-        Arrays.stream(pack.getClasses()).forEach(psiClass -> {
-            VirtualFile virtualFile = psiClass.getContainingFile().getVirtualFile();
-            String path = Objects.requireNonNull(virtualFile.getCanonicalPath())
-                    .replace(SRC_DIR, HTML).replace(JAVA_EXT, HTML_EXT);
+        Arrays.stream(aPackage.getSubPackages()).forEach(psiPackage -> psiPackage.accept(this));
+        Arrays.stream(aPackage.getClasses()).forEach(psiClass -> {
+            final String canonicalPath = psiClass.getContainingFile().getVirtualFile().getCanonicalPath();
+            if (canonicalPath == null) return;
+            String path = canonicalPath.replace(SRC_DIR, HTML).replace(JAVA_EXT, HTML_EXT);
             File file = new File(path);
             try {
                 file.getParentFile().mkdirs();
@@ -57,6 +67,11 @@ public class MdDocElementVisitor extends JavaElementVisitor {
         stack.pop();
     }
 
+    /**
+     * Visit a class.
+     *
+     * @param aClass Target class.
+     */
     @Override
     public void visitClass(PsiClass aClass) {
         final DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(aClass);
@@ -73,6 +88,11 @@ public class MdDocElementVisitor extends JavaElementVisitor {
         stack.pop();
     }
 
+    /**
+     * Visit a method.
+     *
+     * @param method Target method.
+     */
     @Override
     public void visitMethod(PsiMethod method) {
         final DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(method);
@@ -81,6 +101,11 @@ public class MdDocElementVisitor extends JavaElementVisitor {
         stringBuilder.append(appendComment(method.getDocComment()));
     }
 
+    /**
+     * Visit a field.
+     *
+     * @param field Target field.
+     */
     @Override
     public void visitField(PsiField field) {
         final DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(field);
@@ -89,6 +114,12 @@ public class MdDocElementVisitor extends JavaElementVisitor {
         stringBuilder.append(appendComment(field.getDocComment()));
     }
 
+    /**
+     * Apply code markdown grammar to visualize doc comment.
+     *
+     * @param docComment comment for editing.
+     * @return edited doc comment.
+     */
     private String appendComment(PsiDocComment docComment) {
         if (docComment != null) {
             StringBuilder stringBuilder = new StringBuilder();
