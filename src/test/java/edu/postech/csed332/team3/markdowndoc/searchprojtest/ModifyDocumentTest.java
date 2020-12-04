@@ -12,7 +12,7 @@ import static org.junit.Assert.assertTrue;
 public class ModifyDocumentTest {
     ModifyDocument modifyDocument = new ModifyDocument();
 
-    @Test
+    //@Test
     public void testModifyDocument() throws IOException {
         String pth = new File("").getAbsolutePath() + "/src/test/java/edu/postech/csed332/team3/MarkdownDoc/SearchProjectTest/example.java";
         File file = new File("./mdsaved/" + Path.of(pth).getFileName().toString().replace(".java", "") + ".md");
@@ -21,7 +21,7 @@ public class ModifyDocumentTest {
         file.delete();
     }
 
-    @Test
+    //@Test
     public void testModifyDocumentNotJavaFile() throws IOException {
         Path pth = Path.of("./src/example.cpp");
         assertFalse(modifyDocument.modifyDocument(pth, null));

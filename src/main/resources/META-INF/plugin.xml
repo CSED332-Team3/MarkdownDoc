@@ -13,7 +13,10 @@
         <toolWindow id="MarkdownDoc" anchor="right"
                     factoryClass="edu.postech.csed332.team3.markdowndoc.BrowserWindowFactory"/>
     </extensions>
-
+    <extensions defaultExtensionNs="com.intellij">
+        <completion.contributor language="JAVA"
+                                implementationClass="edu.postech.csed332.team3.markdowndoc.MarkdownCompletionContributor"/>
+    </extensions>
     <actions>
         <!-- Add your actions here -->
     </actions>

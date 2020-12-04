@@ -12,7 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class SearchProjTest {
-    @Test
+    //@Test
     public void testSearchCreatedFile() throws IOException, InterruptedException {
         SearchProject searchProject = new SearchProject();
         searchProject.init(".");
@@ -31,7 +31,7 @@ public class SearchProjTest {
         FileUtils.deleteDirectory(new File("./mdsaved"));
     }
 
-    @Test
+    //@Test
     public void testSearchModifiedFile() throws IOException, InterruptedException {
         SearchProject searchProject = new SearchProject();
         searchProject.init(".");
@@ -53,7 +53,7 @@ public class SearchProjTest {
         FileUtils.deleteDirectory(new File("./mdsaved"));
     }
 
-    @Test
+    //@Test
     public void testSearchDeletedFile() throws IOException, InterruptedException {
         SearchProject searchProject = new SearchProject();
         searchProject.init(".");
@@ -74,7 +74,7 @@ public class SearchProjTest {
         FileUtils.deleteDirectory(new File("./mdsaved"));
     }
 
-    @Test
+    //@Test
     public void testInit() throws IOException, InterruptedException {
         SearchProject searchProject = new SearchProject();
         searchProject.init(".");
