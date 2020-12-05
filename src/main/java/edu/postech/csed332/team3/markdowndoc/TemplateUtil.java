@@ -62,6 +62,144 @@ public class TemplateUtil {
     }
 
     /**
+     * Returns HTML table starting element
+     * with class description and tags.
+     * NOTE: this class does not close the HTML table tag.
+     *
+     * @param desc the class description (html surrounded with p tag)
+     * @param tags list of tag strings, such as @param or @author, etc.
+     * @return the HTML string
+     */
+    public String classDesc(String desc, @Nullable List<String> tags) {
+        StringBuilder html = new StringBuilder("<h2>Description</h2><table id = \"table\">");
+
+        // Description
+        html.append("<tr><td>")
+                .append(desc)
+                .append("</td></tr>");
+
+        // Tags
+        if (tags != null && !tags.isEmpty()) {
+            html.append("<tr><td><p>");
+            for (String tag : tags) {
+                // Strip the leading @tag from this string
+                String[] substr = tag.split(" ", 2);
+                if (substr.length < 2) continue; // This indicates no tag or no description
+
+                html.append("<strong class=\"alert\">")
+                        .append(substr[0])
+                        .append("</strong> ")
+                        .append(substr[1])
+                        .append("<br>");
+            }
+            html.append("</p></td></tr>");
+        }
+
+        return html.toString();
+    }
+
+    /**
+     * Returns HTML table row of field
+     * with field description.
+     *
+     * @param fieldName the field name
+     * @param type the field type
+     * @param desc the field description (html surrounded with p tag)
+     * @return the HTML string
+     */
+    public String field(String fieldName, String type, @Nullable String desc) {
+        StringBuilder html = new StringBuilder("<tr><td data-type=\"");
+        html.append(type)
+                .append("\"><h5>Field</h5><h3><a id=\"f-")
+                .append(fieldName)
+                .append("\">")
+                .append(type)
+                .append(" ")
+                .append(fieldName)
+                .append("</a></h3>");
+
+        if (desc != null) {
+            html.append(desc);
+        }
+
+        html.append("</td></tr>");
+
+        return html.toString();
+    }
+
+    /**
+     * Returns HTML table row of method
+     * with method description and tags.
+     *
+     * @param methodName the method name
+     * @param returnType the return type
+     * @param accessMod the access modifier
+     * @param desc the method description (html surrounded with p tag)
+     * @param tags list of tag strings, such as @param or @author, etc.
+     * @return the HTML string
+     */
+    public String method(String methodName, String returnType, String accessMod, @Nullable String desc, @Nullable List<String> tags) {
+        StringBuilder html = new StringBuilder("<tr><td data-type=\"");
+        html.append(returnType)
+                .append("\"><h5>Method</h5><h3><a id=\"m-")
+                .append(methodName)
+                .append("\">")
+                .append(accessMod)
+                .append(" ")
+                .append(returnType)
+                .append(" ")
+                .append(methodName)
+                .append("</a></h3>");
+
+        // Description
+        if (desc != null) {
+            html.append(desc);
+        }
+
+        // Tags
+        if (tags != null && !tags.isEmpty()) {
+            html.append("<p>");
+            for (String tag : tags) {
+                // Strip the leading @tag from this string
+                String[] substr = tag.split(" ", 2);
+                if (substr.length < 2) continue; // This indicates no tag or no description
+
+                html.append("<strong class=\"alert\">")
+                        .append(substr[0])
+                        .append("</strong> ")
+                        .append(substr[1])
+                        .append("<br>");
+            }
+            html.append("</p>");
+        }
+
+        html.append("</td></tr>");
+
+        return html.toString();
+    }
+
+    /**
+     * Close the Description table
+     *
+     * @return the HTML string
+     */
+    public String closeDesc() {
+        return "</table>";
+    }
+
+    public String allClasses() {
+        return null;
+    }
+
+    public String header() {
+        return null;
+    }
+
+    public String footer() {
+        return null;
+    }
+
+    /**
      * Returns HTML div element of class label section
      *
      * @param psiClass the PsiClass element
