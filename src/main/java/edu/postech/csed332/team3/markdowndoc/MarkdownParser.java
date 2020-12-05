@@ -22,11 +22,10 @@ public class MarkdownParser {
      */
     @Nonnull
     public static String parse(@Nonnull String comment) {
-//        if (!isMarkdown(comment))
-//            throw new IllegalArgumentException("Not a md comment.");
-
-//        comment = comment.replaceFirst("!!mdDoc\n", "");
-        comment = parseLoop(comment);
+        if (isMarkdown(comment)) {
+            comment = comment.replaceFirst("!!mdDoc\n", "");
+            comment = parseLoop(comment);
+        }
 
         final Parser parser = Parser.builder().build();
         final Node node = parser.parse(comment);
@@ -41,7 +40,7 @@ public class MarkdownParser {
      */
     public static boolean isMarkdown(@Nonnull String comment) {
         try {
-            return comment.subSequence(0, 7).equals("!!mdDoc");
+            return comment.matches("\\s*!!mdDoc(.|\\n)*");
         } catch (Exception e) {
             return false;
         }

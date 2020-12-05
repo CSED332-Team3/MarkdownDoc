@@ -7,14 +7,16 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.jcef.JBCefApp;
 import com.intellij.ui.jcef.JBCefBrowser;
 import com.intellij.ui.jcef.JBCefJSQuery;
-import edu.postech.csed332.team3.markdowndoc.searchproject.SearchProject;
+import edu.postech.csed332.team3.markdowndoc.explorer.ProjectModel;
 import org.cef.CefSettings;
 import org.cef.browser.CefBrowser;
 import org.cef.browser.CefFrame;
 import org.cef.handler.CefDisplayHandler;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
+import javax.swing.tree.TreeModel;
+
+import static edu.postech.csed332.team3.markdowndoc.explorer.ActiveProjectModel.getActiveProject;
 
 public class BrowserController {
 
@@ -22,8 +24,7 @@ public class BrowserController {
     private final BrowserView view;
     private final CefBrowser cefBrowser;
     private final ProjectNavigator navigator;
-
-    private final SearchProject searchProject;
+    private TreeModel model;
 
     // JSHandler for communication
     private JBCefJSQuery linkQuery;
@@ -31,7 +32,7 @@ public class BrowserController {
     /**
      * Create an empty browser controller instance
      */
-    public BrowserController(BrowserView view) throws IOException {
+    public BrowserController(BrowserView view) {
         if (!JBCefApp.isSupported()) {
             throw new NotSupportedException("This IDE version is not supported.");
         }
@@ -40,7 +41,7 @@ public class BrowserController {
 
         // Get project root directory and load it in the browser
         @NotNull VirtualFile projectRoot = ModuleRootManager.getInstance(
-                ModuleManager.getInstance(navigator.getActiveProject()).getModules()[0]
+                ModuleManager.getInstance(getActiveProject()).getModules()[0]
         ).getContentRoots()[0];
 
         browser = new JBCefBrowser("file://" + projectRoot.getCanonicalPath() + "/mdsaved");
@@ -54,9 +55,7 @@ public class BrowserController {
         setHandlers();
 
         // Initialize SearchProject
-        searchProject = new SearchProject(this);
-        searchProject.init(projectRoot.getCanonicalPath());
-        searchProject.start();
+        model = ProjectModel.createProjectTreeModel(projectRoot.getCanonicalPath());
     }
 
     private void setListeners() {
