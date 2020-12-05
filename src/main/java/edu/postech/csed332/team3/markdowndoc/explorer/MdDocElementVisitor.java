@@ -18,7 +18,7 @@ public class MdDocElementVisitor extends JavaElementVisitor {
     private static final String JAVA_EXT = ".java";
     private static final String SRC_DIR = "src";
     private static final String HTML_EXT = ".html";
-    private static final String HTML = "html";
+    private static final String HTML = "templates";
     final StringBuilder stringBuilder = new StringBuilder();
     final Deque<DefaultMutableTreeNode> stack;
     FileWriter fileWriter = null;

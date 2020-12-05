@@ -18,7 +18,7 @@ import java.util.Set;
 import static edu.postech.csed332.team3.markdowndoc.explorer.ActiveProjectModel.getActiveProject;
 
 public class ProjectModel {
-    private static final String HTML = "html";
+    private static final String HTML = "templates";
 
     private ProjectModel() {
     }

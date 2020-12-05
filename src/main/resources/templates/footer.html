@@ -1,0 +1,49 @@
+<div class="credits">
+    Generated with MarkdownDoc
+</div>
+
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+        var links = document.getElementsByTagName('a');
+
+        for (var i = links.length - 1; i >= 0; --i) {
+            links[i].addEventListener("click", function() {
+                var id = this.getAttribute('id');
+                if (id) {
+                    console.log(id);
+                }
+            });
+        }
+    });
+
+    function sortTable(method) {
+        var table, rows, switching, i, x, y, shouldSwitch, dir;
+        table = document.getElementById('table');
+        switching = true;
+
+        while (switching) {
+            switching = false;
+            rows = table.rows;
+            // Switch starting from row index 2 (3rd row)
+            // since the first two rows contain desc. of class
+            for (i = 2; i < rows.length - 1; i++) {
+                shouldSwitch = false;
+                x = rows[i].getElementsByTagName("td")[0];
+                y = rows[i + 1].getElementsByTagName("td")[0];
+
+                if (x.getAttribute("data-type") != method) {
+                    if (y.getAttribute("data-type") == method) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+            }
+        }
+    }
+</script>
+</body>
+</html>
