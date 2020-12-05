@@ -153,6 +153,6 @@ public class SearchProject extends Thread {
     @NotNull
     private File getFile(Path path) {
         final String replacedPath = path.toString().replace(Path.of(projPath.toString(), SRC_DIR).toString(), "").replace(JAVA_EXT, "");
-        return Path.of(projPath.toString(), MD_SAVED, replacedPath, HTML_EXT).toFile();
+        return Path.of(projPath.toString(), MD_SAVED, replacedPath + HTML_EXT).toFile();
     }
 }

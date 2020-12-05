@@ -8,14 +8,19 @@
     <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="MarkdownDoc" anchor="right"
                     factoryClass="edu.postech.csed332.team3.markdowndoc.BrowserWindowFactory"/>
     </extensions>
     <extensions defaultExtensionNs="com.intellij">
-        <completion.contributor language="JAVA"
+        <completion.contributor language="any"
                                 implementationClass="edu.postech.csed332.team3.markdowndoc.MarkdownCompletionContributor"/>
+    </extensions>
+    <extensions defaultExtensionNs="com.intellij">
+        <defaultLiveTemplates file="/MarkdownCompletion.xml"/>
+        <liveTemplateContext implementation="edu.postech.csed332.team3.markdowndoc.MarkdownContext"/>
     </extensions>
     <actions>
         <!-- Add your actions here -->

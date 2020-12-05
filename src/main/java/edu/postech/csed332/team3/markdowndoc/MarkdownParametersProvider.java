@@ -5,6 +5,7 @@ import com.intellij.codeInsight.completion.CompletionProvider;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.util.ProcessingContext;
+import org.bouncycastle.asn1.pkcs.MacData;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -20,4 +21,5 @@ public class MarkdownParametersProvider extends CompletionProvider<CompletionPar
             result.addElement(LookupElementBuilder.create(entry.getKey()));
         }
     }
+
 }

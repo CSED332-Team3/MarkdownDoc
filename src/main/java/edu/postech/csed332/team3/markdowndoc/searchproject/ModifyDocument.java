@@ -34,6 +34,7 @@ public class ModifyDocument {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             StringBuilder builder = new StringBuilder();
+            builder.append("!!mdDoc");
 
             //iterate json array
             for (JsonElement jsonElement : commentAndElementInfo) {
