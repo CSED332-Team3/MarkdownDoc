@@ -6,7 +6,7 @@ import java.util.Base64;
 /**
  * Stub of BrowserController for testing
  */
-public class BrowserControllerStub {
+public class BrowserControllerStub implements BrowserControllerInterface {
 
     private final ArrayList<String> URL;
     private String base64URI;
@@ -18,11 +18,7 @@ public class BrowserControllerStub {
         current = -1;
     }
 
-    /**
-     * Loads URL in the browser
-     *
-     * @param url the URL
-     */
+    @Override
     public void loadURL(String url) {
         current++;
         if (URL.size() > current + 1) {
@@ -33,11 +29,7 @@ public class BrowserControllerStub {
         }
     }
 
-    /**
-     * Loads HTML in the browser
-     *
-     * @param html HTML content
-     */
+    @Override
     public void loadHTML(String html) {
         current++;
         base64URI = "data:text/html;base64,"
@@ -53,46 +45,34 @@ public class BrowserControllerStub {
         }
     }
 
-    /**
-     * Return the URL
-     *
-     * @return the URL
-     */
+    @Override
     public String getURL() {
         if (current >= 0)
             return URL.get(current);
         else return null;
     }
 
-    /**
-     * Go back in history if possible
-     */
+    @Override
     public void goBack() {
         if (canGoBack()) current--;
     }
 
-    /**
-     * Go forward in history if possible
-     */
+    @Override
     public void goForward() {
         if (canGoForward()) current++;
     }
 
-    /**
-     * Return whether the browser can go back in history
-     *
-     * @return true if browser can go back
-     */
+    @Override
     public boolean canGoBack() {
         return current > 0;
     }
 
-    /**
-     * Return whether the browser can go forward in history
-     *
-     * @return true if browser can go forward
-     */
+    @Override
     public boolean canGoForward() {
         return current < URL.size() - 1;
+    }
+
+    @Override
+    public void reload() {
     }
 }
