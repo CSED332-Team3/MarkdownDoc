@@ -30,7 +30,7 @@ public class MarkdownTypedHandler extends CompletionAutoPopupHandler {
      */
     @Override
     public @NotNull Result checkAutoPopup(char charTyped, @NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
-        DoAutoPopup(charTyped);
+        DoAutoPopup(charTyped, project, editor);
         return super.checkAutoPopup(charTyped, project, editor, file);
     }
 
@@ -39,7 +39,7 @@ public class MarkdownTypedHandler extends CompletionAutoPopupHandler {
      */
     @Override
     public Result charTyped(char c, final Project project, @NotNull final Editor editor, @NotNull PsiFile file) {
-        DoAutoPopup(c);
+        DoAutoPopup(c, project, editor);
         return super.charTyped(c, project, editor, file);
     }
 
@@ -47,7 +47,7 @@ public class MarkdownTypedHandler extends CompletionAutoPopupHandler {
      * When we type custom parameter like &, Completion Pop-upped automatically
      * @param charTyped to be checked
      */
-    private Result DoAutoPopup(char charTyped){
+    private Result DoAutoPopup(char charTyped, final Project project, @NotNull final Editor editor){
         if (isParameter(charTyped)) {
             CompletionAutoPopupHandler.runLaterWithCommitted(project, editor.getDocument(), new Runnable() {
                 @Override
@@ -59,6 +59,7 @@ public class MarkdownTypedHandler extends CompletionAutoPopupHandler {
             });
             return Result.STOP;
         }
+        return Result.CONTINUE;
     }
 
 }
