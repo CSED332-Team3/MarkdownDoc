@@ -44,7 +44,7 @@ public class BrowserController implements BrowserControllerInterface {
                 ModuleManager.getInstance(getActiveProject()).getModules()[0]
         ).getContentRoots()[0];
 
-        browser = new JBCefBrowser("file://" + projectRoot.getCanonicalPath() + "/mdsaved");
+        browser = new JBCefBrowser("file://" + projectRoot.getCanonicalPath() + "/html");
         this.view = view;
         cefBrowser = browser.getCefBrowser();
 

@@ -17,21 +17,33 @@ import java.util.Set;
 
 import static edu.postech.csed332.team3.markdowndoc.explorer.ActiveProjectModel.getActiveProject;
 
+/**
+ * A singleton class for creating MD-HTML files.
+ * <p/>
+ * Use {@link #createProjectTreeModel(String)} for processing.
+ */
 public class ProjectModel {
-    private static final String HTML = "templates";
+
+    private static final String HTML = "html";
 
     private ProjectModel() {
     }
 
+    /**
+     * Make directory of html files.
+     * <p/>
+     * The method will also convert documents to files and write them.
+     *
+     * @param path Root path of the target(mainly opened one) project.
+     * @return tree model of active project.
+     */
     public static TreeModel createProjectTreeModel(String path) {
-        // Make mdsaved directory
+        // Make html directory
         File folder = new File(path, HTML);
         if (!folder.mkdirs())
             return null;
 
         Project activeProject = getActiveProject();
-        PsiManager.getInstance(activeProject).addPsiTreeChangeListener(new UpdateListener(), () -> {
-        });
         final DefaultMutableTreeNode root = new DefaultMutableTreeNode(activeProject);
 
         final JavaElementVisitor visitor = new MdDocElementVisitor(root);
@@ -40,6 +52,11 @@ public class ProjectModel {
         return new DefaultTreeModel(root);
     }
 
+    /**
+     * Grab root packages and return the set containing them.
+     * <p/>
+     * The code snippet from HW06-2.
+     */
     private static Set<PsiPackage> getRootPackages(Project project) {
         final Set<PsiPackage> rootPackages = new HashSet<>();
         PsiElementVisitor visitor = new PsiElementVisitor() {
