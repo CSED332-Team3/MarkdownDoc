@@ -32,8 +32,8 @@ public class BrowserView {
         responseLabel.setText("No responses");
 
         // Set text
-        backButton.setText("←");
-        forwardButton.setText("→");
+        backButton.setText("<--");
+        forwardButton.setText("-->");
 
         buttons.add(backButton);
         buttons.add(responseLabel);

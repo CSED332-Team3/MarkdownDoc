@@ -18,7 +18,7 @@ import javax.swing.tree.TreeModel;
 
 import static edu.postech.csed332.team3.markdowndoc.explorer.ActiveProjectModel.getActiveProject;
 
-public class BrowserController {
+public class BrowserController implements BrowserControllerInterface {
 
     private final JBCefBrowser browser;
     private final BrowserView view;
@@ -113,6 +113,7 @@ public class BrowserController {
      *
      * @param url the URL
      */
+    @Override
     public void loadURL(String url) {
         browser.loadURL(url);
     }
@@ -122,15 +123,17 @@ public class BrowserController {
      *
      * @param html HTML content
      */
+    @Override
     public void loadHTML(String html) {
         browser.loadHTML(html);
     }
 
     /**
-     * Return the URL
+     * Returns the current URL
      *
      * @return the URL
      */
+    @Override
     public String getURL() {
         return cefBrowser.getURL();
     }
@@ -138,6 +141,7 @@ public class BrowserController {
     /**
      * Go back in history if possible
      */
+    @Override
     public void goBack() {
         cefBrowser.goBack();
         updateView();
@@ -146,6 +150,7 @@ public class BrowserController {
     /**
      * Go forward in history if possible
      */
+    @Override
     public void goForward() {
         cefBrowser.goForward();
         updateView();
@@ -156,6 +161,7 @@ public class BrowserController {
      *
      * @return true if browser can go back
      */
+    @Override
     public boolean canGoBack() {
         return cefBrowser.canGoBack();
     }
@@ -165,6 +171,7 @@ public class BrowserController {
      *
      * @return true if browser can go forward
      */
+    @Override
     public boolean canGoForward() {
         return cefBrowser.canGoForward();
     }
@@ -172,6 +179,7 @@ public class BrowserController {
     /**
      * Reload the current page
      */
+    @Override
     public void reload() {
         cefBrowser.reload();
     }
