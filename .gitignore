@@ -109,3 +109,5 @@ Temporary Items
 
 # Generated files
 mdsaved
+/html/
+.idea/encodings.xml

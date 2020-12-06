@@ -4,8 +4,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -20,13 +20,12 @@ public class MarkdownParser {
      * @param comment The comment to be parsed.
      * @return Parsed comment in HTML form.
      */
-    @Nonnull
-    public static String parse(@Nonnull String comment) {
-        if (!isMarkdown(comment))
-            throw new IllegalArgumentException("Not a md comment.");
-
-        comment = comment.replaceFirst("!!mdDoc\n", "");
-        comment = parseLoop(comment);
+    @NotNull
+    public static String parse(@NotNull String comment) {
+        if (isMarkdown(comment)) {
+            comment = comment.replaceFirst("!!mdDoc\n", "");
+            comment = parseLoop(comment);
+        }
 
         final Parser parser = Parser.builder().build();
         final Node node = parser.parse(comment);
@@ -39,9 +38,9 @@ public class MarkdownParser {
      * @param comment Comment text to check whether it is mdDoc.
      * @return The result.
      */
-    public static boolean isMarkdown(@Nonnull String comment) {
+    public static boolean isMarkdown(@NotNull String comment) {
         try {
-            return comment.subSequence(0, 7).equals("!!mdDoc");
+            return comment.matches("\\s*!!mdDoc(.|\\n)*");
         } catch (Exception e) {
             return false;
         }
@@ -52,26 +51,24 @@ public class MarkdownParser {
      *
      * @param comment The comment to be parsed.
      * @return Parsed strikethrough, table, and checkbox md only.
-     * @deprecated Planned change to private.
      */
-    @Deprecated(since = "This function will be private soon.")
-    @Nonnull
-    public static String parseLoop(@Nonnull String comment) {
+    @NotNull
+    private static String parseLoop(@NotNull String comment) {
         final BufferedReader bufferedReader = new BufferedReader(new StringReader(comment));
         StringBuilder stringBuilder = new StringBuilder();
         try {
             String line;
-            @Nonnull String prevLine = parseStrikethrough(parseCheckBox(bufferedReader.readLine()));
+            @NotNull String prevLine = preprocess(bufferedReader.readLine());
             while ((line = bufferedReader.readLine()) != null) {
-                line = parseStrikethrough(parseCheckBox(line));
-                if (!line.matches("-{3,}") && line.matches("\\|?-{3,}(\\|-{3,})*\\|?")) {
+                line = preprocess(line);
+                if (!line.matches("-{3,}") && line.matches("\\|-{3,}(\\|-{3,})*\\|")) {
                     final int columnNum = StringUtil.getOccurrenceCount(line, "-|-") + 1;
                     final String regex = String.format("\\|[^|]*(\\|[^|]*){%d}\\|", columnNum - 1);
                     if (prevLine.matches(regex)) {
                         stringBuilder.append("<table>\n");
                         stringBuilder.append("<thead>\n").append(parseTableHeader(prevLine)).append("</thead>\n");
                         stringBuilder.append("<tbody>\n");
-                        while ((line = bufferedReader.readLine()) != null && !line.matches("\n?")) {
+                        while ((line = bufferedReader.readLine()) != null && line.matches("^\\|.*\\|")) {
                             stringBuilder.append(parseTableDetails(line, columnNum));
                         }
                         stringBuilder.append("</tbody>\n");
@@ -93,8 +90,16 @@ public class MarkdownParser {
         return stringBuilder.toString();
     }
 
-    @Nonnull
-    private static String parseStrikethrough(@Nonnull String comment) {
+    @NotNull
+    private static String preprocess(@NotNull String comment) {
+        comment = comment.trim();
+        comment = parseCheckBox(comment);
+        comment = parseStrikethrough(comment);
+        return comment;
+    }
+
+    @NotNull
+    private static String parseStrikethrough(@NotNull String comment) {
         String strikethroughToken = "~~";
         int count = StringUtil.getOccurrenceCount(comment, strikethroughToken);
         if (count % 2 == 1) count--;
@@ -115,8 +120,8 @@ public class MarkdownParser {
      * @param comment One line string to be parsed.
      * @return Comment in a table header HTML form.
      */
-    @Nonnull
-    public static String parseTableHeader(@Nonnull String comment) {
+    @NotNull
+    private static String parseTableHeader(@NotNull String comment) {
         StringBuilder stringBuilder = new StringBuilder().append("<tr>\n");
         String[] header = comment.split("\\|");
         for (String s : header) {
@@ -135,8 +140,8 @@ public class MarkdownParser {
      * @param comment One line string to be parsed.
      * @return Comment in a table detail HTML form.
      */
-    @Nonnull
-    public static String parseTableDetails(@Nonnull String comment, int columnNum) {
+    @NotNull
+    private static String parseTableDetails(@NotNull String comment, int columnNum) {
         StringBuilder stringBuilder = new StringBuilder().append("<tr>\n");
         String[] strings = comment.split("\\|");
         int i = 0;
@@ -163,12 +168,14 @@ public class MarkdownParser {
      * @param comment One line string to be parsed.
      * @return Comment with checkbox HTMLs.
      */
-    @Nonnull
-    public static String parseCheckBox(@Nonnull String comment) {
-        if (comment.matches("^- \\[[ x]]\\s*"))
-            return comment;
-        return comment
-                .replaceAll("^- \\[ ]\\s+", "<input type=\"checkbox\" disabled>")
-                .replaceAll("^- \\[x]\\s+", "<input type=\"checkbox\" checked disabled>");
+    @NotNull
+    private static String parseCheckBox(@NotNull String comment) {
+        if (comment.matches("^\\s*-\\s+\\[ ] [^\\s]+")) {
+            return comment.replaceFirst("\\[ ] ","<input type=\"checkbox\" disabled>");
+        }
+        if (comment.matches("^\\s*-\\s+\\[x] [^\\s]+")) {
+            return comment.replaceFirst("\\[x] ","<input type=\"checkbox\" checked disabled>");
+        }
+        return comment;
     }
 }

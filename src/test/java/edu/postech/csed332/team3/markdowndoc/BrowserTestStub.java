@@ -9,7 +9,7 @@ import static org.junit.Assert.assertFalse;
 
 public class BrowserTestStub {
 
-    private BrowserControllerStub browserController;
+    private BrowserControllerInterface browserController;
 
     @Test
     public void URLTest() {
