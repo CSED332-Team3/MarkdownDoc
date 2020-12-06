@@ -1,6 +1,6 @@
 package edu.postech.csed332.team3.markdowndoc.explorer;
 
-import edu.postech.csed332.team3.markdowndoc.MarkdownParser;
+import edu.postech.csed332.team3.markdowndoc.converter.MarkdownParser;
 
 public class FileManagerStub {
     private final StringBuilder stringBuilder = new StringBuilder();

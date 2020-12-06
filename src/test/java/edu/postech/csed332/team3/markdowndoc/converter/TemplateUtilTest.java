@@ -1,5 +1,6 @@
-package edu.postech.csed332.team3.markdowndoc;
+package edu.postech.csed332.team3.markdowndoc.converter;
 
+import edu.postech.csed332.team3.markdowndoc.converter.TemplateUtil;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

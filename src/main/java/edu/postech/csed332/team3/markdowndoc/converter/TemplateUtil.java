@@ -1,4 +1,4 @@
-package edu.postech.csed332.team3.markdowndoc;
+package edu.postech.csed332.team3.markdowndoc.converter;
 
 
 import com.intellij.psi.*;
@@ -7,7 +7,6 @@ import com.intellij.psi.javadoc.PsiDocTag;
 import com.intellij.psi.javadoc.PsiDocToken;
 import org.apache.commons.io.IOUtils;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;

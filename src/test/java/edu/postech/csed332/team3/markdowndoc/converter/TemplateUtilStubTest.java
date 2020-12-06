@@ -1,4 +1,4 @@
-package edu.postech.csed332.team3.markdowndoc;
+package edu.postech.csed332.team3.markdowndoc.converter;
 
 import org.junit.jupiter.api.Test;
 

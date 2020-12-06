@@ -2,8 +2,8 @@ package edu.postech.csed332.team3.markdowndoc.explorer;
 
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiNamedElement;
-import edu.postech.csed332.team3.markdowndoc.MarkdownParser;
-import edu.postech.csed332.team3.markdowndoc.TemplateUtil;
+import edu.postech.csed332.team3.markdowndoc.converter.MarkdownParser;
+import edu.postech.csed332.team3.markdowndoc.converter.TemplateUtil;
 
 import java.io.File;
 import java.io.FileWriter;
