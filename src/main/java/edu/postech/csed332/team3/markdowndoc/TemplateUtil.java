@@ -2,9 +2,10 @@ package edu.postech.csed332.team3.markdowndoc;
 
 
 import com.intellij.psi.*;
-import com.sun.istack.Nullable;
 import org.apache.commons.io.IOUtils;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -65,9 +66,9 @@ public class TemplateUtil {
      * Returns HTML div element of class label section
      *
      * @param className the class name
-     * @param pkg the package name
-     * @param ext any class this extends
-     * @param impl (a list of) any interface this implements
+     * @param pkg       the package name
+     * @param ext       any class this extends
+     * @param impl      (a list of) any interface this implements
      * @return the HTML string
      */
     public String classLabel(String className, String pkg, @Nullable String ext, @Nullable List<String> impl) {
@@ -180,9 +181,9 @@ public class TemplateUtil {
      * with field description.
      *
      * @param fieldName the field name
-     * @param type the field type
-     * @param desc the field description (html surrounded with p tag)
-     * @param tags list of tag strings, such as @param or @author, etc.
+     * @param type      the field type
+     * @param desc      the field description (html surrounded with p tag)
+     * @param tags      list of tag strings, such as @param or @author, etc.
      * @return the HTML string
      */
     public String field(String fieldName, String type, @Nullable String desc, @Nullable List<String> tags) {
@@ -205,13 +206,13 @@ public class TemplateUtil {
             html.append("<p>");
             for (String tag : tags) {
                 // Strip the leading @tag from this string
-                String[] substr = tag.split(" ", 2);
-                if (substr.length < 2) continue; // This indicates no tag or no description
+                String[] subStr = tag.split(" ", 2);
+                if (subStr.length < 2) continue; // This indicates no tag or no description
 
                 html.append("<strong class=\"alert\">")
-                        .append(substr[0])
+                        .append(subStr[0])
                         .append("</strong> ")
-                        .append(substr[1])
+                        .append(subStr[1])
                         .append("<br>");
             }
             html.append("</p>");
@@ -227,12 +228,12 @@ public class TemplateUtil {
      * with field description.
      *
      * @param psiField the PsiField element
-     * @param desc the field description (html surrounded with p tag)
-     * @param tags list of tag strings, such as @param or @author, etc.
+     * @param desc     the field description (html surrounded with p tag)
+     * @param tags     list of tag strings, such as @param or @author, etc.
      * @return the HTML string
      */
     public String field(PsiField psiField, @Nullable String desc, @Nullable List<String> tags) {
-        String fieldName = psiField.getName(); // @NotNull
+        @NotNull String fieldName = psiField.getName();
         String type = psiField.getType().getPresentableText();
 
         return field(fieldName, type, desc, tags);
@@ -244,9 +245,9 @@ public class TemplateUtil {
      *
      * @param methodName the method name
      * @param returnType the return type, null for constructors
-     * @param modifier the modifiers (public static ...)
-     * @param desc the method description (html surrounded with p tag)
-     * @param tags list of tag strings, such as @param or @author, etc.
+     * @param modifier   the modifiers (public static ...)
+     * @param desc       the method description (html surrounded with p tag)
+     * @param tags       list of tag strings, such as @param or @author, etc.
      * @return the HTML string
      */
     public String method(String methodName, @Nullable String returnType, String modifier, @Nullable String desc, @Nullable List<String> tags) {
@@ -274,13 +275,13 @@ public class TemplateUtil {
             html.append("<p>");
             for (String tag : tags) {
                 // Strip the leading @tag from this string
-                String[] substr = tag.split(" ", 2);
-                if (substr.length < 2) continue; // This indicates no tag or no description
+                String[] subStr = tag.split(" ", 2);
+                if (subStr.length < 2) continue; // This indicates no tag or no description
 
                 html.append("<strong class=\"alert\">")
-                        .append(substr[0])
+                        .append(subStr[0])
                         .append("</strong> ")
-                        .append(substr[1])
+                        .append(subStr[1])
                         .append("<br>");
             }
             html.append("</p>");
@@ -296,12 +297,12 @@ public class TemplateUtil {
      * with method description and tags.
      *
      * @param psiMethod the PsiMethod element
-     * @param desc the method description (html surrounded with p tag)
-     * @param tags list of tag strings, such as @param or @author, etc.
+     * @param desc      the method description (html surrounded with p tag)
+     * @param tags      list of tag strings, such as @param or @author, etc.
      * @return the HTML string
      */
     public String method(PsiMethod psiMethod, @Nullable String desc, @Nullable List<String> tags) {
-        String methodName = psiMethod.getName(); // @NotNull
+        @NotNull String methodName = psiMethod.getName();
         String returnType = psiMethod.getReturnType() == null ? null : psiMethod.getReturnType().getPresentableText();
         String accessMod = psiMethod.getModifierList().getText();
 
