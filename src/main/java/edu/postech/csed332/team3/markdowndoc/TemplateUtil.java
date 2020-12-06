@@ -3,6 +3,7 @@ package edu.postech.csed332.team3.markdowndoc;
 
 import com.intellij.psi.*;
 import com.intellij.psi.javadoc.PsiDocComment;
+import com.intellij.psi.javadoc.PsiDocTag;
 import com.intellij.psi.javadoc.PsiDocToken;
 import org.apache.commons.io.IOUtils;
 
@@ -94,11 +95,11 @@ public class TemplateUtil {
 
 
         html.append("\n")
-            .append(getCommentFirst(psiClass));
+                .append(getCommentFirst(psiClass))
+                .append(getTagComment(psiClass.getDocComment()));
 
         return html.toString();
     }
-
 
     /**
      * Returns HTML table row of method
@@ -128,25 +129,8 @@ public class TemplateUtil {
 
         html.append(name)
                 .append("</a></h3>")
-                .append(getComment(((PsiJavaDocumentedElement) element).getDocComment()));
-
-
-//        // Tags
-//        if (tags != null && !tags.isEmpty()) {
-//            html.append("<p>");
-//            for (String tag : tags) {
-//                // Strip the leading @tag from this string
-//                String[] subStr = tag.split(" ", 2);
-//                if (subStr.length < 2) continue; // This indicates no tag or no description
-//
-//                html.append("<strong class=\"alert\">")
-//                        .append(subStr[0])
-//                        .append("</strong> ")
-//                        .append(subStr[1])
-//                        .append("<br>");
-//            }
-//            html.append("</p>");
-//        }
+                .append(getComment(((PsiJavaDocumentedElement) element).getDocComment()))
+                .append(getTagComment(((PsiJavaDocumentedElement) element).getDocComment()));
 
         html.append("</td></tr>\n");
 
@@ -172,43 +156,6 @@ public class TemplateUtil {
 
 
         html.append("</div>");
-
-        return html.toString();
-    }
-
-    /**
-     * Returns HTML table starting element
-     * with class description and tags.
-     * NOTE: this class does not close the HTML table tag.
-     *
-     * @param desc the class description (html surrounded with p tag)
-     * @param tags list of tag strings, such as @param or @author, etc.
-     * @return the HTML string
-     */
-    public static String classDesc(String desc, @Nullable List<String> tags) {
-        StringBuilder html = new StringBuilder("<h2>Description</h2><table id = \"table\">");
-
-        // Description
-        html.append("<tr><td>")
-                .append(desc)
-                .append("</td></tr>");
-
-        // Tags
-        if (tags != null && !tags.isEmpty()) {
-            html.append("<tr><td><p>");
-            for (String tag : tags) {
-                // Strip the leading @tag from this string
-                String[] subStr = tag.split(" ", 2);
-                if (subStr.length < 2) continue; // This indicates no tag or no description
-
-                html.append("<strong class=\"alert\">")
-                        .append(subStr[0])
-                        .append("</strong> ")
-                        .append(subStr[1])
-                        .append("<br>");
-            }
-            html.append("</p></td></tr>");
-        }
 
         return html.toString();
     }
@@ -258,32 +205,31 @@ public class TemplateUtil {
         return element.toString().split(":")[0].replaceFirst("Psi", "");
     }
 
-    public static String getCommentFirst(PsiClass psiClass) {
-        StringBuilder html = new StringBuilder("<h2>Description</h2>\n<table id = \"table\">\n");
+    private static String getCommentFirst(PsiClass psiClass) {
+        return "<h2>Description</h2>\n<table id = \"table\">\n" + "<tr><td>" +
+                getComment(psiClass.getDocComment()) +
+                "</td></tr>";
+    }
 
-        // Description
-        html.append("<tr><td>")
-                .append(getComment(psiClass.getDocComment()))
-                .append("</td></tr>");
-
-        // Tags
-//        if (tags != null && !tags.isEmpty()) {
-//            html.append("<tr><td><p>");
-//            for (String tag : tags) {
-//                // Strip the leading @tag from this string
-//                String[] substr = tag.split(" ", 2);
-//                if (substr.length < 2) continue; // This indicates no tag or no description
-//
-//                html.append("<strong class=\"alert\">")
-//                        .append(substr[0])
-//                        .append("</strong> ")
-//                        .append(substr[1])
-//                        .append("<br>");
-//            }
-//            html.append("</p></td></tr>");
-//        }
-
-        return html.toString();
+    private static String getTagComment(PsiDocComment docComment) {
+        if (docComment != null) {
+            StringBuilder html = new StringBuilder();
+            PsiDocTag[] docTags = docComment.getTags();
+            if (docTags.length > 0) {
+                html.append("<tr><td><p>");
+                for (PsiDocTag tag : docTags) {
+                    html.append("<strong class=\"alert\">@")
+                            .append(tag.getName())
+                            .append("</strong> ");
+                    PsiElement[] dataElements = tag.getDataElements();
+                    for (PsiElement dataElement : dataElements) html.append(dataElement.getText()).append(" ");
+                    html.append("<br>");
+                }
+                html.append("</p></td></tr>");
+            }
+            return html.toString();
+        }
+        return "";
     }
 
     /**

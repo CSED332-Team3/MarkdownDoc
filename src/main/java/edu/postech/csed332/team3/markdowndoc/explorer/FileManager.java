@@ -41,14 +41,6 @@ public class FileManager {
      */
     public void write(PsiNamedElement element) {
         stringBuilder.append(TemplateUtil.append(element));
-
-//        stringBuilder
-//                .append(appendId(element))
-//                .append(appendType(element))
-//                .append(element.getName());
-//        if (element instanceof PsiJavaDocumentedElement)
-//            stringBuilder.append(appendComment(((PsiJavaDocumentedElement) element).getDocComment()));
-//        stringBuilder.append("\n</p>\n");
     }
 
     /**

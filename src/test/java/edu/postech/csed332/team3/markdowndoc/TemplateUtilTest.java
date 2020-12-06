@@ -35,10 +35,4 @@ class TemplateUtilTest {
                 TemplateUtil.allClasses(List.of("Class1", "Class2", "Class3")));
 
     }
-
-    @Test
-    void classDescTest() {
-        assertEquals("<h2>Description</h2><table id = \"table\"><tr><td><p>An HTML description</p></td></tr><tr><td><p><strong class=\"alert\">@param</strong> some param<br><strong class=\"alert\">@author</strong> myself<br></p></td></tr>",
-                TemplateUtil.classDesc("<p>An HTML description</p>", List.of("@param some param", "@author myself")));
-    }
 }
