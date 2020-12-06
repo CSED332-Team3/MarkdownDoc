@@ -29,14 +29,6 @@ import static com.intellij.patterns.PsiJavaPatterns.psiElement;
  */
 public class MarkdownCompletionContributor extends CompletionContributor implements DumbAware {
     public MarkdownCompletionContributor() {
-        extend(CompletionType.BASIC, PsiJavaPatterns.psiElement(),
-                new CompletionProvider<CompletionParameters>() {
-                    public void addCompletions(@NotNull CompletionParameters parameters,
-                                               @NotNull ProcessingContext context,
-                                               @NotNull CompletionResultSet resultSet) {
-                        resultSet.addElement(LookupElementBuilder.create("Hello"));
-                    }
-                }
-        );
+        extend(CompletionType.BASIC, PsiJavaPatterns.psiElement(JavaDocTokenType.DOC_COMMENT_DATA), new MarkdownParametersProvider());
     }
 }
