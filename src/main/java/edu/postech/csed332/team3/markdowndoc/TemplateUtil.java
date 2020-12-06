@@ -2,8 +2,9 @@ package edu.postech.csed332.team3.markdowndoc;
 
 
 import com.intellij.psi.*;
+import com.intellij.psi.javadoc.PsiDocComment;
+import com.intellij.psi.javadoc.PsiDocToken;
 import org.apache.commons.io.IOUtils;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -20,28 +21,7 @@ import java.util.List;
  */
 public class TemplateUtil {
 
-    private String header;
-    private String footer;
-
-    public TemplateUtil() {
-        try {
-            InputStream headerStream = getClass().getResourceAsStream(File.separator + "header.part");
-            StringWriter headerWriter = new StringWriter();
-            IOUtils.copy(headerStream, headerWriter, StandardCharsets.UTF_8);
-            header = headerWriter.toString();
-            headerStream.close();
-
-            InputStream footerStream = getClass().getResourceAsStream(File.separator + "footer.part");
-            StringWriter footerWriter = new StringWriter();
-            IOUtils.copy(footerStream, footerWriter, StandardCharsets.UTF_8);
-            footer = footerWriter.toString();
-            footerStream.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            header = null;
-            footer = null;
-        }
+    private TemplateUtil() {
     }
 
     /**
@@ -49,7 +29,13 @@ public class TemplateUtil {
      *
      * @return the header as String
      */
-    public String header() {
+    public static String header() throws IOException {
+        InputStream headerStream = TemplateUtil.class.getResourceAsStream(File.separator + "header.part");
+        StringWriter headerWriter = new StringWriter();
+        IOUtils.copy(headerStream, headerWriter, StandardCharsets.UTF_8);
+        String header = headerWriter.toString() + "\n";
+        headerStream.close();
+
         return header;
     }
 
@@ -58,45 +44,14 @@ public class TemplateUtil {
      *
      * @return the footer as String
      */
-    public String footer() {
+    public static String footer() throws IOException {
+        InputStream footerStream = TemplateUtil.class.getResourceAsStream(File.separator + "footer.part");
+        StringWriter footerWriter = new StringWriter();
+        IOUtils.copy(footerStream, footerWriter, StandardCharsets.UTF_8);
+        String footer = footerWriter.toString() + "\n";
+        footerStream.close();
+
         return footer;
-    }
-
-    /**
-     * Returns HTML div element of class label section
-     *
-     * @param className the class name
-     * @param pkg       the package name
-     * @param ext       any class this extends
-     * @param impl      (a list of) any interface this implements
-     * @return the HTML string
-     */
-    public String classLabel(String className, String pkg, @Nullable String ext, @Nullable List<String> impl) {
-        StringBuilder html = new StringBuilder("<div>");
-
-        if (pkg != null && pkg.length() > 0) {
-            html.append("<div class=\"pkg\">").append(pkg).append("</div>");
-        }
-        html.append("<h1>").append(className).append("</h1>");
-        if (ext != null && ext.length() > 0) {
-            html.append("<div><strong>extends</strong> <a id=\"c-")
-                    .append(ext)
-                    .append("\">")
-                    .append(ext)
-                    .append("</a></div>");
-        }
-        if (impl != null && !impl.isEmpty()) {
-            for (String i : impl) {
-                html.append("<div><strong>implements</strong> <a id=\"c-")
-                        .append(i)
-                        .append("\">")
-                        .append(i)
-                        .append("</a></div>");
-            }
-        }
-
-        html.append("</div>");
-        return html.toString();
     }
 
     /**
@@ -106,37 +61,119 @@ public class TemplateUtil {
      * @return the HTML string
      * @throws InvalidParameterException className doesn't exist
      */
-    public String classLabel(PsiClass psiClass) {
+    public static String appendFirst(PsiClass psiClass) {
         String className = psiClass.getName();
-        String pkg = null;
-        String ext = null;
-        List<String> impl = null;
-
-        String qualifiedName = psiClass.getQualifiedName();
-        PsiReferenceList extList = psiClass.getExtendsList();
-        PsiReferenceList implList = psiClass.getImplementsList();
+        StringBuilder html = new StringBuilder();
 
         // Check null
         if (className == null) throw new InvalidParameterException("Class name is null");
 
-        // Get package name from qualified name
-        if (qualifiedName != null) {
-            int classNameIndex = qualifiedName.lastIndexOf(".");
-            pkg = qualifiedName.substring(0, classNameIndex);
-        }
+        String pkg = getPkg(psiClass);
+        String ext = getExtends(psiClass);
+        List<String> impl = getImplements(psiClass);
 
-        if (extList != null) {
-            ext = extList.getReferencedTypes()[0].getClassName();
-        }
+        html.append(pkg)
+                .append("<h1>")
+                .append(className)
+                .append("</h1>");
 
-        if (implList != null) {
-            impl = new ArrayList<>();
-            for (PsiClassType c : implList.getReferencedTypes()) {
-                impl.add(c.getClassName());
-            }
-        }
+        if (ext != null && ext.length() > 0)
+            html.append("<div><strong>extends</strong> <a id=\"c-")
+                    .append(ext)
+                    .append("\">")
+                    .append(ext)
+                    .append("</a></div>");
 
-        return classLabel(className, pkg, ext, impl);
+        if (impl != null && !impl.isEmpty())
+            for (String i : impl)
+                html.append("<div><strong>implements</strong> <a id=\"c-")
+                        .append(i)
+                        .append("\">")
+                        .append(i)
+                        .append("</a></div>");
+
+
+        html.append("\n")
+            .append(getCommentFirst(psiClass));
+
+        return html.toString();
+    }
+
+
+    /**
+     * Returns HTML table row of method
+     * with method description and tags.
+     *
+     * @param element the PsiMethod element
+     * @return the HTML string
+     */
+    public static String append(PsiNamedElement element) {
+        String name = element.getName();
+        String type = getType(element);
+
+        StringBuilder html = new StringBuilder("<tr><td data-type=\"");
+        html.append(type)
+                .append("\"><h5>")
+                .append(getElementType(element))
+                .append("</h5><h3>")
+                .append(getId(element));
+
+        if (element instanceof PsiMethod)
+            html.append(((PsiMethod) element).getModifierList().getText())
+                    .append(" ");
+
+        if (type != null)
+            html.append(type)
+                    .append(" ");
+
+        html.append(name)
+                .append("</a></h3>")
+                .append(getComment(((PsiJavaDocumentedElement) element).getDocComment()));
+
+
+//        // Tags
+//        if (tags != null && !tags.isEmpty()) {
+//            html.append("<p>");
+//            for (String tag : tags) {
+//                // Strip the leading @tag from this string
+//                String[] subStr = tag.split(" ", 2);
+//                if (subStr.length < 2) continue; // This indicates no tag or no description
+//
+//                html.append("<strong class=\"alert\">")
+//                        .append(subStr[0])
+//                        .append("</strong> ")
+//                        .append(subStr[1])
+//                        .append("<br>");
+//            }
+//            html.append("</p>");
+//        }
+
+        html.append("</td></tr>\n");
+
+        return html.toString();
+    }
+
+    /**
+     * Returns HTML list of all classes in the project
+     * This acts as a quick index
+     *
+     * @param classes the list of all class names
+     * @return the HTML string
+     */
+    public static String allClasses(List<String> classes) {
+        StringBuilder html = new StringBuilder("<h2>All classes</h2><div class=\"all\">");
+
+        for (String c : classes)
+            html.append("<a id=\"c-")
+                    .append(c)
+                    .append("\">")
+                    .append(c)
+                    .append("</a><br>");
+
+
+        html.append("</div>");
+
+        return html.toString();
     }
 
     /**
@@ -148,7 +185,7 @@ public class TemplateUtil {
      * @param tags list of tag strings, such as @param or @author, etc.
      * @return the HTML string
      */
-    public String classDesc(String desc, @Nullable List<String> tags) {
+    public static String classDesc(String desc, @Nullable List<String> tags) {
         StringBuilder html = new StringBuilder("<h2>Description</h2><table id = \"table\">");
 
         // Description
@@ -161,13 +198,13 @@ public class TemplateUtil {
             html.append("<tr><td><p>");
             for (String tag : tags) {
                 // Strip the leading @tag from this string
-                String[] substr = tag.split(" ", 2);
-                if (substr.length < 2) continue; // This indicates no tag or no description
+                String[] subStr = tag.split(" ", 2);
+                if (subStr.length < 2) continue; // This indicates no tag or no description
 
                 html.append("<strong class=\"alert\">")
-                        .append(substr[0])
+                        .append(subStr[0])
                         .append("</strong> ")
-                        .append(substr[1])
+                        .append(subStr[1])
                         .append("<br>");
             }
             html.append("</p></td></tr>");
@@ -177,167 +214,135 @@ public class TemplateUtil {
     }
 
     /**
-     * Returns HTML table row of field
-     * with field description.
+     * Make the string fit the template
      *
-     * @param fieldName the field name
-     * @param type      the field type
-     * @param desc      the field description (html surrounded with p tag)
-     * @param tags      list of tag strings, such as @param or @author, etc.
-     * @return the HTML string
+     * @param psiClass target class
+     * @return the edited package string
      */
-    public String field(String fieldName, String type, @Nullable String desc, @Nullable List<String> tags) {
-        StringBuilder html = new StringBuilder("<tr><td data-type=\"");
-        html.append(type)
-                .append("\"><h5>Field</h5><h3><a id=\"f-")
-                .append(fieldName)
-                .append("\">")
-                .append(type)
-                .append(" ")
-                .append(fieldName)
-                .append("</a></h3>");
-
-        if (desc != null) {
-            html.append(desc);
+    private static String getPkg(PsiClass psiClass) {
+        String pkg = null;
+        String qualifiedName = psiClass.getQualifiedName();
+        if (qualifiedName != null) {
+            int classNameIndex = qualifiedName.lastIndexOf(".");
+            pkg = qualifiedName.substring(0, classNameIndex);
         }
 
-        // Tags
-        if (tags != null && !tags.isEmpty()) {
-            html.append("<p>");
-            for (String tag : tags) {
-                // Strip the leading @tag from this string
-                String[] subStr = tag.split(" ", 2);
-                if (subStr.length < 2) continue; // This indicates no tag or no description
-
-                html.append("<strong class=\"alert\">")
-                        .append(subStr[0])
-                        .append("</strong> ")
-                        .append(subStr[1])
-                        .append("<br>");
-            }
-            html.append("</p>");
-        }
-
-        html.append("</td></tr>");
-
-        return html.toString();
+        StringBuilder stringBuilder = new StringBuilder();
+        if (pkg != null && pkg.length() > 0)
+            stringBuilder.append("<div class=\"pkg\">").append(pkg).append("</div>\n");
+        return stringBuilder.toString();
     }
 
-    /**
-     * Returns HTML table row of field
-     * with field description.
-     *
-     * @param psiField the PsiField element
-     * @param desc     the field description (html surrounded with p tag)
-     * @param tags     list of tag strings, such as @param or @author, etc.
-     * @return the HTML string
-     */
-    public String field(PsiField psiField, @Nullable String desc, @Nullable List<String> tags) {
-        @NotNull String fieldName = psiField.getName();
-        String type = psiField.getType().getPresentableText();
+    @org.jetbrains.annotations.Nullable
+    private static List<String> getImplements(PsiClass psiClass) {
+        PsiReferenceList implList = psiClass.getImplementsList();
+        List<String> impl = null;
+        if (implList != null) {
+            impl = new ArrayList<>();
+            for (PsiClassType c : implList.getReferencedTypes())
+                impl.add(c.getClassName());
 
-        return field(fieldName, type, desc, tags);
+        }
+        return impl;
     }
 
-    /**
-     * Returns HTML table row of method
-     * with method description and tags.
-     *
-     * @param methodName the method name
-     * @param returnType the return type, null for constructors
-     * @param modifier   the modifiers (public static ...)
-     * @param desc       the method description (html surrounded with p tag)
-     * @param tags       list of tag strings, such as @param or @author, etc.
-     * @return the HTML string
-     */
-    public String method(String methodName, @Nullable String returnType, String modifier, @Nullable String desc, @Nullable List<String> tags) {
-        StringBuilder html = new StringBuilder("<tr><td data-type=\"");
-        html.append(returnType)
-                .append("\"><h5>Method</h5><h3><a id=\"m-")
-                .append(methodName)
-                .append("\">")
-                .append(modifier)
-                .append(" ");
-        if (returnType != null) {
-            html.append(returnType)
-                    .append(" ");
-        }
-        html.append(methodName)
-                .append("</a></h3>");
+    @org.jetbrains.annotations.Nullable
+    private static String getExtends(PsiClass psiClass) {
+        PsiReferenceList extList = psiClass.getExtendsList();
+        if (extList != null && extList.getReferencedTypes().length > 0)
+            return extList.getReferencedTypes()[0].getClassName();
+        return null;
+    }
+
+    private static String getElementType(PsiElement element) {
+        return element.toString().split(":")[0].replaceFirst("Psi", "");
+    }
+
+    public static String getCommentFirst(PsiClass psiClass) {
+        StringBuilder html = new StringBuilder("<h2>Description</h2>\n<table id = \"table\">\n");
 
         // Description
-        if (desc != null) {
-            html.append(desc);
-        }
+        html.append("<tr><td>")
+                .append(getComment(psiClass.getDocComment()))
+                .append("</td></tr>");
 
         // Tags
-        if (tags != null && !tags.isEmpty()) {
-            html.append("<p>");
-            for (String tag : tags) {
-                // Strip the leading @tag from this string
-                String[] subStr = tag.split(" ", 2);
-                if (subStr.length < 2) continue; // This indicates no tag or no description
-
-                html.append("<strong class=\"alert\">")
-                        .append(subStr[0])
-                        .append("</strong> ")
-                        .append(subStr[1])
-                        .append("<br>");
-            }
-            html.append("</p>");
-        }
-
-        html.append("</td></tr>");
+//        if (tags != null && !tags.isEmpty()) {
+//            html.append("<tr><td><p>");
+//            for (String tag : tags) {
+//                // Strip the leading @tag from this string
+//                String[] substr = tag.split(" ", 2);
+//                if (substr.length < 2) continue; // This indicates no tag or no description
+//
+//                html.append("<strong class=\"alert\">")
+//                        .append(substr[0])
+//                        .append("</strong> ")
+//                        .append(substr[1])
+//                        .append("<br>");
+//            }
+//            html.append("</p></td></tr>");
+//        }
 
         return html.toString();
     }
 
     /**
-     * Returns HTML table row of method
-     * with method description and tags.
+     * Apply code markdown grammar to visualize doc comment.
      *
-     * @param psiMethod the PsiMethod element
-     * @param desc      the method description (html surrounded with p tag)
-     * @param tags      list of tag strings, such as @param or @author, etc.
-     * @return the HTML string
+     * @param docComment comment for editing.
+     * @return edited doc comment.
      */
-    public String method(PsiMethod psiMethod, @Nullable String desc, @Nullable List<String> tags) {
-        @NotNull String methodName = psiMethod.getName();
-        String returnType = psiMethod.getReturnType() == null ? null : psiMethod.getReturnType().getPresentableText();
-        String accessMod = psiMethod.getModifierList().getText();
-
-        return method(methodName, returnType, accessMod, desc, tags);
-    }
-
-    /**
-     * Close the Description table
-     *
-     * @return the HTML string
-     */
-    public String closeDesc() {
-        return "</table>";
-    }
-
-    /**
-     * Returns HTML list of all classes in the project
-     * This acts as a quick index
-     *
-     * @param classes the list of all class names
-     * @return the HTML string
-     */
-    public String allClasses(List<String> classes) {
-        StringBuilder html = new StringBuilder("<h2>All classes</h2><div class=\"all\">");
-
-        for (String c : classes) {
-            html.append("<a id=\"c-")
-                    .append(c)
-                    .append("\">")
-                    .append(c)
-                    .append("</a><br>");
+    private static String getComment(PsiDocComment docComment) {
+        if (docComment != null) {
+            StringBuilder builder = new StringBuilder();
+            builder.append("\n");
+            for (PsiElement descriptionElement : docComment.getDescriptionElements())
+                if (descriptionElement instanceof PsiDocToken)
+                    builder.append(descriptionElement.getText()).append('\n');
+            return MarkdownParser.parse(builder.toString());
         }
+        return "";
+    }
 
-        html.append("</div>");
+    /**
+     * Get type of element. <br>
+     * If element is PsiMethod, return a return type of method. <br>
+     * If element is PsiField, return a type of field.
+     *
+     * @param element target element
+     * @return type of element, return null if element is not PsiClass, PsiMethod, PsiField.
+     */
+    private static String getType(PsiElement element) {
+        if (element instanceof PsiClass)
+            return "";
+        if (element instanceof PsiMethod) {
+            PsiType returnType = ((PsiMethod) element).getReturnType();
+            if (returnType == null)
+                return "";
+            return returnType.getPresentableText();
+        }
+        if (element instanceof PsiField)
+            return ((PsiField) element).getType().toString().split(":")[1];
+        return null;
+    }
 
-        return html.toString();
+    /**
+     * A form of Id is "type"-"name". <br>
+     * Type is one of "c", "m", "f".
+     *
+     * @param element target element
+     * @return id of element
+     */
+    private static String getId(PsiNamedElement element) {
+        StringBuilder builder = new StringBuilder("<a id=\"");
+        if (element instanceof PsiClass)
+            builder.append("c");
+        else if (element instanceof PsiMethod)
+            builder.append("m");
+        else if (element instanceof PsiField)
+            builder.append("f");
+        builder.append("-").append(element.getName()).append("\">\n");
+
+        return builder.toString();
     }
 }

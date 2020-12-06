@@ -15,6 +15,7 @@ public class MdDocElementVisitor extends JavaElementVisitor {
     private static final String HTML = "html";
     private final Deque<DefaultMutableTreeNode> stack;
     private FileManager fileManager;
+    private boolean first = true;
 
     MdDocElementVisitor(DefaultMutableTreeNode root) {
         stack = new ArrayDeque<>(Collections.singleton(root));
@@ -39,6 +40,7 @@ public class MdDocElementVisitor extends JavaElementVisitor {
             String path = canonicalPath.replace(SRC_DIR, HTML).replace(JAVA_EXT, HTML_EXT);
 
             fileManager = new FileManager(path);
+            first = true;
             psiClass.accept(this);
             fileManager.close();
         });
@@ -55,7 +57,13 @@ public class MdDocElementVisitor extends JavaElementVisitor {
         final DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(aClass);
         stack.getFirst().add(newChild);
         stack.push(newChild);
-        fileManager.write(aClass);
+
+        if (first) {
+            fileManager.writeFirst(aClass);
+            first = false;
+        }
+        else
+            fileManager.write(aClass);
 
         Arrays.stream(aClass.getInnerClasses()).forEach(psiClass -> psiClass.accept(this));
         Arrays.stream(aClass.getFields()).forEach(psiField -> psiField.accept(this));
