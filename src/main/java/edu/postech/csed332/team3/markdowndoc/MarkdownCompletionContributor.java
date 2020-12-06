@@ -25,7 +25,7 @@ import java.util.HashMap;
 import static com.intellij.patterns.PsiJavaPatterns.psiElement;
 
 /**
- *
+ * This class implement quick Markdown completion inside of comments using CompletionContributor
  */
 public class MarkdownCompletionContributor extends CompletionContributor implements DumbAware {
     public MarkdownCompletionContributor() {

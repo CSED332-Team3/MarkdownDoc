@@ -14,7 +14,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 /**
- *
+ * This class give result of Completion to MarkdownCompletionContributor
+ * this class doesn't implement perfect yet
  */
 public class MarkdownParametersProvider extends CompletionProvider<CompletionParameters> {
     private static final String BOLD = "** **";
