@@ -7,6 +7,15 @@ public class TemplateUtilStub {
     private TemplateUtilStub() {
     }
 
+    /**
+     * Stub method of appendFirst in TemplateUtil class.
+     *
+     * @param name a name of element.
+     * @param pkg  a package of java file
+     * @param ext  a parent class which is called by `extends`
+     * @param impl a parent class which is called by `implements`
+     * @return a string fit in template.
+     */
     public static String appendFirst(String name, String pkg, String ext, List<String> impl) {
         StringBuilder html = new StringBuilder();
 
@@ -40,7 +49,7 @@ public class TemplateUtilStub {
     }
 
     /**
-     * Make string fit a form.
+     * Stub method of append in TemplateUtil class.
      *
      * @param element  "element type" (+ type).
      * @param name     a name of element.
@@ -69,24 +78,6 @@ public class TemplateUtilStub {
         html.append(name)
                 .append("</a></h3>")
                 .append(comment);
-
-
-//        // Tags
-//        if (tags != null && !tags.isEmpty()) {
-//            html.append("<p>");
-//            for (String tag : tags) {
-//                // Strip the leading @tag from this string
-//                String[] subStr = tag.split(" ", 2);
-//                if (subStr.length < 2) continue; // This indicates no tag or no description
-//
-//                html.append("<strong class=\"alert\">")
-//                        .append(subStr[0])
-//                        .append("</strong> ")
-//                        .append(subStr[1])
-//                        .append("<br>");
-//            }
-//            html.append("</p>");
-//        }
 
         html.append("</td></tr>\n");
 

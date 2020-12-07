@@ -28,14 +28,21 @@ public class FileManager {
         }
     }
 
+    /**
+     * Writes a target class in its HTML string form. <br>
+     * This form is emphasized after rendering.
+     * </p>
+     *
+     * @param aClass Class of java file
+     */
     public void writeFirst(PsiClass aClass) {
         stringBuilder.append(TemplateUtil.appendFirst(aClass));
     }
 
     /**
-     * Writes a target element in its HTML string form.
-     * <p/>
+     * Writes a target element in its HTML string form. <br>
      * If it has a document, it will also be written together.
+     * </p>
      *
      * @param element Named element to be written.
      */
