@@ -93,7 +93,7 @@ public class BrowserController implements BrowserControllerInterface {
 
             @Override
             public boolean onConsoleMessage(CefBrowser cefBrowser, CefSettings.LogSeverity logSeverity, String s, String s1, int i) {
-                view.getResponseLabel().setText(s1);
+                view.getResponseLabel().setText(s);
                 return false;
             }
         });

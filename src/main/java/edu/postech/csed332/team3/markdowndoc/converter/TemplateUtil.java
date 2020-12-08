@@ -94,7 +94,7 @@ public class TemplateUtil {
 
 
         html.append("\n")
-                .append(getCommentFirst(psiClass))
+                .append(getCommentFirst(psiClass)) // Opens table tag
                 .append(getTagComment(psiClass.getDocComment()));
 
         return html.toString();
@@ -134,6 +134,15 @@ public class TemplateUtil {
         html.append("</td></tr>\n");
 
         return html.toString();
+    }
+
+    /**
+     * Append the table close tag at the end
+     *
+     * @return the table close tag
+     */
+    public static String appendLast() {
+        return "</table>";
     }
 
     /**
