@@ -25,9 +25,8 @@ public class BrowserController implements BrowserControllerInterface {
     private final CefBrowser cefBrowser;
     private final ProjectNavigator navigator;
     private TreeModel model;
-
-    // JSHandler for communication
-    private JBCefJSQuery linkQuery;
+    private final String projectPath;
+    private final String baseURL;
 
     /**
      * Create an empty browser controller instance
@@ -37,14 +36,15 @@ public class BrowserController implements BrowserControllerInterface {
             throw new NotSupportedException("This IDE version is not supported.");
         }
 
-        navigator = new ProjectNavigator();
-
         // Get project root directory and load it in the browser
         @NotNull VirtualFile projectRoot = ModuleRootManager.getInstance(
                 ModuleManager.getInstance(getActiveProject()).getModules()[0]
         ).getContentRoots()[0];
 
-        browser = new JBCefBrowser("file://" + projectRoot.getCanonicalPath() + "/html");
+        projectPath = projectRoot.getCanonicalPath();
+
+        baseURL = "file://" + projectPath + "/html";
+        browser = new JBCefBrowser(baseURL);
         this.view = view;
         cefBrowser = browser.getCefBrowser();
 
@@ -56,6 +56,7 @@ public class BrowserController implements BrowserControllerInterface {
 
         // Initialize SearchProject
         model = ProjectModel.createProjectTreeModel(projectRoot.getCanonicalPath());
+        navigator = new ProjectNavigator(this, projectPath);
     }
 
     private void setListeners() {
@@ -93,6 +94,16 @@ public class BrowserController implements BrowserControllerInterface {
 
             @Override
             public boolean onConsoleMessage(CefBrowser cefBrowser, CefSettings.LogSeverity logSeverity, String s, String s1, int i) {
+                if (s.startsWith("c")) {
+                    // Class
+                    // Navigate to the appropriate documentation for the class
+
+
+                } else if (s.startsWith("m") || s.startsWith("f")) {
+                    // Method or field
+                    navigator.navigateToMethodField(s);
+                }
+
                 view.getResponseLabel().setText(s);
                 return false;
             }
