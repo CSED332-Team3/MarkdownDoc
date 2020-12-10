@@ -4,6 +4,7 @@ import com.intellij.ide.projectView.impl.nodes.PackageUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.psi.*;
+import com.intellij.ui.treeStructure.Tree;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -43,6 +44,10 @@ public class ProjectModel {
         if (!folder.mkdirs())
             return null;
 
+        return createProjectTreeModel();
+    }
+
+    public static TreeModel createProjectTreeModel() {
         Project activeProject = getActiveProject();
         final DefaultMutableTreeNode root = new DefaultMutableTreeNode(activeProject);
 
