@@ -25,7 +25,7 @@ public class MarkdownParametersProvider extends CompletionProvider<CompletionPar
     @Override
     protected void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context, @NotNull CompletionResultSet result) {
 
-        LookupElement e = LookupElementBuilder.create(BOLD)
+        LookupElement e = LookupElementBuilder.create("Bold")
                 .withPresentableText("MarkDown Bold")
                 .withItemTextForeground(JBColor.RED)
                 .bold()

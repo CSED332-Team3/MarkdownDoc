@@ -1,95 +1,95 @@
 <templateSet group="MarkdownCompletion">
-  <template name="Bold" value="**$string$**" toReformat="true" toShortenFQNames="true">
+  <template name="&amp;Bold" value="**$string$**" description="Make string look BOLD" toReformat="true" toShortenFQNames="true">
     <variable name="string" expression="" defaultValue="" alwaysStopAt="true" />
     <context>
       <option name="JAVA_COMMENT" value="true" />
     </context>
   </template>
-  <template name="Heading1" value="# $string$" toReformat="true" toShortenFQNames="true">
+  <template name="&amp;Heading1" value="# $string$" description="Make string Title as size 1(biggest)" toReformat="true" toShortenFQNames="true">
     <variable name="string" expression="" defaultValue="" alwaysStopAt="true" />
     <context>
       <option name="JAVA_COMMENT" value="true" />
     </context>
   </template>
-  <template name="Heading2" value="## $string$" description="" toReformat="true" toShortenFQNames="true">
+  <template name="&amp;Heading2" value="## $string$" description="Make string Title as size 2" toReformat="true" toShortenFQNames="true">
     <variable name="string" expression="" defaultValue="" alwaysStopAt="true" />
     <context>
       <option name="JAVA_COMMENT" value="true" />
     </context>
   </template>
-  <template name="Heading3" value="### $string$" description="" toReformat="true" toShortenFQNames="true">
+  <template name="&amp;Heading3" value="### $string$" description="Make string Title as size 3" toReformat="true" toShortenFQNames="true">
     <variable name="string" expression="" defaultValue="" alwaysStopAt="true" />
     <context>
       <option name="JAVA_COMMENT" value="true" />
     </context>
   </template>
-  <template name="Heading4" value="#### $string$" description="" toReformat="true" toShortenFQNames="true">
+  <template name="&amp;Heading4" value="#### $string$" description="Make string Title as size 4" toReformat="true" toShortenFQNames="true">
     <variable name="string" expression="" defaultValue="" alwaysStopAt="true" />
     <context>
       <option name="JAVA_COMMENT" value="true" />
     </context>
   </template>
-  <template name="Heading5" value="##### $string$" description="" toReformat="true" toShortenFQNames="true">
+  <template name="&amp;Heading5" value="##### $string$" description="Make string Title as size 5" toReformat="true" toShortenFQNames="true">
     <variable name="string" expression="" defaultValue="" alwaysStopAt="true" />
     <context>
       <option name="JAVA_COMMENT" value="true" />
     </context>
   </template>
-  <template name="Heading6" value="###### $string$" description="" toReformat="true" toShortenFQNames="true">
+  <template name="&amp;Heading6" value="###### $string$" description="Make string Title as size 6(smallest)" toReformat="true" toShortenFQNames="true">
     <variable name="string" expression="" defaultValue="" alwaysStopAt="true" />
     <context>
       <option name="JAVA_COMMENT" value="true" />
     </context>
   </template>
-  <template name="Italic" value="*$string$*" description="" toReformat="true" toShortenFQNames="true">
+  <template name="&amp;Italic" value="*$string$*" description="Make string look ITALIC" toReformat="true" toShortenFQNames="true">
     <variable name="string" expression="" defaultValue="" alwaysStopAt="true" />
     <context>
       <option name="JAVA_COMMENT" value="true" />
     </context>
   </template>
-  <template name="Blockquotes" value="&gt; $string$" toReformat="true" toShortenFQNames="true">
+  <template name="&amp;Blockquotes" value="&gt; $string$" description="Make string look Blockquotes" toReformat="true" toShortenFQNames="true">
     <variable name="string" expression="" defaultValue="" alwaysStopAt="true" />
     <context>
       <option name="JAVA_COMMENT" value="true" />
     </context>
   </template>
-  <template name="OrderedList" value="1. $string$&#10;* 2." description="" toReformat="true" toShortenFQNames="true">
+  <template name="&amp;OrderedList" value="1. $string$&#10;* 2." description="Make OrderedList" toReformat="true" toShortenFQNames="true">
     <variable name="string" expression="" defaultValue="" alwaysStopAt="true" />
     <context>
       <option name="JAVA_COMMENT" value="true" />
     </context>
   </template>
-  <template name="UnorderedList" value="- $string$&#10;*   +" description="" toReformat="true" toShortenFQNames="true">
+  <template name="&amp;UnorderedList" value="- $string$&#10;*   +" description="Make UnorderedList" toReformat="true" toShortenFQNames="true">
     <variable name="string" expression="" defaultValue="" alwaysStopAt="true" />
     <context>
       <option name="JAVA_COMMENT" value="true" />
     </context>
   </template>
-  <template name="Image" value="![$description$]($image_location$)" description="" toReformat="true" toShortenFQNames="true">
+  <template name="&amp;Image" value="![$description$]($image_location$)" description="Insert Image in document" toReformat="true" toShortenFQNames="true">
     <variable name="description" expression="" defaultValue="" alwaysStopAt="true" />
     <variable name="image_location" expression="" defaultValue="" alwaysStopAt="true" />
     <context>
       <option name="JAVA_COMMENT" value="true" />
     </context>
   </template>
-  <template name="Code" value="`$String&#10;$`" description="" toReformat="true" toShortenFQNames="true">
+  <template name="&amp;Code" value="`$String$`" description="Make string look CODE" toReformat="true" toShortenFQNames="true">
     <context>
       <option name="JAVA_COMMENT" value="true" />
     </context>
   </template>
-  <template name="HorizontalRule" value="_________________" toReformat="true" toShortenFQNames="true">
+  <template name="&amp;HorizontalRule" value="_________________" description="Make Horizontal Rule" toReformat="true" toShortenFQNames="true">
     <context>
       <option name="JAVA_COMMENT" value="true" />
     </context>
   </template>
-  <template name="Link" value="[$Description$]($Link$)" toReformat="true" toShortenFQNames="true">
+  <template name="&amp;Link" value="[$Description$]($Link$)" description="Insert Link" toReformat="true" toShortenFQNames="true">
     <variable name="Description" expression="" defaultValue="" alwaysStopAt="true" />
     <variable name="Link" expression="" defaultValue="" alwaysStopAt="true" />
     <context>
       <option name="JAVA_COMMENT" value="true" />
     </context>
   </template>
-  <template name="URL" value="&lt;$Description$&gt;" toReformat="true" toShortenFQNames="true">
+  <template name="&amp;URL" value="&lt;$Description$&gt;" description="Insert URL" toReformat="true" toShortenFQNames="true">
     <variable name="Description" expression="" defaultValue="" alwaysStopAt="true" />
     <context>
       <option name="JAVA_COMMENT" value="true" />

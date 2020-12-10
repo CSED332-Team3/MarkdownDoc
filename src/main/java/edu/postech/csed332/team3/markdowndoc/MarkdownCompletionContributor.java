@@ -27,8 +27,12 @@ import static com.intellij.patterns.PsiJavaPatterns.psiElement;
 /**
  * This class implement quick Markdown completion inside of comments using CompletionContributor
  */
-public class MarkdownCompletionContributor extends CompletionContributor implements DumbAware {
+public class MarkdownCompletionContributor extends CompletionContributor{
+    /**
+     *
+     */
     public MarkdownCompletionContributor() {
         extend(CompletionType.BASIC, PsiJavaPatterns.psiElement(JavaDocTokenType.DOC_COMMENT_DATA), new MarkdownParametersProvider());
     }
+
 }

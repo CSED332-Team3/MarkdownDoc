@@ -6,23 +6,34 @@ import com.intellij.codeInsight.editorActions.CompletionAutoPopupHandler;
 import com.intellij.codeInsight.editorActions.TypedHandlerDelegate;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
+import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 /**
  * We want to use Markdown grammar completion inside of comments,
  * so we use custom parameter(&) that triggered completion popup
- * Yet, this class doesn't implement perfect
  */
-public class MarkdownTypedHandler extends CompletionAutoPopupHandler {
+public class MarkdownTypedHandler extends TypedHandlerDelegate {
 
     /**
      * check if input is triggered character
      * @param input to be checked
      */
-    private boolean isParameter(char input){
+    private boolean isParameter(char input) {
         return input == '&';
+    }
+
+    /**
+     * check if current location is in JavaDoc context
+     */
+    private boolean isJavaDocComment(Editor editor, PsiFile file){
+        try {
+            return Objects.requireNonNull(Objects.requireNonNull(file.findElementAt(editor.getCaretModel().getOffset())).getContext()).toString().equals("PsiDocComment");
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     /**
@@ -30,7 +41,10 @@ public class MarkdownTypedHandler extends CompletionAutoPopupHandler {
      */
     @Override
     public @NotNull Result checkAutoPopup(char charTyped, @NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
-        DoAutoPopup(charTyped, project, editor);
+        if (isParameter(charTyped) && isJavaDocComment(editor, file)) {
+            DoAutoPopup(project, editor);
+            return Result.STOP;
+        }
         return super.checkAutoPopup(charTyped, project, editor, file);
     }
 
@@ -38,28 +52,23 @@ public class MarkdownTypedHandler extends CompletionAutoPopupHandler {
      * Override checkAutoPopup to insert DoAutoPopup
      */
     @Override
-    public Result charTyped(char c, final Project project, @NotNull final Editor editor, @NotNull PsiFile file) {
-        DoAutoPopup(c, project, editor);
+    public @NotNull Result charTyped(char c, final @NotNull Project project, @NotNull final Editor editor, @NotNull PsiFile file) {
+        if (isParameter(c) && isJavaDocComment(editor, file)) {
+            DoAutoPopup(project, editor);
+            return Result.STOP;
+        }
         return super.charTyped(c, project, editor, file);
     }
 
     /**
      * When we type custom parameter like &, Completion Pop-upped automatically
-     * @param charTyped to be checked
      */
-    private Result DoAutoPopup(char charTyped, final Project project, @NotNull final Editor editor){
-        if (isParameter(charTyped)) {
-            CompletionAutoPopupHandler.runLaterWithCommitted(project, editor.getDocument(), new Runnable() {
-                @Override
-                public void run() {
-                    if (PsiDocumentManager.getInstance(project).isCommitted(editor.getDocument())) {
-                        new CodeCompletionHandlerBase(CompletionType.BASIC).invokeCompletion(project, editor, 1);
-                    }
-                }
-            });
-            return Result.STOP;
-        }
-        return Result.CONTINUE;
+    private void DoAutoPopup(final Project project, @NotNull final Editor editor) {
+        CompletionAutoPopupHandler.runLaterWithCommitted(project, editor.getDocument(), () -> {
+            if (PsiDocumentManager.getInstance(project).isCommitted(editor.getDocument())) {
+                new CodeCompletionHandlerBase(CompletionType.BASIC).invokeCompletion(project, editor, 1);
+            }
+        });
     }
 
 }
