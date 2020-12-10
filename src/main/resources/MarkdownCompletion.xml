@@ -95,8 +95,50 @@
       <option name="JAVA_COMMENT" value="true" />
     </context>
   </template>
-  <template name="Table" value="| $Description$ | | | &#10;* |-----|-----|-----| &#10;* | | | |" description="" toReformat="true" toShortenFQNames="true">
+  <template name="&amp;Table" value="| $Description$ | | | &#10;* |-----|-----|-----| &#10;* | | | |" description="Make default TABLE" toReformat="true" toShortenFQNames="true">
     <variable name="Description" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="JAVA_COMMENT" value="true" />
+    </context>
+  </template>
+  <template name="**" value="**$String$**" toReformat="true" toShortenFQNames="true">
+    <variable name="String" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="JAVA_COMMENT" value="true" />
+    </context>
+  </template>
+  <template name="*" value="*$String$*" toReformat="true" toShortenFQNames="true">
+    <variable name="String" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="JAVA_COMMENT" value="true" />
+    </context>
+  </template>
+  <template name="_" value="_$String$_" toReformat="true" toShortenFQNames="true">
+    <variable name="String" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="JAVA_COMMENT" value="true" />
+    </context>
+  </template>
+  <template name="__" value="__$String$__" toReformat="true" toShortenFQNames="true">
+    <variable name="String" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="JAVA_COMMENT" value="true" />
+    </context>
+  </template>
+  <template name="__" value="__$String$__" toReformat="true" toShortenFQNames="true">
+    <variable name="String" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="JAVA_COMMENT" value="true" />
+    </context>
+  </template>
+  <template name="-" value="-------" toReformat="true" toShortenFQNames="true">
+    <variable name="String" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="JAVA_COMMENT" value="true" />
+    </context>
+  </template>
+  <template name="=" value="========" toReformat="true" toShortenFQNames="true">
+    <variable name="String" expression="" defaultValue="" alwaysStopAt="true" />
     <context>
       <option name="JAVA_COMMENT" value="true" />
     </context>

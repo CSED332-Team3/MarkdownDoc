@@ -5,9 +5,6 @@ import com.intellij.codeInsight.template.TemplateContextType;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * |  | | | 
- * |-----|-----|-----| 
- * | | | |
  * This class provide Markdown macro using Intellj live template
  * For example, when we type Bold and press TAB inside JavaDoc comment, it converted to ** **
  * Information of live template that we implement is in MarkdownCompletion.xml
