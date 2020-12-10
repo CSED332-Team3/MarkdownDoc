@@ -1,0 +1,14 @@
+<templateSet group="MarkdownPairCompletion">
+    <template name="**" value="**$string$**" toReformat="true" toShortenFQNames="true">
+        <variable name="string" expression="" defaultValue="" alwaysStopAt="true" />
+        <context>
+            <option name="JAVA_COMMENT" value="true" />
+        </context>
+    </template>
+    <template name="*" value="*$string$*" description="" toReformat="true" toShortenFQNames="true">
+        <variable name="string" expression="" defaultValue="" alwaysStopAt="true" />
+        <context>
+            <option name="JAVA_COMMENT" value="true" />
+        </context>
+    </template>
+</templateSet>
