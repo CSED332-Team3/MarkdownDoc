@@ -73,7 +73,7 @@ public class TemplateUtil {
         List<String> impl = getImplements(psiClass);
 
         html.append(pkg)
-                .append("<h1>")
+                .append("<h1 id=\"class\">")
                 .append(className)
                 .append("</h1>");
 
@@ -184,7 +184,7 @@ public class TemplateUtil {
 
         StringBuilder stringBuilder = new StringBuilder();
         if (pkg != null && pkg.length() > 0)
-            stringBuilder.append("<div class=\"pkg\">").append(pkg).append("</div>\n");
+            stringBuilder.append("<div id=\"pkg\" class=\"pkg\">").append(pkg).append("</div>\n");
         return stringBuilder.toString();
     }
 
