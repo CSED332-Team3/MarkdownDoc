@@ -28,9 +28,5 @@ public class MarkdownCompletionTest extends BasePlatformTestCase {
         myFixture.type('d');
         myFixture.type('\t');
         myFixture.checkResultByFile("AutoPopUpCompletionTest2.java", false);
-
-        myFixture.configureByFile("AutoPopUpCompletionTest3.java");
-        myFixture.type('&');
-        Assert.assertNotNull(myFixture);
     }
 }
