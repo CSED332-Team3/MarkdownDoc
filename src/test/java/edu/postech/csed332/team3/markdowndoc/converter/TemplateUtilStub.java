@@ -1,5 +1,7 @@
 package edu.postech.csed332.team3.markdowndoc.converter;
 
+import com.intellij.psi.*;
+
 import java.security.InvalidParameterException;
 import java.util.List;
 
@@ -95,10 +97,10 @@ public class TemplateUtilStub {
             String[] strings = str.split(":");
             if (strings.length == 1)
                 return "";
-            return strings[1];
+            return escapeString(strings[1]);
         }
         if (str.contains("PsiField"))
-            return str.split(":")[1];
+            return escapeString(str.split(":")[1]);
         return null;
     }
 
@@ -113,5 +115,9 @@ public class TemplateUtilStub {
         builder.append("-").append(name).append("\">\n");
 
         return builder.toString();
+    }
+
+    private static String escapeString(String str) {
+        return str.replace("<", "&lt;").replace(">", "&gt;");
     }
 }

@@ -7,7 +7,6 @@ import com.intellij.psi.javadoc.PsiDocTag;
 import com.intellij.psi.javadoc.PsiDocToken;
 import org.apache.commons.io.IOUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -30,7 +29,7 @@ public class TemplateUtil {
      * @return the header as String
      */
     public static String header() throws IOException {
-        InputStream headerStream = TemplateUtil.class.getResourceAsStream(File.separator + "header.part");
+        InputStream headerStream = TemplateUtil.class.getResourceAsStream("/header.part");
         StringWriter headerWriter = new StringWriter();
         IOUtils.copy(headerStream, headerWriter, StandardCharsets.UTF_8);
         String header = headerWriter.toString() + "\n";
@@ -45,7 +44,7 @@ public class TemplateUtil {
      * @return the footer as String
      */
     public static String footer() throws IOException {
-        InputStream footerStream = TemplateUtil.class.getResourceAsStream(File.separator + "footer.part");
+        InputStream footerStream = TemplateUtil.class.getResourceAsStream("/footer.part");
         StringWriter footerWriter = new StringWriter();
         IOUtils.copy(footerStream, footerWriter, StandardCharsets.UTF_8);
         String footer = footerWriter.toString() + "\n";
@@ -264,11 +263,15 @@ public class TemplateUtil {
             PsiType returnType = ((PsiMethod) element).getReturnType();
             if (returnType == null)
                 return "";
-            return returnType.getPresentableText();
+            return escapeString(returnType.getPresentableText());
         }
         if (element instanceof PsiField)
-            return ((PsiField) element).getType().toString().split(":")[1];
+            return escapeString(((PsiField) element).getType().toString().split(":")[1]);
         return null;
+    }
+
+    private static String escapeString(String str) {
+        return str.replace("<", "&lt;").replace(">", "&gt;");
     }
 
     /**
