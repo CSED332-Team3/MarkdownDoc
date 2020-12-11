@@ -1,14 +1,10 @@
 package edu.postech.csed332.team3.markdowndoc;
 
-import com.intellij.codeInsight.editorActions.TypedHandlerDelegate;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFile;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 public class MarkdownCompletionTest extends BasePlatformTestCase {
     @Override
@@ -22,14 +18,6 @@ public class MarkdownCompletionTest extends BasePlatformTestCase {
     }
 
     @Test
-    public void testCheckAutoPopup() throws Exception {
-        setUp();
-        myFixture.configureByFile("AutoPopUpCompletionTest.java");
-        myFixture.type('&');
-        assertNotNull(myFixture);
-    }
-
-    @Test
     public void testBoldCompletion() throws Exception {
         setUp();
         myFixture.configureByFile("AutoPopUpCompletionTest.java");
@@ -40,5 +28,9 @@ public class MarkdownCompletionTest extends BasePlatformTestCase {
         myFixture.type('d');
         myFixture.type('\t');
         myFixture.checkResultByFile("AutoPopUpCompletionTest2.java", false);
+
+        myFixture.configureByFile("AutoPopUpCompletionTest3.java");
+        myFixture.type('&');
+        Assert.assertNotNull(myFixture);
     }
 }

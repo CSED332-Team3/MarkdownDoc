@@ -68,11 +68,6 @@ public class MarkdownTypedHandler extends TypedHandlerDelegate {
                 new CodeCompletionHandlerBase(CompletionType.BASIC).invokeCompletion(project, editor, 1);
             }
         });
-        //AppUIExecutor.onWriteThread().withDocumentsCommitted(project).inSmartMode(project).execute(() -> {
-          //  if (PsiDocumentManager.getInstance(project).isCommitted(editor.getDocument())) {
-            //    new CodeCompletionHandlerBase(CompletionType.BASIC).invokeCompletion(project, editor, 1);
-           // }
-        //});
     }
 
 }
