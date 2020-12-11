@@ -5,6 +5,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.javadoc.PsiDocTag;
 import com.intellij.psi.javadoc.PsiDocToken;
+import com.intellij.psi.util.PsiTypesUtil;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -19,9 +20,6 @@ import java.util.List;
  * Utility class for getting files from the Resources package
  */
 public class TemplateUtil {
-
-    private TemplateUtil() {
-    }
 
     /**
      * Get content of the header
@@ -72,29 +70,35 @@ public class TemplateUtil {
         List<String> impl = getImplements(psiClass);
 
         html.append(pkg)
-                .append("<h1>")
+                .append("<h1 id=\"class\">")
                 .append(className)
                 .append("</h1>");
 
         if (ext != null && ext.length() > 0)
-            html.append("<div><strong>extends</strong> <a id=\"c-")
+            html.append("<div><strong>extends</strong> ")
+                    .append("<a id=\"c-")
                     .append(ext)
                     .append("\">")
                     .append(ext)
-                    .append("</a></div>");
+                    .append("</a>")
+                    .append("</div>");
 
         if (impl != null && !impl.isEmpty())
             for (String i : impl)
-                html.append("<div><strong>implements</strong> <a id=\"c-")
+                html.append("<div><strong>implements</strong> ")
+                        .append("<a id=\"c-")
                         .append(i)
                         .append("\">")
                         .append(i)
-                        .append("</a></div>");
+                        .append("</a>")
+                        .append("</div>");
 
 
         html.append("\n")
-                .append(getCommentFirst(psiClass))
-                .append(getTagComment(psiClass.getDocComment()));
+                .append(getCommentFirst(psiClass)) // Opens table tag
+                .append("<tr><td>")
+                .append(getTagComment(psiClass.getDocComment()))
+                .append("</td></tr>");
 
         return html.toString();
     }
@@ -136,12 +140,22 @@ public class TemplateUtil {
     }
 
     /**
+     * Append the table close tag at the end
+     *
+     * @return the table close tag
+     */
+    public static String appendLast() {
+        return "</table>";
+    }
+
+    /**
      * Returns HTML list of all classes in the project
      * This acts as a quick index
      *
      * @param classes the list of all class names
      * @return the HTML string
      */
+    // TODO: Add functionality
     public static String allClasses(List<String> classes) {
         StringBuilder html = new StringBuilder("<h2>All classes</h2><div class=\"all\">");
 
@@ -174,7 +188,7 @@ public class TemplateUtil {
 
         StringBuilder stringBuilder = new StringBuilder();
         if (pkg != null && pkg.length() > 0)
-            stringBuilder.append("<div class=\"pkg\">").append(pkg).append("</div>\n");
+            stringBuilder.append("<div id=\"pkg\" class=\"pkg\">").append(pkg).append("</div>\n");
         return stringBuilder.toString();
     }
 
@@ -184,9 +198,12 @@ public class TemplateUtil {
         List<String> impl = null;
         if (implList != null) {
             impl = new ArrayList<>();
-            for (PsiClassType c : implList.getReferencedTypes())
-                impl.add(c.getClassName());
-
+            for (PsiClassType c : implList.getReferencedTypes()) {
+                PsiClass implClass = PsiTypesUtil.getPsiClass(c);
+                if (implClass != null) {
+                    impl.add(implClass.getQualifiedName());
+                }
+            }
         }
         return impl;
     }
@@ -194,8 +211,12 @@ public class TemplateUtil {
     @org.jetbrains.annotations.Nullable
     private static String getExtends(PsiClass psiClass) {
         PsiReferenceList extList = psiClass.getExtendsList();
-        if (extList != null && extList.getReferencedTypes().length > 0)
-            return extList.getReferencedTypes()[0].getClassName();
+        if (extList != null && extList.getReferencedTypes().length > 0) {
+            PsiClass extClass = PsiTypesUtil.getPsiClass(extList.getReferencedTypes()[0]);
+            if (extClass != null) {
+                return extClass.getQualifiedName();
+            }
+        }
         return null;
     }
 
@@ -214,7 +235,7 @@ public class TemplateUtil {
             StringBuilder html = new StringBuilder();
             PsiDocTag[] docTags = docComment.getTags();
             if (docTags.length > 0) {
-                html.append("<tr><td><p>");
+                html.append("<p>");
                 for (PsiDocTag tag : docTags) {
                     html.append("<strong class=\"alert\">@")
                             .append(tag.getName())
@@ -223,7 +244,7 @@ public class TemplateUtil {
                     for (PsiElement dataElement : dataElements) html.append(dataElement.getText()).append(" ");
                     html.append("<br>");
                 }
-                html.append("</p></td></tr>");
+                html.append("</p>");
             }
             return html.toString();
         }

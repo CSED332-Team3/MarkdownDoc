@@ -12,7 +12,7 @@ public class BrowserView {
     private final JPanel panel;
     private final JButton backButton;
     private final JButton forwardButton;
-    private final JLabel responseLabel;
+    private final JButton sortButton;
 
     /**
      * Creates a browser component
@@ -27,16 +27,17 @@ public class BrowserView {
         backButton = new JButton();
         forwardButton = new JButton();
 
-        // Response label
-        responseLabel = new JLabel();
-        responseLabel.setText("No responses");
+        // Sort Button
+        // TODO: Only for testing
+        sortButton = new JButton();
+        sortButton.setText("Sort");
 
         // Set text
-        backButton.setText("<--");
-        forwardButton.setText("-->");
+        backButton.setText("<-");
+        forwardButton.setText("->");
 
         buttons.add(backButton);
-        buttons.add(responseLabel);
+        buttons.add(sortButton);
         buttons.add(forwardButton);
         addComponent(buttons, "South"); // Add buttons
     }
@@ -64,9 +65,9 @@ public class BrowserView {
      *
      * @return the response label
      */
-    public JLabel getResponseLabel() {
+    public JButton getSortButton() {
         // TODO: Remove
-        return responseLabel;
+        return sortButton;
     }
 
     /**

@@ -4,9 +4,9 @@ import com.intellij.openapi.externalSystem.service.execution.NotSupportedExcepti
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiType;
 import com.intellij.ui.jcef.JBCefApp;
 import com.intellij.ui.jcef.JBCefBrowser;
-import com.intellij.ui.jcef.JBCefJSQuery;
 import edu.postech.csed332.team3.markdowndoc.explorer.ProjectModel;
 import org.cef.CefSettings;
 import org.cef.browser.CefBrowser;
@@ -25,9 +25,8 @@ public class BrowserController implements BrowserControllerInterface {
     private final CefBrowser cefBrowser;
     private final ProjectNavigator navigator;
     private TreeModel model;
-
-    // JSHandler for communication
-    private JBCefJSQuery linkQuery;
+    private final String projectPath;
+    private final String baseURL;
 
     /**
      * Create an empty browser controller instance
@@ -37,14 +36,15 @@ public class BrowserController implements BrowserControllerInterface {
             throw new NotSupportedException("This IDE version is not supported.");
         }
 
-        navigator = new ProjectNavigator();
-
         // Get project root directory and load it in the browser
         @NotNull VirtualFile projectRoot = ModuleRootManager.getInstance(
                 ModuleManager.getInstance(getActiveProject()).getModules()[0]
         ).getContentRoots()[0];
 
-        browser = new JBCefBrowser("file://" + projectRoot.getCanonicalPath() + "/html");
+        projectPath = projectRoot.getCanonicalPath();
+
+        baseURL = "file://" + projectPath + "/html";
+        browser = new JBCefBrowser(baseURL);
         this.view = view;
         cefBrowser = browser.getCefBrowser();
 
@@ -56,6 +56,7 @@ public class BrowserController implements BrowserControllerInterface {
 
         // Initialize SearchProject
         model = ProjectModel.createProjectTreeModel(projectRoot.getCanonicalPath());
+        navigator = new ProjectNavigator(this, projectPath);
     }
 
     private void setListeners() {
@@ -66,6 +67,10 @@ public class BrowserController implements BrowserControllerInterface {
 
         view.getForwardButton().addActionListener(e -> {
             goForward();
+        });
+
+        view.getSortButton().addActionListener(e -> {
+            sort("String");
         });
     }
 
@@ -93,7 +98,15 @@ public class BrowserController implements BrowserControllerInterface {
 
             @Override
             public boolean onConsoleMessage(CefBrowser cefBrowser, CefSettings.LogSeverity logSeverity, String s, String s1, int i) {
-                view.getResponseLabel().setText(s1);
+                if (s.startsWith("c")) {
+                    // Class
+                    // Navigate to the appropriate documentation for the class
+
+                } else {
+                    // Method or field
+                    navigator.navigateToMethodField(s);
+                }
+
                 return false;
             }
         });
@@ -195,5 +208,23 @@ public class BrowserController implements BrowserControllerInterface {
      */
     public void executeJavaScript(String code) {
         cefBrowser.executeJavaScript(code, getURL(), 0);
+    }
+
+    /**
+     * Sort documentation elements according to type
+     *
+     * @param type the type (in PsiType)
+     */
+    public void sort(PsiType type) {
+        sort(type.getPresentableText());
+    }
+
+    /**
+     * Sort documentation elements according to type
+     *
+     * @param type the type (in String)
+     */
+    public void sort(String type) {
+        executeJavaScript("sortTable('" + type + "'); void(0)");
     }
 }

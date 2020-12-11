@@ -56,6 +56,8 @@ public class FileManager {
      */
     public void close() {
         try {
+            stringBuilder.append(TemplateUtil.appendLast()); // Close table tag
+            // stringBuilder.append(TemplateUtil.allClasses(null)); // Add class index
             stringBuilder.append(TemplateUtil.footer());
             fileWriter.write(MarkdownParser.parse(stringBuilder.toString()));
             fileWriter.close();
