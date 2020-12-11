@@ -99,7 +99,7 @@ public class BrowserController implements BrowserControllerInterface {
                     // Navigate to the appropriate documentation for the class
 
 
-                } else if (s.startsWith("m") || s.startsWith("f")) {
+                } else {
                     // Method or field
                     navigator.navigateToMethodField(s);
                 }

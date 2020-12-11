@@ -1,5 +1,6 @@
 package edu.postech.csed332.team3.markdowndoc;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -89,11 +90,11 @@ public class ProjectNavigator {
     }
 
     public void navigateToMethodField(String input) {
-        loadModel();
-        parseInput(input);
-        PsiElement element = find();
+        ApplicationManager.getApplication().invokeLater(() -> {
+            loadModel();
+            parseInput(input);
+            PsiElement element = find();
 
-        SwingUtilities.invokeLater(() -> {
             if (element instanceof PsiMethod) {
                 ((PsiMethod) element).navigate(true);
             } else if (element instanceof PsiField) {
