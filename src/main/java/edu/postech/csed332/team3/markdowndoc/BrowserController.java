@@ -4,9 +4,9 @@ import com.intellij.openapi.externalSystem.service.execution.NotSupportedExcepti
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiType;
 import com.intellij.ui.jcef.JBCefApp;
 import com.intellij.ui.jcef.JBCefBrowser;
-import com.intellij.ui.jcef.JBCefJSQuery;
 import edu.postech.csed332.team3.markdowndoc.explorer.ProjectModel;
 import org.cef.CefSettings;
 import org.cef.browser.CefBrowser;
@@ -68,6 +68,10 @@ public class BrowserController implements BrowserControllerInterface {
         view.getForwardButton().addActionListener(e -> {
             goForward();
         });
+
+        view.getSortButton().addActionListener(e -> {
+            sort("String");
+        });
     }
 
     private void setHandlers() {
@@ -98,13 +102,11 @@ public class BrowserController implements BrowserControllerInterface {
                     // Class
                     // Navigate to the appropriate documentation for the class
 
-
                 } else {
                     // Method or field
                     navigator.navigateToMethodField(s);
                 }
 
-                view.getResponseLabel().setText(s);
                 return false;
             }
         });
@@ -206,5 +208,23 @@ public class BrowserController implements BrowserControllerInterface {
      */
     public void executeJavaScript(String code) {
         cefBrowser.executeJavaScript(code, getURL(), 0);
+    }
+
+    /**
+     * Sort documentation elements according to type
+     *
+     * @param type the type (in PsiType)
+     */
+    public void sort(PsiType type) {
+        sort(type.getPresentableText());
+    }
+
+    /**
+     * Sort documentation elements according to type
+     *
+     * @param type the type (in String)
+     */
+    public void sort(String type) {
+        executeJavaScript("sortTable('" + type + "'); void(0)");
     }
 }

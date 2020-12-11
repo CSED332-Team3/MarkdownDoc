@@ -5,6 +5,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.javadoc.PsiDocTag;
 import com.intellij.psi.javadoc.PsiDocToken;
+import com.intellij.psi.util.PsiTypesUtil;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
@@ -20,9 +21,6 @@ import java.util.List;
  * Utility class for getting files from the Resources package
  */
 public class TemplateUtil {
-
-    private TemplateUtil() {
-    }
 
     /**
      * Get content of the header
@@ -78,19 +76,23 @@ public class TemplateUtil {
                 .append("</h1>");
 
         if (ext != null && ext.length() > 0)
-            html.append("<div><strong>extends</strong> <a id=\"c-")
+            html.append("<div><strong>extends</strong> ")
+                    .append("<a id=\"c-")
                     .append(ext)
                     .append("\">")
                     .append(ext)
-                    .append("</a></div>");
+                    .append("</a>")
+                    .append("</div>");
 
         if (impl != null && !impl.isEmpty())
             for (String i : impl)
-                html.append("<div><strong>implements</strong> <a id=\"c-")
+                html.append("<div><strong>implements</strong> ")
+                        .append("<a id=\"c-")
                         .append(i)
                         .append("\">")
                         .append(i)
-                        .append("</a></div>");
+                        .append("</a>")
+                        .append("</div>");
 
 
         html.append("\n")
@@ -154,6 +156,7 @@ public class TemplateUtil {
      * @param classes the list of all class names
      * @return the HTML string
      */
+    // TODO: Add functionality
     public static String allClasses(List<String> classes) {
         StringBuilder html = new StringBuilder("<h2>All classes</h2><div class=\"all\">");
 
@@ -196,9 +199,12 @@ public class TemplateUtil {
         List<String> impl = null;
         if (implList != null) {
             impl = new ArrayList<>();
-            for (PsiClassType c : implList.getReferencedTypes())
-                impl.add(c.getClassName());
-
+            for (PsiClassType c : implList.getReferencedTypes()) {
+                PsiClass implClass = PsiTypesUtil.getPsiClass(c);
+                if (implClass != null) {
+                    impl.add(implClass.getQualifiedName());
+                }
+            }
         }
         return impl;
     }
@@ -206,8 +212,12 @@ public class TemplateUtil {
     @org.jetbrains.annotations.Nullable
     private static String getExtends(PsiClass psiClass) {
         PsiReferenceList extList = psiClass.getExtendsList();
-        if (extList != null && extList.getReferencedTypes().length > 0)
-            return extList.getReferencedTypes()[0].getClassName();
+        if (extList != null && extList.getReferencedTypes().length > 0) {
+            PsiClass extClass = PsiTypesUtil.getPsiClass(extList.getReferencedTypes()[0]);
+            if (extClass != null) {
+                return extClass.getQualifiedName();
+            }
+        }
         return null;
     }
 
