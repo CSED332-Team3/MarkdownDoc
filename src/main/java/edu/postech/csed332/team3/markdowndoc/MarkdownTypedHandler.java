@@ -4,6 +4,7 @@ import com.intellij.codeInsight.completion.CodeCompletionHandlerBase;
 import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.codeInsight.editorActions.CompletionAutoPopupHandler;
 import com.intellij.codeInsight.editorActions.TypedHandlerDelegate;
+import com.intellij.openapi.application.AppUIExecutor;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
@@ -29,14 +30,11 @@ public class MarkdownTypedHandler extends TypedHandlerDelegate {
      * check if current location is in JavaDoc context
      */
     private boolean isJavaDocComment(Editor editor, PsiFile file){
-        try {
             return Objects.requireNonNull(Objects.requireNonNull(file.findElementAt(editor.getCaretModel().getOffset())).getContext()).toString().equals("PsiDocComment");
-        } catch (Exception e) {
-            return false;
-        }
     }
 
     /**
+     * If the specified character triggers auto-popup, schedules the auto-popup appearance
      * Override checkAutoPopup to insert DoAutoPopup
      */
     @Override
@@ -49,6 +47,7 @@ public class MarkdownTypedHandler extends TypedHandlerDelegate {
     }
 
     /**
+     * Called after the specified character typed by the user has been inserted in the editor.
      * Override checkAutoPopup to insert DoAutoPopup
      */
     @Override
@@ -69,6 +68,11 @@ public class MarkdownTypedHandler extends TypedHandlerDelegate {
                 new CodeCompletionHandlerBase(CompletionType.BASIC).invokeCompletion(project, editor, 1);
             }
         });
+        //AppUIExecutor.onWriteThread().withDocumentsCommitted(project).inSmartMode(project).execute(() -> {
+          //  if (PsiDocumentManager.getInstance(project).isCommitted(editor.getDocument())) {
+            //    new CodeCompletionHandlerBase(CompletionType.BASIC).invokeCompletion(project, editor, 1);
+           // }
+        //});
     }
 
 }

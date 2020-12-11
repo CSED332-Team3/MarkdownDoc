@@ -15,14 +15,9 @@
                     factoryClass="edu.postech.csed332.team3.markdowndoc.BrowserWindowFactory"/>
     </extensions>
     <extensions defaultExtensionNs="com.intellij">
-        <completion.contributor language="any"
-                                implementationClass="edu.postech.csed332.team3.markdowndoc.MarkdownCompletionContributor"/>
-    </extensions>
-    <extensions defaultExtensionNs="com.intellij">
         <defaultLiveTemplates file="/MarkdownCompletion.xml"/>
-        <liveTemplateContext implementation="edu.postech.csed332.team3.markdowndoc.MarkdownContext"/>
-        <typedHandler implementation="edu.postech.csed332.team3.markdowndoc.MarkdownTypedHandler"
-  />
+        <liveTemplateContext implementation="com.intellij.codeInsight.template.JavaCommentContextType"/>
+        <typedHandler implementation="edu.postech.csed332.team3.markdowndoc.MarkdownTypedHandler"/>
     </extensions>
     <actions>
         <!-- Add your actions here -->
