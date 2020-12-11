@@ -95,7 +95,9 @@ public class TemplateUtil {
 
         html.append("\n")
                 .append(getCommentFirst(psiClass)) // Opens table tag
-                .append(getTagComment(psiClass.getDocComment()));
+                .append("<tr><td>")
+                .append(getTagComment(psiClass.getDocComment()))
+                .append("</td></tr>");
 
         return html.toString();
     }
@@ -224,7 +226,7 @@ public class TemplateUtil {
             StringBuilder html = new StringBuilder();
             PsiDocTag[] docTags = docComment.getTags();
             if (docTags.length > 0) {
-                html.append("<tr><td><p>");
+                html.append("<p>");
                 for (PsiDocTag tag : docTags) {
                     html.append("<strong class=\"alert\">@")
                             .append(tag.getName())
@@ -233,7 +235,7 @@ public class TemplateUtil {
                     for (PsiElement dataElement : dataElements) html.append(dataElement.getText()).append(" ");
                     html.append("<br>");
                 }
-                html.append("</p></td></tr>");
+                html.append("</p>");
             }
             return html.toString();
         }
