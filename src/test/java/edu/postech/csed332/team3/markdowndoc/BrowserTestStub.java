@@ -3,9 +3,7 @@ package edu.postech.csed332.team3.markdowndoc;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 
 public class BrowserTestStub {
 
@@ -15,15 +13,15 @@ public class BrowserTestStub {
     public void URLTest() {
         browserController = new BrowserControllerStub();
         browserController.loadURL("https://www.google.com");
-        assertEquals(browserController.getURL(), "https://www.google.com");
+        assertEquals("https://www.google.com", browserController.getURL());
     }
 
     @Test
     public void HTMLTest() {
         browserController = new BrowserControllerStub();
         browserController.loadHTML("<html><body>test</body></html>");
-        assertEquals(browserController.getURL(),
-                "data:text/html;base64,PGh0bWw+PGJvZHk+dGVzdDwvYm9keT48L2h0bWw+");
+        assertEquals("data:text/html;base64,PGh0bWw+PGJvZHk+dGVzdDwvYm9keT48L2h0bWw+",
+                browserController.getURL());
     }
 
     @Test
@@ -39,7 +37,7 @@ public class BrowserTestStub {
 
         browserController.goBack();
         assertFalse(browserController.canGoBack());
-        assertEquals(browserController.getURL(), "https://google.com");
+        assertEquals("https://google.com", browserController.getURL());
     }
 
     @Test
@@ -55,11 +53,11 @@ public class BrowserTestStub {
 
         browserController.goBack();
         assertTrue(browserController.canGoForward());
-        assertEquals(browserController.getURL(), "https://google.com");
+        assertEquals("https://google.com", browserController.getURL());
 
         browserController.goForward();
         assertFalse(browserController.canGoForward());
-        assertEquals(browserController.getURL(), "https://naver.com");
+        assertEquals("https://naver.com", browserController.getURL());
     }
 
     @Test
@@ -71,10 +69,10 @@ public class BrowserTestStub {
         browserController.loadURL("https://yahoo.com");
         browserController.goBack();
         browserController.goBack();
-        assertEquals(browserController.getURL(), "https://google.com");
+        assertEquals("https://google.com", browserController.getURL());
 
         browserController.loadURL("https://youtube.com");
-        assertEquals(browserController.getURL(), "https://youtube.com");
+        assertEquals("https://youtube.com", browserController.getURL());
         assertFalse(browserController.canGoForward());
     }
 }
