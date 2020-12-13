@@ -1,7 +1,5 @@
 package edu.postech.csed332.team3.markdowndoc.converter;
 
-import com.intellij.psi.*;
-
 import java.security.InvalidParameterException;
 import java.util.List;
 

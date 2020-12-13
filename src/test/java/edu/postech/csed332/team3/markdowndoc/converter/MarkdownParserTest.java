@@ -1,12 +1,11 @@
 package edu.postech.csed332.team3.markdowndoc.converter;
 
-import edu.postech.csed332.team3.markdowndoc.converter.MarkdownParser;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
-class MarkdownParserTest {
+public class MarkdownParserTest {
     @NotNull
     static String parseReroute(@NotNull String str) {
         String toParse = "!!mdDoc\n" + str;
@@ -17,7 +16,7 @@ class MarkdownParserTest {
      * Test isMarkdown method in MarkdownParser.
      */
     @Test
-    void testIsMarkdown() {
+    public void testIsMarkdown() {
         assertTrue(MarkdownParser.isMarkdown("!!mdDoc"));
         assertTrue(MarkdownParser.isMarkdown(" \t\n!!mdDoc"));
         assertTrue(MarkdownParser.isMarkdown("!!mdDoc\nCSED332\nWOMBO COMBO\n!!!!!"));
@@ -29,7 +28,7 @@ class MarkdownParserTest {
      * Test Commonmark library.
      */
     @Test
-    void testEmbeddedHtml() {
+    public void testEmbeddedHtml() {
         assertEquals("<p><strike>test</strike></p>\n", parseReroute("<strike>test</strike>"));
     }
 
@@ -37,7 +36,7 @@ class MarkdownParserTest {
      * Test header grammar.
      */
     @Test
-    void testIsHeader() {
+    public void testIsHeader() {
         assertEquals("<h1>header1</h1>\n", parseReroute("# header1"));
         assertEquals("<h2>header2</h2>\n", parseReroute("## header2"));
         assertEquals("<h3>header3</h3>\n", parseReroute("### header3"));
@@ -50,7 +49,7 @@ class MarkdownParserTest {
      * Test list grammar.
      */
     @Test
-    void testIsList() {
+    public void testIsList() {
         assertEquals("<ul>\n" +
                 "<li>list</li>\n" +
                 "</ul>\n", parseReroute("* list"));
@@ -60,7 +59,7 @@ class MarkdownParserTest {
      * Test image grammar.
      */
     @Test
-    void testIsImage() {
+    public void testIsImage() {
         assertEquals("<p><img src=\"\" alt=\"Image\" /></p>\n", parseReroute("![Image]()"));
         assertEquals("<p><a href=\"#\"><img src=\"https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png\"></a></p>\n",
                 parseReroute("<a href=\"#\"><img src=\"https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png\"></a> "));
@@ -70,7 +69,7 @@ class MarkdownParserTest {
      * Test link grammar.
      */
     @Test
-    void testIsLink() {
+    public void testIsLink() {
         assertEquals("<p><a href=\"https://csed332.postech.ac.kr/team3-2020/MarkdownDoc\">MarkdownDoc</a></p>\n",
                 parseReroute("[MarkdownDoc](https://csed332.postech.ac.kr/team3-2020/MarkdownDoc)"));
     }
@@ -79,7 +78,7 @@ class MarkdownParserTest {
      * Test code block grammar.
      */
     @Test
-    void testIsCodeBlock() {
+    public void testIsCodeBlock() {
         assertEquals("<pre><code class=\"language-javascript\">function test() {\n" +
                 "console.log(&quot;hello world!&quot;);\n" +
                 "}\n" +
@@ -90,7 +89,7 @@ class MarkdownParserTest {
      * Test block quote grammar.
      */
     @Test
-    void testIsBlockquote() {
+    public void testIsBlockquote() {
         assertEquals("<blockquote>\n" +
                 "<p>MarkdownDoc</p>\n" +
                 "</blockquote>\n", parseReroute("> MarkdownDoc"));
@@ -100,7 +99,7 @@ class MarkdownParserTest {
      * Test inline code grammar.
      */
     @Test
-    void testIsInlineCode() {
+    public void testIsInlineCode() {
         assertEquals("<p><code>printf(&quot;Hello world!&quot;)</code></p>\n",
                 parseReroute("`printf(\"Hello world!\")`"));
     }
@@ -109,7 +108,7 @@ class MarkdownParserTest {
      * Test horizontal bar grammar.
      */
     @Test
-    void testIsHorizontal() {
+    public void testIsHorizontal() {
         assertEquals("<hr />\n", parseReroute("---"));
         assertEquals("<hr />\n", parseReroute("***"));
         assertEquals("<hr />\n", parseReroute("___"));
@@ -119,7 +118,7 @@ class MarkdownParserTest {
      * Test badge grammar.
      */
     @Test
-    void testIsBadge() {
+    public void testIsBadge() {
         assertEquals("<p><a href=\"https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png\">https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png</a></p>\n",
                 parseReroute("<https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png>"));
     }
@@ -128,7 +127,7 @@ class MarkdownParserTest {
      * Test bold text grammar.
      */
     @Test
-    void testIsBold() {
+    public void testIsBold() {
         assertEquals("<p><strong>bold</strong></p>\n", parseReroute("**bold**"));
         assertEquals("<p><strong>bold</strong></p>\n", parseReroute("__bold__"));
     }
@@ -137,7 +136,7 @@ class MarkdownParserTest {
      * Test italic text grammar.
      */
     @Test
-    void testIsItalic() {
+    public void testIsItalic() {
         assertEquals("<p><em>italic</em></p>\n", parseReroute("*italic*"));
         assertEquals("<p><em>italic</em></p>\n", parseReroute("_italic_"));
     }
@@ -146,7 +145,7 @@ class MarkdownParserTest {
      * Test underline text grammar.
      */
     @Test
-    void testIsUnderline() {
+    public void testIsUnderline() {
         assertEquals("<p><u>underline</u></p>\n", parseReroute("<u>underline</u>"));
     }
 
@@ -154,7 +153,7 @@ class MarkdownParserTest {
      * Test strikethrough grammar.
      */
     @Test
-    void testIsStrikeThrough() {
+    public void testIsStrikeThrough() {
         assertEquals("<p><strike>StrikeThrough</strike></p>\n", parseReroute("~~StrikeThrough~~"));
     }
 
@@ -162,13 +161,13 @@ class MarkdownParserTest {
      * Test strikethrough grammar.
      */
     @Test
-    void testOddStrikeThrough() {
+    public void testOddStrikeThrough() {
         assertEquals("<p><strike>StrikeThrough</strike>odd tilde~~</p>\n", parseReroute("~~StrikeThrough~~odd tilde~~"));
         assertEquals("<p>odd tilde~~</p>\n", parseReroute("odd tilde~~"));
     }
 
     @Test
-    void testTableBarRecognition() {
+    public void testTableBarRecognition() {
         // Header.
         assertEquals("<p>asdf|asdf|asdf|\n" +
                         "|---|---|---|\n" +
@@ -258,7 +257,7 @@ class MarkdownParserTest {
      * Test table grammar.
      */
     @Test
-    void testParseTable() {
+    public void testParseTable() {
         assertEquals("<table>\n" +
                         "<thead>\n" +
                         "<tr>\n" +
@@ -387,7 +386,7 @@ class MarkdownParserTest {
      * Test checkbox grammar.
      */
     @Test
-    void testParseCheckBox() {
+    public void testParseCheckBox() {
         assertEquals("<ul>\n" +
                         "<li>[ ]</li>\n" +
                         "</ul>\n",

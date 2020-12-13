@@ -15,14 +15,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'junit:junit:4.12'
-    implementation 'org.junit.jupiter:junit-jupiter:5.4.2'
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
-
-    // JSONParser, JSONObject
-    implementation 'org.json:json:20190722'
+    testImplementation 'junit:junit:4.12'
 
     // Java parser
     implementation 'com.github.javaparser:javaparser-core-serialization:3.17.0'
@@ -43,7 +36,6 @@ patchPluginXml {
 }
 
 test {
-    useJUnitPlatform()
     finalizedBy jacocoTestReport // report is always generated after tests run
 }
 

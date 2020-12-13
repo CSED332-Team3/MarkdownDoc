@@ -1,20 +1,20 @@
 package edu.postech.csed332.team3.markdowndoc.explorer;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.*;
 
-class FileManagerStubTest {
+public class FileManagerStubTest {
     private FileManagerStub fileManagerStub;
 
-    @BeforeEach
-    void init() {
+    @Before
+    public void init() {
         fileManagerStub = new FileManagerStub("path");
     }
 
     @Test
-    void testWrite() {
+    public void testWrite() {
         assertEquals("<p id=\"c\">\n" +
                 "test\n" +
                 "<p>test doc</p>\n" +
@@ -57,7 +57,7 @@ class FileManagerStubTest {
     }
 
     @Test
-    void testClose() {
+    public void testClose() {
         fileManagerStub.write("class", "test1", "test1-doc");
         fileManagerStub.write("method", "test2", "test2-doc");
         fileManagerStub.write("method", "test1", "test1-doc");
@@ -88,7 +88,7 @@ class FileManagerStubTest {
     }
 
     @Test
-    void testAppendComment() {
+    public void testAppendComment() {
         assertEquals("<p>this is test comment</p>\n", fileManagerStub.appendComment("this is test comment"));
         assertEquals("<p>*this is test comment</p>\n", fileManagerStub.appendComment("\\*this is test comment"));
         assertEquals("<p>this is\n*test comment</p>\n", fileManagerStub.appendComment("this is\n *test comment"));
@@ -97,7 +97,7 @@ class FileManagerStubTest {
     }
 
     @Test
-    void testAppendId() {
+    public void testAppendId() {
         assertEquals("<p id=\"c\">\n", fileManagerStub.appendId("class"));
         assertEquals("<p id=\"m\">\n", fileManagerStub.appendId("method"));
         assertEquals("<p id=\"f\">\n", fileManagerStub.appendId("field"));
