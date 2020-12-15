@@ -13,6 +13,11 @@ public class Exporter {
     private Exporter() {
     }
 
+    /**
+     * Export html directories to zip file.
+     *
+     * @param projectName name of zip file
+     */
     public static void export(String projectName) {
         File file = new File("html");
         try {
