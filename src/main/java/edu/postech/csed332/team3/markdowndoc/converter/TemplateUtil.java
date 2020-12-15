@@ -6,7 +6,9 @@ import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.javadoc.PsiDocTag;
 import com.intellij.psi.javadoc.PsiDocToken;
 import com.intellij.psi.util.PsiTypesUtil;
+import edu.postech.csed332.team3.markdowndoc.explorer.ProjectModel;
 import org.apache.commons.io.IOUtils;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -152,20 +154,41 @@ public class TemplateUtil {
      * Returns HTML list of all classes in the project
      * This acts as a quick index
      *
-     * @param classes the list of all class names
+     * @param currentClass the current PsiClass
      * @return the HTML string
      */
-    // TODO: Add functionality
-    public static String allClasses(List<String> classes) {
+    public static String allClasses(@Nullable PsiClass currentClass) {
         StringBuilder html = new StringBuilder("<h2>All classes</h2><div class=\"all\">");
 
-        for (String c : classes)
+        for (PsiClass c : ProjectModel.getAllClasses()) {
             html.append("<a id=\"c-")
-                    .append(c)
-                    .append("\">")
-                    .append(c)
-                    .append("</a><br>");
+                    .append(c.getQualifiedName())
+                    .append("\" href=\"");
 
+            // Link to the document using relative paths
+            if (currentClass != null && currentClass.getQualifiedName() != null) {
+                String[] pkgFrom = currentClass.getQualifiedName().split("\\.");
+                html.append("../".repeat(Math.max(0, pkgFrom.length - 1)));
+            } else {
+                html.append("./");
+            }
+
+            if (c.getQualifiedName() != null) {
+                String[] pkgTo = c.getQualifiedName().split("\\.");
+                for (String path : pkgTo) {
+                    html.append(path)
+                            .append("/");
+                }
+
+                // Replace last path with .html
+                html.replace(html.length() - 1, html.length(), ".")
+                        .append("html");
+            }
+
+            html.append("\">")
+                    .append(c.getName())
+                    .append("</a><br>");
+        }
 
         html.append("</div>");
 

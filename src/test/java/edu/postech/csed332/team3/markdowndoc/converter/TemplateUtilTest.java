@@ -31,13 +31,6 @@ public class TemplateUtilTest {
         }
     }
 
-    @Test
-    public void allClassesTest() {
-        assertEquals("<h2>All classes</h2><div class=\"all\"><a id=\"c-Class1\">Class1</a><br><a id=\"c-Class2\">Class2</a><br><a id=\"c-Class3\">Class3</a><br></div>",
-                TemplateUtil.allClasses(List.of("Class1", "Class2", "Class3")));
-
-    }
-
     @Test(expected = InvalidParameterException.class)
     public void appendFirstThrows() {
         TemplateUtilStub.appendFirst(null, "test", "", null);

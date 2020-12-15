@@ -4,39 +4,32 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.ui.treeStructure.Tree;
 import com.sun.istack.NotNull;
-import com.thaiopensource.xml.dtd.om.Def;
 import edu.postech.csed332.team3.markdowndoc.explorer.ActiveProjectModel;
 import edu.postech.csed332.team3.markdowndoc.explorer.ProjectModel;
 
-import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreeNode;
 import java.security.InvalidParameterException;
 
+/**
+ * Class providing methods for navigating to the code location
+ */
 public class ProjectNavigator {
 
-    private final BrowserController controller;
-    private final String projectPath;
-
-    private TreeModel model;
     private DefaultMutableTreeNode root;
     private final Project project;
     private String qualifiedClassName;
     private String elementName;
     private String elementType;
 
-    public ProjectNavigator(BrowserController controller, String projectPath) {
-        this.controller = controller;
-        this.projectPath = projectPath;
+    public ProjectNavigator() {
         project = ActiveProjectModel.getActiveProject();
         loadModel();
     }
 
     private void loadModel() {
-        model = ProjectModel.createProjectTreeModel();
+        TreeModel model = ProjectModel.createProjectTreeModel();
         root = (DefaultMutableTreeNode) (model.getRoot());
     }
 
@@ -85,10 +78,12 @@ public class ProjectNavigator {
         return n;
     }
 
-    public void navigateToClass(String input) {
-
-    }
-
+    /**
+     * Navigate to the editor
+     * if the clicked item is a method or a field
+     *
+     * @param input the input string
+     */
     public void navigateToMethodField(String input) {
         ApplicationManager.getApplication().invokeLater(() -> {
             loadModel();
