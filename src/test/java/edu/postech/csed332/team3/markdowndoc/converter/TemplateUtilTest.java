@@ -102,11 +102,4 @@ public class TemplateUtilTest extends BasePlatformTestCase {
                         "List&lt;char&gt; c</a></h3></td></tr>\n",
                 TemplateUtil.append(aClass.getFields()[2]));
     }
-
-    public void testAllClasses() {
-        PsiClass aClass = getPsiClass();
-        assertNotNull(aClass);
-
-        assertEquals("<h2>All classes</h2><div class=\"all\"></div>", TemplateUtil.allClasses(aClass));
-    }
 }
