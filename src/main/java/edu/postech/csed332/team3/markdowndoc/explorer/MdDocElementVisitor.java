@@ -3,10 +3,7 @@ package edu.postech.csed332.team3.markdowndoc.explorer;
 import com.intellij.psi.*;
 
 import javax.swing.tree.DefaultMutableTreeNode;
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Deque;
+import java.util.*;
 
 public class MdDocElementVisitor extends JavaElementVisitor {
     private static final String JAVA_EXT = ".java";
@@ -95,5 +92,9 @@ public class MdDocElementVisitor extends JavaElementVisitor {
         final DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(element);
         stack.getFirst().add(newChild);
         fileManager.write(element);
+    }
+
+    protected Collection<DefaultMutableTreeNode> getStack(){
+        return Collections.unmodifiableCollection(stack);
     }
 }
