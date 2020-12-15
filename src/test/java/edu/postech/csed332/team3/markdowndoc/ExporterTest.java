@@ -14,8 +14,8 @@ import static org.junit.Assert.assertEquals;
 public class ExporterTest {
 
     @Test
-    public void testExportByZip() {
-        Exporter.exportByZip("MarkdownDoc");
+    public void testExport() {
+        Exporter.export("MarkdownDoc");
         Set<String> zipSet = new HashSet<>();
 
         try {
