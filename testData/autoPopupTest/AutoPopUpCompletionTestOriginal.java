@@ -1,4 +1,4 @@
-package root;
+package autoPopupTest;
 
 public class AutoPopUpCompletionTest {
     /**

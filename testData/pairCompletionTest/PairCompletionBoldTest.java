@@ -1,4 +1,4 @@
-package root;
+package pairCompletioinTest;
 
 public class PairCompletionTest {
     /**
