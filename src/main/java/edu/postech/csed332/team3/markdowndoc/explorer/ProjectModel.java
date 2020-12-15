@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
-import java.io.File;
 import java.util.*;
 
 /**
@@ -18,9 +17,6 @@ import java.util.*;
  * Use {@link #createProjectTreeModel(Project)} for processing.
  */
 public class ProjectModel {
-
-    private static final String HTML = "html";
-    private static final Set<PsiClass> allClasses = new HashSet<>();
 
     private ProjectModel() {
     }
@@ -37,47 +33,6 @@ public class ProjectModel {
 
         getRootPackages(project).forEach(aPackage -> aPackage.accept(visitor));
         return new DefaultTreeModel(root);
-    }
-
-    /**
-     * Get the list of all classes in this project, sorted
-     *
-     * @return the list of all classes
-     */
-    public static List<PsiClass> getAllClasses() {
-        // Sort in alphabetical order
-        List<PsiClass> sorted = new ArrayList<>(allClasses);
-        sorted.sort(new Comparator<PsiClass>() {
-            @Override
-            public int compare(PsiClass o1, PsiClass o2) {
-                if (o1.getName() == null) {
-                    if (o2.getName() == null) return 0;
-                    else return 1;
-                } else {
-                    if (o2.getName() == null) return -1;
-                    else return o1.getName().compareToIgnoreCase(o2.getName());
-                }
-            }
-        });
-
-        return sorted;
-    }
-
-    public static Set<PsiClass> getAllClassesSet() {
-        return allClasses;
-    }
-
-    /**
-     * Add PsiClass to the set
-     *
-     * @param psiClass the PsiClass object
-     */
-    public static void addClass(PsiClass psiClass) {
-        allClasses.add(psiClass);
-    }
-
-    public static void emptySet() {
-        allClasses.clear();
     }
 
     /**

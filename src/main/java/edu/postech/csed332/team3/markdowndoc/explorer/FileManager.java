@@ -58,27 +58,13 @@ public class FileManager {
      */
     public void close(PsiClass currentClass) {
         try {
-            stringBuilder.append(TemplateUtil.appendLast()); // Close table tag
+            if (currentClass != null)
+                stringBuilder.append(TemplateUtil.appendLast()); // Close table tag
             stringBuilder.append(TemplateUtil.allClasses(currentClass)); // Add class index
             stringBuilder.append(TemplateUtil.footer());
             fileWriter.write(MarkdownParser.parse(stringBuilder.toString()));
             fileWriter.close();
             stringBuilder.setLength(0);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Write index.html file to the root of html folder
-     */
-    public void writeIndex() {
-        try {
-            stringBuilder.append(TemplateUtil.header());
-            stringBuilder.append(TemplateUtil.allClasses(null));
-            stringBuilder.append(TemplateUtil.footer());
-            fileWriter.write(stringBuilder.toString());
-            fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

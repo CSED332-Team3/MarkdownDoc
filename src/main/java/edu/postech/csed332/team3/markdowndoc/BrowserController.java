@@ -65,7 +65,7 @@ public class BrowserController implements BrowserControllerInterface {
 
         // Initialize SearchProject
         model = ProjectModel.createProjectTreeModel(getActiveProject());
-        navigator = new ProjectNavigator(this, projectPath);
+        navigator = new ProjectNavigator();
     }
 
     private void setListeners() {

@@ -9,7 +9,6 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 
 import java.io.IOException;
-import java.util.List;
 
 public class TemplateUtilTest extends BasePlatformTestCase {
 
@@ -42,12 +41,6 @@ public class TemplateUtilTest extends BasePlatformTestCase {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void testAllClasses() {
-        assertEquals("<h2>All classes</h2><div class=\"all\"><a id=\"c-Class1\">Class1</a><br><a id=\"c-Class2\">Class2</a><br><a id=\"c-Class3\">Class3</a><br></div>",
-                TemplateUtil.allClasses(List.of("Class1", "Class2", "Class3")));
-
     }
 
     public void testAppendLast() {
@@ -108,5 +101,12 @@ public class TemplateUtilTest extends BasePlatformTestCase {
         assertEquals("<tr><td data-type=\"List&lt;char&gt;\"><h5>Field</h5><h3><a id=\"f-c\">\n" +
                         "List&lt;char&gt; c</a></h3></td></tr>\n",
                 TemplateUtil.append(aClass.getFields()[2]));
+    }
+
+    public void testAllClasses() {
+        PsiClass aClass = getPsiClass();
+        assertNotNull(aClass);
+
+        assertEquals("<h2>All classes</h2><div class=\"all\"></div>", TemplateUtil.allClasses(aClass));
     }
 }

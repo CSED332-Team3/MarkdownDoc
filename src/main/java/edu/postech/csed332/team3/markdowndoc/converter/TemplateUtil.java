@@ -18,10 +18,14 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static edu.postech.csed332.team3.markdowndoc.explorer.MdDocElementVisitor.getAllClasses;
+
 /**
  * Utility class for getting files from the Resources package
  */
 public class TemplateUtil {
+
+    private TemplateUtil() {}
 
     /**
      * Get content of the header
@@ -160,7 +164,7 @@ public class TemplateUtil {
     public static String allClasses(@Nullable PsiClass currentClass) {
         StringBuilder html = new StringBuilder("<h2>All classes</h2><div class=\"all\">");
 
-        for (PsiClass c : ProjectModel.getAllClasses()) {
+        for (PsiClass c : getAllClasses()) {
             html.append("<a id=\"c-")
                     .append(c.getQualifiedName())
                     .append("\" href=\"");

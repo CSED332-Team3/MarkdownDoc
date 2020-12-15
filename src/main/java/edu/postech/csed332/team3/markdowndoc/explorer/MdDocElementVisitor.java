@@ -7,6 +7,7 @@ import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
+import java.io.File;
 import java.util.*;
 
 import static edu.postech.csed332.team3.markdowndoc.explorer.ActiveProjectModel.getActiveProject;
@@ -16,6 +17,7 @@ public class MdDocElementVisitor extends JavaElementVisitor {
     private static final String SRC_DIR = "src";
     private static final String HTML_EXT = ".html";
     private static final String HTML = "html";
+    private static final Set<PsiClass> allClasses = new HashSet<>();
     private final Deque<DefaultMutableTreeNode> stack;
     private FileManager fileManager;
     private boolean first = true;
@@ -23,6 +25,27 @@ public class MdDocElementVisitor extends JavaElementVisitor {
 
     MdDocElementVisitor(DefaultMutableTreeNode root) {
         stack = new ArrayDeque<>(Collections.singleton(root));
+    }
+
+    /**
+     * Get the list of all classes in this project, sorted
+     *
+     * @return the list of all classes
+     */
+    public static List<PsiClass> getAllClasses() {
+        // Sort in alphabetical order
+        List<PsiClass> sorted = new ArrayList<>(allClasses);
+        sorted.sort((o1, o2) -> {
+            if (o1.getName() == null) {
+                if (o2.getName() == null) return 0;
+                else return 1;
+            } else {
+                if (o2.getName() == null) return -1;
+                else return o1.getName().compareToIgnoreCase(o2.getName());
+            }
+        });
+
+        return sorted;
     }
 
     /**
@@ -36,27 +59,24 @@ public class MdDocElementVisitor extends JavaElementVisitor {
     public void visitPackage(PsiPackage aPackage) {
         if (isParentPkg) {
             // Empty classes set on re-search
-            ProjectModel.emptySet();
+            allClasses.clear();
             isParentPkg = false;
         }
 
         final DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(aPackage);
         stack.getFirst().add(newChild);
         stack.push(newChild);
-        // Visit package and class twice to ensure all classes have been indexed
-        for (int i = 0; i < 2; i++) {
-            Arrays.stream(aPackage.getSubPackages()).forEach(psiPackage -> psiPackage.accept(this));
-            Arrays.stream(aPackage.getClasses()).forEach(psiClass -> {
-                final String canonicalPath = psiClass.getContainingFile().getVirtualFile().getCanonicalPath();
-                if (canonicalPath == null) return;
-                String path = canonicalPath.replace(SRC_DIR, HTML).replace(JAVA_EXT, HTML_EXT);
+        Arrays.stream(aPackage.getSubPackages()).forEach(psiPackage -> psiPackage.accept(this));
+        Arrays.stream(aPackage.getClasses()).forEach(psiClass -> {
+            final String canonicalPath = psiClass.getContainingFile().getVirtualFile().getCanonicalPath();
+            if (canonicalPath == null) return;
+            String path = canonicalPath.replace(SRC_DIR, HTML).replace(JAVA_EXT, HTML_EXT);
 
-                fileManager = new FileManager(path);
-                first = true;
-                psiClass.accept(this);
-                fileManager.close(psiClass);
-            });
-        }
+            fileManager = new FileManager(path);
+            first = true;
+            psiClass.accept(this);
+            fileManager.close(psiClass);
+        });
         stack.pop();
 
         // Create index.html last
@@ -75,14 +95,13 @@ public class MdDocElementVisitor extends JavaElementVisitor {
         stack.push(newChild);
 
         // Add this class to the set of all classes
-        ProjectModel.addClass(aClass);
+        allClasses.add(aClass);
 
         // Write to file
         if (first) {
             fileManager.writeFirst(aClass);
             first = false;
-        }
-        else
+        } else
             fileManager.write(aClass);
 
         Arrays.stream(aClass.getInnerClasses()).forEach(psiClass -> psiClass.accept(this));
@@ -128,9 +147,10 @@ public class MdDocElementVisitor extends JavaElementVisitor {
                 + File.separator + "html"
                 + File.separator + "index.html";
         fileManager = new FileManager(path);
-        fileManager.writeIndex();
+        fileManager.close(null);
+    }
 
-    protected Collection<DefaultMutableTreeNode> getStack(){
+    protected Collection<DefaultMutableTreeNode> getStack() {
         return Collections.unmodifiableCollection(stack);
     }
 }
