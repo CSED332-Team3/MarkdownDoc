@@ -17,8 +17,8 @@ import java.security.InvalidParameterException;
  */
 public class ProjectNavigator {
 
-    private DefaultMutableTreeNode root;
     private final Project project;
+    private DefaultMutableTreeNode root;
     private String qualifiedClassName;
     private String elementName;
     private String elementType;
@@ -29,7 +29,7 @@ public class ProjectNavigator {
     }
 
     private void loadModel() {
-        TreeModel model = ProjectModel.createProjectTreeModel();
+        TreeModel model = ProjectModel.createProjectTreeModel(project);
         root = (DefaultMutableTreeNode) (model.getRoot());
     }
 
@@ -66,8 +66,8 @@ public class ProjectNavigator {
     }
 
     // Find PsiElement in tree
-    private DefaultMutableTreeNode find(@NotNull DefaultMutableTreeNode node, PsiElement target){
-        if (node.getUserObject() == target){
+    private DefaultMutableTreeNode find(@NotNull DefaultMutableTreeNode node, PsiElement target) {
+        if (node.getUserObject() == target) {
             return node;
         }
         DefaultMutableTreeNode n = null;

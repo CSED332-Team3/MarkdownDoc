@@ -12,12 +12,10 @@ import javax.swing.tree.TreeModel;
 import java.io.File;
 import java.util.*;
 
-import static edu.postech.csed332.team3.markdowndoc.explorer.ActiveProjectModel.getActiveProject;
-
 /**
  * A singleton class for creating MD-HTML files.
  * <p/>
- * Use {@link #createProjectTreeModel(String)} for processing.
+ * Use {@link #createProjectTreeModel(Project)} for processing.
  */
 public class ProjectModel {
 
@@ -28,29 +26,16 @@ public class ProjectModel {
     }
 
     /**
-     * Make directory of html files.
-     * <p/>
+     * Make directory of html files. <br>
      * The method will also convert documents to files and write them.
      *
-     * @param path Root path of the target(mainly opened one) project.
      * @return tree model of active project.
      */
-    public static TreeModel createProjectTreeModel(String path) {
-        // Make html directory
-        File folder = new File(path, HTML);
-        if (!folder.mkdirs())
-            return null;
-
-        return createProjectTreeModel();
-    }
-
-    public static TreeModel createProjectTreeModel() {
-        Project activeProject = getActiveProject();
-        final DefaultMutableTreeNode root = new DefaultMutableTreeNode(activeProject);
-
+    public static TreeModel createProjectTreeModel(Project project) {
+        final DefaultMutableTreeNode root = new DefaultMutableTreeNode(project);
         final JavaElementVisitor visitor = new MdDocElementVisitor(root);
 
-        getRootPackages(activeProject).forEach(aPackage -> aPackage.accept(visitor));
+        getRootPackages(project).forEach(aPackage -> aPackage.accept(visitor));
         return new DefaultTreeModel(root);
     }
 

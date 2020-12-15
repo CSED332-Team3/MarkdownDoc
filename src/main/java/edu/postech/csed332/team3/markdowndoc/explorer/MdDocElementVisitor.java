@@ -7,11 +7,7 @@ import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
-import java.io.File;
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Deque;
+import java.util.*;
 
 import static edu.postech.csed332.team3.markdowndoc.explorer.ActiveProjectModel.getActiveProject;
 
@@ -133,5 +129,8 @@ public class MdDocElementVisitor extends JavaElementVisitor {
                 + File.separator + "index.html";
         fileManager = new FileManager(path);
         fileManager.writeIndex();
+
+    protected Collection<DefaultMutableTreeNode> getStack(){
+        return Collections.unmodifiableCollection(stack);
     }
 }

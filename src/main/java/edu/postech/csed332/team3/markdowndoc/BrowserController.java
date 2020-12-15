@@ -18,18 +18,20 @@ import org.cef.network.CefRequest;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.tree.TreeModel;
+import java.io.File;
 
 import static edu.postech.csed332.team3.markdowndoc.explorer.ActiveProjectModel.getActiveProject;
 
 public class BrowserController implements BrowserControllerInterface {
 
+    private static final String HTML = "html";
     private final JBCefBrowser browser;
     private final BrowserView view;
     private final CefBrowser cefBrowser;
     private final ProjectNavigator navigator;
-    private TreeModel model;
     private final String projectPath;
     private final String baseURL;
+    private TreeModel model;
 
     /**
      * Create an empty browser controller instance
@@ -57,9 +59,13 @@ public class BrowserController implements BrowserControllerInterface {
         setListeners();
         setHandlers();
 
+        // Make html directory
+        File folder = new File(projectPath, HTML);
+        folder.mkdirs();
+
         // Initialize SearchProject
-        model = ProjectModel.createProjectTreeModel(projectRoot.getCanonicalPath());
-        navigator = new ProjectNavigator();
+        model = ProjectModel.createProjectTreeModel(getActiveProject());
+        navigator = new ProjectNavigator(this, projectPath);
     }
 
     private void setListeners() {
