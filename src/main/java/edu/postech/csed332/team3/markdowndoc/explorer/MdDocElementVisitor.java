@@ -1,13 +1,19 @@
 package edu.postech.csed332.team3.markdowndoc.explorer;
 
-import com.intellij.openapi.project.Project;
+import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
+import java.io.File;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Deque;
+
+import static edu.postech.csed332.team3.markdowndoc.explorer.ActiveProjectModel.getActiveProject;
 
 public class MdDocElementVisitor extends JavaElementVisitor {
     private static final String JAVA_EXT = ".java";
@@ -17,6 +23,7 @@ public class MdDocElementVisitor extends JavaElementVisitor {
     private final Deque<DefaultMutableTreeNode> stack;
     private FileManager fileManager;
     private boolean first = true;
+    private boolean isParentPkg = true;
 
     MdDocElementVisitor(DefaultMutableTreeNode root) {
         stack = new ArrayDeque<>(Collections.singleton(root));
@@ -31,15 +38,18 @@ public class MdDocElementVisitor extends JavaElementVisitor {
      */
     @Override
     public void visitPackage(PsiPackage aPackage) {
-        // Empty classes set on re-search
-        ProjectModel.emptySet();
+        if (isParentPkg) {
+            // Empty classes set on re-search
+            ProjectModel.emptySet();
+            isParentPkg = false;
+        }
 
         final DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(aPackage);
         stack.getFirst().add(newChild);
         stack.push(newChild);
-        Arrays.stream(aPackage.getSubPackages()).forEach(psiPackage -> psiPackage.accept(this));
-        // Visit class twice to ensure all classes have been indexed
+        // Visit package and class twice to ensure all classes have been indexed
         for (int i = 0; i < 2; i++) {
+            Arrays.stream(aPackage.getSubPackages()).forEach(psiPackage -> psiPackage.accept(this));
             Arrays.stream(aPackage.getClasses()).forEach(psiClass -> {
                 final String canonicalPath = psiClass.getContainingFile().getVirtualFile().getCanonicalPath();
                 if (canonicalPath == null) return;
@@ -52,6 +62,9 @@ public class MdDocElementVisitor extends JavaElementVisitor {
             });
         }
         stack.pop();
+
+        // Create index.html last
+        if (stack.size() == 1) createIndex();
     }
 
     /**
@@ -106,5 +119,19 @@ public class MdDocElementVisitor extends JavaElementVisitor {
         final DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(element);
         stack.getFirst().add(newChild);
         fileManager.write(element);
+    }
+
+    /**
+     * Create index.html
+     */
+    private void createIndex() {
+        @NotNull VirtualFile projectRoot = ModuleRootManager.getInstance(
+                ModuleManager.getInstance(getActiveProject()).getModules()[0]
+        ).getContentRoots()[0];
+        final String path = projectRoot.getCanonicalPath()
+                + File.separator + "html"
+                + File.separator + "index.html";
+        fileManager = new FileManager(path);
+        fileManager.writeIndex();
     }
 }

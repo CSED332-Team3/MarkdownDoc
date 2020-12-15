@@ -171,6 +171,9 @@ public class TemplateUtil {
                 html.append("../".repeat(Math.max(0, pkgFrom.length - 1)));
             } else {
                 html.append("./");
+
+                // TODO: Remove after files are created in a single directory
+                html.append("main/java/");
             }
 
             if (c.getQualifiedName() != null) {
