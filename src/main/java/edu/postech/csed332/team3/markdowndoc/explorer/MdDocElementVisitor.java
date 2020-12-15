@@ -1,5 +1,6 @@
 package edu.postech.csed332.team3.markdowndoc.explorer;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -30,20 +31,26 @@ public class MdDocElementVisitor extends JavaElementVisitor {
      */
     @Override
     public void visitPackage(PsiPackage aPackage) {
+        // Empty classes set on re-search
+        ProjectModel.emptySet();
+
         final DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(aPackage);
         stack.getFirst().add(newChild);
         stack.push(newChild);
         Arrays.stream(aPackage.getSubPackages()).forEach(psiPackage -> psiPackage.accept(this));
-        Arrays.stream(aPackage.getClasses()).forEach(psiClass -> {
-            final String canonicalPath = psiClass.getContainingFile().getVirtualFile().getCanonicalPath();
-            if (canonicalPath == null) return;
-            String path = canonicalPath.replace(SRC_DIR, HTML).replace(JAVA_EXT, HTML_EXT);
+        // Visit class twice to ensure all classes have been indexed
+        for (int i = 0; i < 2; i++) {
+            Arrays.stream(aPackage.getClasses()).forEach(psiClass -> {
+                final String canonicalPath = psiClass.getContainingFile().getVirtualFile().getCanonicalPath();
+                if (canonicalPath == null) return;
+                String path = canonicalPath.replace(SRC_DIR, HTML).replace(JAVA_EXT, HTML_EXT);
 
-            fileManager = new FileManager(path);
-            first = true;
-            psiClass.accept(this);
-            fileManager.close();
-        });
+                fileManager = new FileManager(path);
+                first = true;
+                psiClass.accept(this);
+                fileManager.close(psiClass);
+            });
+        }
         stack.pop();
     }
 
@@ -58,6 +65,10 @@ public class MdDocElementVisitor extends JavaElementVisitor {
         stack.getFirst().add(newChild);
         stack.push(newChild);
 
+        // Add this class to the set of all classes
+        ProjectModel.addClass(aClass);
+
+        // Write to file
         if (first) {
             fileManager.writeFirst(aClass);
             first = false;

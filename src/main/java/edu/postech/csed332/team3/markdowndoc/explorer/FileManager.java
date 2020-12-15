@@ -53,11 +53,13 @@ public class FileManager {
     /**
      * Write string to file & close file writer.
      * Reset string.
+     *
+     * @param currentClass the current PsiClass
      */
-    public void close() {
+    public void close(PsiClass currentClass) {
         try {
             stringBuilder.append(TemplateUtil.appendLast()); // Close table tag
-            // stringBuilder.append(TemplateUtil.allClasses(null)); // Add class index
+            stringBuilder.append(TemplateUtil.allClasses(currentClass)); // Add class index
             stringBuilder.append(TemplateUtil.footer());
             fileWriter.write(MarkdownParser.parse(stringBuilder.toString()));
             fileWriter.close();
