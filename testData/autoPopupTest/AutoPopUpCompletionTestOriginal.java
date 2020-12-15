@@ -2,7 +2,7 @@ package autoPopupTest;
 
 public class AutoPopUpCompletionTest {
     /**
-     * &<caret>
+     * /<caret>
      */
     public void AutoPopUpCompletionTest() {
         int a;

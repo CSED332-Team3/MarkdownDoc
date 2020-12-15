@@ -23,7 +23,7 @@ public class MarkdownTypedHandler extends TypedHandlerDelegate {
      * @param input to be checked
      */
     private boolean isParameter(char input) {
-        return input == '&';
+        return input == '/';
     }
 
     /**
@@ -60,14 +60,13 @@ public class MarkdownTypedHandler extends TypedHandlerDelegate {
     }
 
     /**
-     * When we type custom parameter like &, Completion Pop-upped automatically
+     * When we type custom parameter like /, Completion Pop-upped automatically
      */
     private void DoAutoPopup(final Project project, @NotNull final Editor editor) {
-        CompletionAutoPopupHandler.runLaterWithCommitted(project, editor.getDocument(), () -> {
+        AppUIExecutor.onUiThread().later().withDocumentsCommitted(project).execute(() -> {
             if (PsiDocumentManager.getInstance(project).isCommitted(editor.getDocument())) {
                 new CodeCompletionHandlerBase(CompletionType.BASIC).invokeCompletion(project, editor, 1);
-            }
-        });
+            }});
     }
 
 }
