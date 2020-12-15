@@ -4,26 +4,21 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.ui.treeStructure.Tree;
 import com.sun.istack.NotNull;
-import com.thaiopensource.xml.dtd.om.Def;
 import edu.postech.csed332.team3.markdowndoc.explorer.ActiveProjectModel;
 import edu.postech.csed332.team3.markdowndoc.explorer.ProjectModel;
 
-import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreeNode;
 import java.security.InvalidParameterException;
 
 public class ProjectNavigator {
 
     private final BrowserController controller;
     private final String projectPath;
-
+    private final Project project;
     private TreeModel model;
     private DefaultMutableTreeNode root;
-    private final Project project;
     private String qualifiedClassName;
     private String elementName;
     private String elementType;
@@ -36,7 +31,7 @@ public class ProjectNavigator {
     }
 
     private void loadModel() {
-        model = ProjectModel.createProjectTreeModel();
+        model = ProjectModel.createProjectTreeModel(project);
         root = (DefaultMutableTreeNode) (model.getRoot());
     }
 
@@ -73,8 +68,8 @@ public class ProjectNavigator {
     }
 
     // Find PsiElement in tree
-    private DefaultMutableTreeNode find(@NotNull DefaultMutableTreeNode node, PsiElement target){
-        if (node.getUserObject() == target){
+    private DefaultMutableTreeNode find(@NotNull DefaultMutableTreeNode node, PsiElement target) {
+        if (node.getUserObject() == target) {
             return node;
         }
         DefaultMutableTreeNode n = null;
