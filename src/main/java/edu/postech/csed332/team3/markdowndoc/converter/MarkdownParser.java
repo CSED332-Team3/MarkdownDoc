@@ -68,7 +68,7 @@ public class MarkdownParser {
                         stringBuilder.append("<table>\n");
                         stringBuilder.append("<thead>\n").append(parseTableHeader(prevLine)).append("</thead>\n");
                         stringBuilder.append("<tbody>\n");
-                        while ((line = bufferedReader.readLine()) != null && line.matches("^\\|.*\\|")) {
+                        while ((line = bufferedReader.readLine()) != null && (line = preprocess(line)).matches("^\\|.*\\|")) {
                             stringBuilder.append(parseTableDetails(line, columnNum));
                         }
                         stringBuilder.append("</tbody>\n");
