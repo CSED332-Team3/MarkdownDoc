@@ -9,6 +9,7 @@ import junit.framework.TestCase;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
+import java.io.File;
 import java.util.*;
 
 public class MdDocElementVisitorTest extends BasePlatformTestCase {
@@ -80,5 +81,11 @@ public class MdDocElementVisitorTest extends BasePlatformTestCase {
         getPsiPackages().forEach(psiPackage -> psiPackage.accept(visitor));
         assertEquals(Set.of(root), Set.copyOf(visitor.getStack()));
         reached.forEach(TestCase::assertTrue);
+
+        File test = new File("html/root/Subject.html");
+        assertTrue(test.delete());
+
+        test = new File("html/root");
+        assertTrue(test.delete());
     }
 }
