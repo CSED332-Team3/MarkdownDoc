@@ -1,8 +1,10 @@
 package edu.postech.csed332.team3.markdowndoc.explorer;
 
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileSystem;
+import com.intellij.openapi.vfs.ex.temp.TempFileSystem;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,36 +27,6 @@ public class MdDocElementVisitor extends JavaElementVisitor {
 
     MdDocElementVisitor(DefaultMutableTreeNode root) {
         stack = new ArrayDeque<>(Collections.singleton(root));
-    }
-
-    /**
-     * Get the list of all classes in this project, sorted
-     *
-     * @return the list of all classes
-     */
-    public static List<PsiClass> getAllClasses() {
-        // Sort in alphabetical order
-        List<PsiClass> sorted = new ArrayList<>(allClasses);
-        sorted.sort((o1, o2) -> {
-            if (o1.getName() == null) {
-                if (o2.getName() == null) return 0;
-                else return 1;
-            } else {
-                if (o2.getName() == null) return -1;
-                else return o1.getName().compareToIgnoreCase(o2.getName());
-            }
-        });
-
-        return sorted;
-    }
-
-    /**
-     * Get the set of all classes in this project
-     *
-     * @return the set of all classes
-     */
-    public static Set<PsiClass> getAllClassesSet() {
-        return allClasses;
     }
 
     /**
@@ -81,9 +53,14 @@ public class MdDocElementVisitor extends JavaElementVisitor {
         for (int i = 0; i < 2; i++) {
             Arrays.stream(aPackage.getSubPackages()).forEach(psiPackage -> psiPackage.accept(this));
             Arrays.stream(aPackage.getClasses()).forEach(psiClass -> {
-                final String canonicalPath = psiClass.getContainingFile().getVirtualFile().getCanonicalPath();
+                VirtualFile virtualFile = psiClass.getContainingFile().getVirtualFile();
+                final String canonicalPath = virtualFile.getCanonicalPath();
+                VirtualFileSystem fileSystem = virtualFile.getFileSystem();
                 if (canonicalPath == null) return;
+
                 String path = canonicalPath.replace(SRC_DIR, HTML).replace(JAVA_EXT, HTML_EXT);
+                if (fileSystem instanceof TempFileSystem && path.startsWith("/"))
+                    path = path.replaceFirst("/", "");
 
                 fileManager = new FileManager(path);
                 first = true;
