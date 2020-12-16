@@ -49,6 +49,15 @@ public class MdDocElementVisitor extends JavaElementVisitor {
     }
 
     /**
+     * Get the set of all classes in this project
+     *
+     * @return the set of all classes
+     */
+    public static Set<PsiClass> getAllClassesSet() {
+        return allClasses;
+    }
+
+    /**
      * Visits a package.
      * <p/>
      * Note that a file is created here; when the visitor visits a class from the package.
@@ -66,17 +75,22 @@ public class MdDocElementVisitor extends JavaElementVisitor {
         final DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(aPackage);
         stack.getFirst().add(newChild);
         stack.push(newChild);
-        Arrays.stream(aPackage.getSubPackages()).forEach(psiPackage -> psiPackage.accept(this));
-        Arrays.stream(aPackage.getClasses()).forEach(psiClass -> {
-            final String canonicalPath = psiClass.getContainingFile().getVirtualFile().getCanonicalPath();
-            if (canonicalPath == null) return;
-            String path = canonicalPath.replace(SRC_DIR, HTML).replace(JAVA_EXT, HTML_EXT);
 
-            fileManager = new FileManager(path);
-            first = true;
-            psiClass.accept(this);
-            fileManager.close(psiClass);
-        });
+        // Run visit twice since all classes must be visited
+        // in order to build the index
+        for (int i = 0; i < 2; i++) {
+            Arrays.stream(aPackage.getSubPackages()).forEach(psiPackage -> psiPackage.accept(this));
+            Arrays.stream(aPackage.getClasses()).forEach(psiClass -> {
+                final String canonicalPath = psiClass.getContainingFile().getVirtualFile().getCanonicalPath();
+                if (canonicalPath == null) return;
+                String path = canonicalPath.replace(SRC_DIR, HTML).replace(JAVA_EXT, HTML_EXT);
+
+                fileManager = new FileManager(path);
+                first = true;
+                psiClass.accept(this);
+                fileManager.close(psiClass);
+            });
+        }
         stack.pop();
 
         // Create index.html last
