@@ -170,7 +170,6 @@ public class MdDocElementVisitor extends JavaElementVisitor {
                 + File.separator + "html"
                 + File.separator + "index.html";
 
-        System.out.println(path);
         FileManager fm = new FileManager(path);
         fm.close(null);
     }
