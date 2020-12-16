@@ -21,12 +21,13 @@ public class Exporter {
      *                               which means never run.
      */
     public static void export(String name, @Nullable String directoryPath) throws FileNotFoundException {
-        File file = new File(directoryPath == null ? "html" : directoryPath + File.separator + "html");
+        String actualPath = directoryPath == null ? "" : directoryPath + File.separator;
+        File file = new File( actualPath + "html");
         if (!file.exists())
             throw new FileNotFoundException("There is no html directory.");
 
         try {
-            FileOutputStream fileOut = new FileOutputStream(directoryPath + File.separator + name + ".zip");
+            FileOutputStream fileOut = new FileOutputStream(actualPath + name + ".zip");
             ZipOutputStream zipOut = new ZipOutputStream(fileOut);
 
             zipFile(file, file.getName(), zipOut);
