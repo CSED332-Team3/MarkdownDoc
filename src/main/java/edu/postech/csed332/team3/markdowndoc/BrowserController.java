@@ -29,6 +29,7 @@ public class BrowserController implements BrowserControllerInterface {
     private final String projectPath;
     private final String baseURL;
     private TreeModel model;
+    private RearrangeMembers rearrangeMembers;
 
     /**
      * Create an empty browser controller instance
@@ -60,6 +61,9 @@ public class BrowserController implements BrowserControllerInterface {
         File folder = new File(projectPath, HTML);
         folder.mkdirs();
 
+        //Create RearrangeMembers that is invoked by ShortCut (Ctrl + ;)
+        rearrangeMembers = new RearrangeMembers(this);
+
         // Initialize SearchProject
         model = ProjectModel.createProjectTreeModel(getActiveProject());
         navigator = new ProjectNavigator(this, projectPath);
@@ -75,9 +79,6 @@ public class BrowserController implements BrowserControllerInterface {
             goForward();
         });
 
-        view.getSortButton().addActionListener(e -> {
-            sort("String");
-        });
     }
 
     private void setHandlers() {
