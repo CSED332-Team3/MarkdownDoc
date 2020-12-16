@@ -1,5 +1,8 @@
 package edu.postech.csed332.team3.markdowndoc.explorer;
 
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileSystem;
+import com.intellij.openapi.vfs.ex.temp.TempFileSystem;
 import com.intellij.psi.*;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -32,9 +35,14 @@ public class MdDocElementVisitor extends JavaElementVisitor {
         stack.push(newChild);
         Arrays.stream(aPackage.getSubPackages()).forEach(psiPackage -> psiPackage.accept(this));
         Arrays.stream(aPackage.getClasses()).forEach(psiClass -> {
-            final String canonicalPath = psiClass.getContainingFile().getVirtualFile().getCanonicalPath();
+            VirtualFile virtualFile = psiClass.getContainingFile().getVirtualFile();
+            final String canonicalPath = virtualFile.getCanonicalPath();
+            VirtualFileSystem fileSystem = virtualFile.getFileSystem();
             if (canonicalPath == null) return;
+
             String path = canonicalPath.replace(SRC_DIR, HTML).replace(JAVA_EXT, HTML_EXT);
+            if (fileSystem instanceof TempFileSystem && path.startsWith("/"))
+                path = path.replaceFirst("/", "");
 
             fileManager = new FileManager(path);
             first = true;
@@ -58,8 +66,7 @@ public class MdDocElementVisitor extends JavaElementVisitor {
         if (first) {
             fileManager.writeFirst(aClass);
             first = false;
-        }
-        else
+        } else
             fileManager.write(aClass);
 
         Arrays.stream(aClass.getInnerClasses()).forEach(psiClass -> psiClass.accept(this));
@@ -94,7 +101,7 @@ public class MdDocElementVisitor extends JavaElementVisitor {
         fileManager.write(element);
     }
 
-    protected Collection<DefaultMutableTreeNode> getStack(){
+    protected Collection<DefaultMutableTreeNode> getStack() {
         return Collections.unmodifiableCollection(stack);
     }
 }
