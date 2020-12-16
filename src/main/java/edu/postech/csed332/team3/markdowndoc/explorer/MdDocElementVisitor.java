@@ -30,6 +30,38 @@ public class MdDocElementVisitor extends JavaElementVisitor {
     }
 
     /**
+     * Get the list of all classes in this project, sorted
+     *
+     * @return the list of all classes
+     */
+    public static List<PsiClass> getAllClasses() {
+        // Sort in alphabetical order
+        List<PsiClass> sorted = new ArrayList<>(allClasses);
+        sorted.sort((o1, o2) -> {
+            if (o1.getName() == null) {
+                if (o2.getName() == null) return 0;
+                else return 1;
+            } else {
+                if (o2.getName() == null) return -1;
+                else return o1.getName().compareToIgnoreCase(o2.getName());
+            }
+        });
+
+        return sorted;
+    }
+
+    /**
+     * Get the set of all classes in this project
+     *
+     * @return the set of all classes
+     */
+    public static Set<PsiClass> getAllClassesSet() {
+        return allClasses;
+    }
+
+
+
+    /**
      * Visits a package.
      * <p/>
      * Note that a file is created here; when the visitor visits a class from the package.
@@ -137,8 +169,10 @@ public class MdDocElementVisitor extends JavaElementVisitor {
         final String path = projectRoot.getCanonicalPath()
                 + File.separator + "html"
                 + File.separator + "index.html";
-        fileManager = new FileManager(path);
-        fileManager.close(null);
+
+        System.out.println(path);
+        FileManager fm = new FileManager(path);
+        fm.close(null);
     }
 
     protected Collection<DefaultMutableTreeNode> getStack() {

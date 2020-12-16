@@ -7,7 +7,6 @@ import com.intellij.psi.javadoc.PsiDocTag;
 import com.intellij.psi.javadoc.PsiDocToken;
 import com.intellij.psi.util.PsiTypesUtil;
 import edu.postech.csed332.team3.markdowndoc.explorer.MdDocElementVisitor;
-import edu.postech.csed332.team3.markdowndoc.explorer.ProjectModel;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Nullable;
 

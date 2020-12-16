@@ -4,6 +4,7 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiNamedElement;
 import edu.postech.csed332.team3.markdowndoc.converter.MarkdownParser;
 import edu.postech.csed332.team3.markdowndoc.converter.TemplateUtil;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -56,14 +57,15 @@ public class FileManager {
      *
      * @param currentClass the current PsiClass
      */
-    public void close(PsiClass currentClass) {
+    public void close(@Nullable PsiClass currentClass) {
         try {
-            if (currentClass != null)
-                stringBuilder.append(TemplateUtil.appendLast()); // Close table tag
-            stringBuilder.append(TemplateUtil.allClasses(currentClass)); // Add class index
+            stringBuilder.append(TemplateUtil.appendLast()); // Close table tag
+            stringBuilder.append(TemplateUtil.allClasses(currentClass));
             stringBuilder.append(TemplateUtil.footer());
-            fileWriter.write(MarkdownParser.parse(stringBuilder.toString()));
-            fileWriter.close();
+            if (fileWriter != null) {
+                fileWriter.write(MarkdownParser.parse(stringBuilder.toString()));
+                fileWriter.close();
+            }
             stringBuilder.setLength(0);
         } catch (IOException e) {
             e.printStackTrace();
