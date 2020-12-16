@@ -22,6 +22,7 @@ public class ProjectNavigator {
     private String qualifiedClassName;
     private String elementName;
     private String elementType;
+    private int overloadIndex;
 
     public ProjectNavigator() {
         project = ActiveProjectModel.getActiveProject();
@@ -41,6 +42,13 @@ public class ProjectNavigator {
         elementName = part[0].substring(2);
         elementType = part[0].substring(0, 1);
         qualifiedClassName = part[1];
+
+        // Additional parsing for method overloading
+        if (elementType.equals("m")) {
+            String[] methodID = elementName.split("/");
+            elementName = methodID[0];
+            overloadIndex = Integer.parseInt(methodID[1]);
+        }
     }
 
     // Find element using qualifiedClassName, elementName, elementType
@@ -49,13 +57,17 @@ public class ProjectNavigator {
         PsiClass psiClass = JavaPsiFacade.getInstance(project).findClass(qualifiedClassName, GlobalSearchScope.projectScope(project));
         DefaultMutableTreeNode classNode = find(root, psiClass);
 
-        for (int i = 0; i < classNode.getChildCount(); i++) {
-            // TODO: Account for overloaded names
+        int overloadCounter = 1;
 
+        for (int i = 0; i < classNode.getChildCount(); i++) {
             if (elementType.equals("m") && ((DefaultMutableTreeNode) classNode.getChildAt(i)).getUserObject() instanceof PsiMethod) {
                 PsiMethod node = (PsiMethod) ((DefaultMutableTreeNode) classNode.getChildAt(i)).getUserObject();
-                if (node.getName().equals(elementName)) return node;
-
+                if (node.getName().equals(elementName)) {
+                    if (overloadCounter == overloadIndex)
+                        return node;
+                    else
+                        overloadCounter++;
+                }
             } else if (elementType.equals("f") && ((DefaultMutableTreeNode) classNode.getChildAt(i)).getUserObject() instanceof PsiField) {
                 PsiField node = (PsiField) ((DefaultMutableTreeNode) classNode.getChildAt(i)).getUserObject();
                 if (node.getName().equals(elementName)) return node;
