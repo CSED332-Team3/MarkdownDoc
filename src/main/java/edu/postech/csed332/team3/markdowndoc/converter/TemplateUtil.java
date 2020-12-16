@@ -239,7 +239,7 @@ public class TemplateUtil {
     private static String getRelativeLink(@Nullable PsiClass from, PsiClass to) {
         // Check of to-class's document exists
         if (!MdDocElementVisitor.getAllClassesSet().contains(to))
-            return "#"; // Do not link to any page
+            return ""; // Do not link to any page
 
         StringBuilder url = new StringBuilder();
 
