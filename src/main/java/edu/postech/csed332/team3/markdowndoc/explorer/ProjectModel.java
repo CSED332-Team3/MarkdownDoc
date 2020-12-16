@@ -40,7 +40,7 @@ public class ProjectModel {
      * <p/>
      * The code snippet from HW06-2.
      */
-    private static Set<PsiPackage> getRootPackages(Project project) {
+    public static Set<PsiPackage> getRootPackages(Project project) {
         final Set<PsiPackage> rootPackages = new HashSet<>();
         PsiElementVisitor visitor = new PsiElementVisitor() {
             @Override
