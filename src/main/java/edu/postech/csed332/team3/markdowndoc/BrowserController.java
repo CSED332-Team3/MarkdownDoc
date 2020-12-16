@@ -1,5 +1,7 @@
 package edu.postech.csed332.team3.markdowndoc;
 
+import com.intellij.notification.*;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.externalSystem.service.execution.NotSupportedException;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.roots.ModuleRootManager;
@@ -8,14 +10,18 @@ import com.intellij.psi.PsiType;
 import com.intellij.ui.jcef.JBCefApp;
 import com.intellij.ui.jcef.JBCefBrowser;
 import edu.postech.csed332.team3.markdowndoc.explorer.ProjectModel;
+import edu.postech.csed332.team3.markdowndoc.util.LoggerUtil;
 import org.cef.CefSettings;
 import org.cef.browser.CefBrowser;
 import org.cef.browser.CefFrame;
 import org.cef.handler.CefDisplayHandler;
+import org.cef.handler.CefLoadHandler;
+import org.cef.network.CefRequest;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.tree.TreeModel;
 import java.io.File;
+import java.io.FileNotFoundException;
 
 import static edu.postech.csed332.team3.markdowndoc.explorer.ActiveProjectModel.getActiveProject;
 
@@ -30,6 +36,10 @@ public class BrowserController implements BrowserControllerInterface {
     private final String baseURL;
     private TreeModel model;
     private RearrangeMembers rearrangeMembers;
+
+    public static final NotificationGroup GROUP_DISPLAY_ID_INFO =
+            new NotificationGroup("MarkdownDoc",
+                    NotificationDisplayType.BALLOON, true);
 
     /**
      * Create an empty browser controller instance
@@ -46,7 +56,7 @@ public class BrowserController implements BrowserControllerInterface {
 
         projectPath = projectRoot.getCanonicalPath();
 
-        baseURL = "file://" + projectPath + "/html";
+        baseURL = "file://" + projectPath + "/html/index.html";
         browser = new JBCefBrowser(baseURL);
         this.view = view;
         cefBrowser = browser.getCefBrowser();
@@ -66,7 +76,7 @@ public class BrowserController implements BrowserControllerInterface {
 
         // Initialize SearchProject
         model = ProjectModel.createProjectTreeModel(getActiveProject());
-        navigator = new ProjectNavigator(this, projectPath);
+        navigator = new ProjectNavigator();
     }
 
     private void setListeners() {
@@ -79,6 +89,26 @@ public class BrowserController implements BrowserControllerInterface {
             goForward();
         });
 
+        view.getExportButton().addActionListener(e -> {
+            ApplicationManager.getApplication().invokeLater(() -> {
+                try {
+                    // Refresh all pages and make sure it's ip to date
+                    model = ProjectModel.createProjectTreeModel(getActiveProject());
+                    // Export to .zip
+                    Exporter.export("mddoc", projectPath);
+                    Notification notification = GROUP_DISPLAY_ID_INFO
+                            .createNotification("Successfully exported to project directory.",
+                                    NotificationType.INFORMATION);
+                    Notifications.Bus.notify(notification);
+                } catch (FileNotFoundException fileNotFoundException) {
+                    fileNotFoundException.printStackTrace();
+                    Notification notification = GROUP_DISPLAY_ID_INFO
+                            .createNotification("An error has occurred.",
+                                    NotificationType.ERROR);
+                    Notifications.Bus.notify(notification);
+                }
+            });
+        });
     }
 
     private void setHandlers() {
@@ -105,16 +135,34 @@ public class BrowserController implements BrowserControllerInterface {
 
             @Override
             public boolean onConsoleMessage(CefBrowser cefBrowser, CefSettings.LogSeverity logSeverity, String s, String s1, int i) {
-                if (s.startsWith("c")) {
-                    // Class
-                    // Navigate to the appropriate documentation for the class
-
-                } else {
+                if (s.startsWith("m") || s.startsWith("f")) {
                     // Method or field
                     navigator.navigateToMethodField(s);
                 }
 
                 return false;
+            }
+        });
+
+        cefBrowser.getClient().addLoadHandler(new CefLoadHandler() {
+            @Override
+            public void onLoadingStateChange(CefBrowser cefBrowser, boolean b, boolean b1, boolean b2) {
+
+            }
+
+            @Override
+            public void onLoadStart(CefBrowser cefBrowser, CefFrame cefFrame, CefRequest.TransitionType transitionType) {
+
+            }
+
+            @Override
+            public void onLoadEnd(CefBrowser cefBrowser, CefFrame cefFrame, int i) {
+
+            }
+
+            @Override
+            public void onLoadError(CefBrowser cefBrowser, CefFrame cefFrame, ErrorCode errorCode, String s, String s1) {
+                LoggerUtil.warning(s);
             }
         });
     }

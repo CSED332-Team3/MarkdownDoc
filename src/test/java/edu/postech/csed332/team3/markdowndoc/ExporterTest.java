@@ -27,7 +27,7 @@ public class ExporterTest {
         }
 
         try {
-            Exporter.export("MarkdownDoc");
+            Exporter.export("MarkdownDoc", null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -57,6 +57,6 @@ public class ExporterTest {
     public void testExportThrow() throws Exception {
         File file = new File("html");
         file.delete();
-        Exporter.export("MarkdownDoc");
+        Exporter.export("MarkdownDoc", null);
     }
 }

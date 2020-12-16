@@ -1,5 +1,7 @@
 package edu.postech.csed332.team3.markdowndoc;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.io.*;
 import java.util.Arrays;
 import java.util.zip.ZipEntry;
@@ -13,17 +15,19 @@ public class Exporter {
     /**
      * Export html directories to zip file.
      *
-     * @param projectName name of zip file.
+     * @param name name of zip file.
+     * @param directoryPath the path to the directory
      * @throws FileNotFoundException when there is no html directory,
      *                               which means never run.
      */
-    public static void export(String projectName) throws FileNotFoundException {
-        File file = new File("html");
+    public static void export(String name, @Nullable String directoryPath) throws FileNotFoundException {
+        String actualPath = directoryPath == null ? "" : directoryPath + File.separator;
+        File file = new File( actualPath + "html");
         if (!file.exists())
             throw new FileNotFoundException("There is no html directory.");
 
         try {
-            FileOutputStream fileOut = new FileOutputStream(projectName + ".zip");
+            FileOutputStream fileOut = new FileOutputStream(actualPath + name + ".zip");
             ZipOutputStream zipOut = new ZipOutputStream(fileOut);
 
             zipFile(file, file.getName(), zipOut);

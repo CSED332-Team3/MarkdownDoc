@@ -9,10 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A singleton class for creating MD-HTML files.
@@ -43,7 +40,7 @@ public class ProjectModel {
      * <p/>
      * The code snippet from HW06-2.
      */
-    private static Set<PsiPackage> getRootPackages(Project project) {
+    public static Set<PsiPackage> getRootPackages(Project project) {
         final Set<PsiPackage> rootPackages = new HashSet<>();
         PsiElementVisitor visitor = new PsiElementVisitor() {
             @Override

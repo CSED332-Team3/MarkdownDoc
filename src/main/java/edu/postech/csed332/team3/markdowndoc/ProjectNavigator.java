@@ -4,34 +4,33 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.sun.istack.NotNull;
 import edu.postech.csed332.team3.markdowndoc.explorer.ActiveProjectModel;
 import edu.postech.csed332.team3.markdowndoc.explorer.ProjectModel;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 import java.security.InvalidParameterException;
 
+/**
+ * Class providing methods for navigating to the code location
+ */
 public class ProjectNavigator {
 
-    private final BrowserController controller;
-    private final String projectPath;
     private final Project project;
-    private TreeModel model;
     private DefaultMutableTreeNode root;
     private String qualifiedClassName;
     private String elementName;
     private String elementType;
+    private int overloadIndex;
 
-    public ProjectNavigator(BrowserController controller, String projectPath) {
-        this.controller = controller;
-        this.projectPath = projectPath;
+    public ProjectNavigator() {
         project = ActiveProjectModel.getActiveProject();
         loadModel();
     }
 
     private void loadModel() {
-        model = ProjectModel.createProjectTreeModel(project);
+        TreeModel model = ProjectModel.createProjectTreeModel(project);
         root = (DefaultMutableTreeNode) (model.getRoot());
     }
 
@@ -43,6 +42,13 @@ public class ProjectNavigator {
         elementName = part[0].substring(2);
         elementType = part[0].substring(0, 1);
         qualifiedClassName = part[1];
+
+        // Additional parsing for method overloading
+        if (elementType.equals("m")) {
+            String[] methodID = elementName.split("/");
+            elementName = methodID[0];
+            overloadIndex = Integer.parseInt(methodID[1]);
+        }
     }
 
     // Find element using qualifiedClassName, elementName, elementType
@@ -51,13 +57,17 @@ public class ProjectNavigator {
         PsiClass psiClass = JavaPsiFacade.getInstance(project).findClass(qualifiedClassName, GlobalSearchScope.projectScope(project));
         DefaultMutableTreeNode classNode = find(root, psiClass);
 
-        for (int i = 0; i < classNode.getChildCount(); i++) {
-            // TODO: Account for overloaded names
+        int overloadCounter = 1;
 
+        for (int i = 0; i < classNode.getChildCount(); i++) {
             if (elementType.equals("m") && ((DefaultMutableTreeNode) classNode.getChildAt(i)).getUserObject() instanceof PsiMethod) {
                 PsiMethod node = (PsiMethod) ((DefaultMutableTreeNode) classNode.getChildAt(i)).getUserObject();
-                if (node.getName().equals(elementName)) return node;
-
+                if (node.getName().equals(elementName)) {
+                    if (overloadCounter == overloadIndex)
+                        return node;
+                    else
+                        overloadCounter++;
+                }
             } else if (elementType.equals("f") && ((DefaultMutableTreeNode) classNode.getChildAt(i)).getUserObject() instanceof PsiField) {
                 PsiField node = (PsiField) ((DefaultMutableTreeNode) classNode.getChildAt(i)).getUserObject();
                 if (node.getName().equals(elementName)) return node;
@@ -80,10 +90,12 @@ public class ProjectNavigator {
         return n;
     }
 
-    public void navigateToClass(String input) {
-
-    }
-
+    /**
+     * Navigate to the editor
+     * if the clicked item is a method or a field
+     *
+     * @param input the input string
+     */
     public void navigateToMethodField(String input) {
         ApplicationManager.getApplication().invokeLater(() -> {
             loadModel();

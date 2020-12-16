@@ -6,7 +6,9 @@ import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.javadoc.PsiDocTag;
 import com.intellij.psi.javadoc.PsiDocToken;
 import com.intellij.psi.util.PsiTypesUtil;
+import edu.postech.csed332.team3.markdowndoc.explorer.MdDocElementVisitor;
 import org.apache.commons.io.IOUtils;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,10 +18,14 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static edu.postech.csed332.team3.markdowndoc.explorer.MdDocElementVisitor.getAllClasses;
+
 /**
  * Utility class for getting files from the Resources package
  */
 public class TemplateUtil {
+
+    private TemplateUtil() {}
 
     /**
      * Get content of the header
@@ -75,23 +81,11 @@ public class TemplateUtil {
                 .append("</h1>");
 
         if (ext != null && ext.length() > 0)
-            html.append("<div><strong>extends</strong> ")
-                    .append("<a id=\"c-")
-                    .append(ext)
-                    .append("\">")
-                    .append(ext)
-                    .append("</a>")
-                    .append("</div>");
+            html.append(ext);
 
         if (impl != null && !impl.isEmpty())
             for (String i : impl)
-                html.append("<div><strong>implements</strong> ")
-                        .append("<a id=\"c-")
-                        .append(i)
-                        .append("\">")
-                        .append(i)
-                        .append("</a>")
-                        .append("</div>");
+                html.append(i);
 
 
         html.append("\n")
@@ -152,20 +146,24 @@ public class TemplateUtil {
      * Returns HTML list of all classes in the project
      * This acts as a quick index
      *
-     * @param classes the list of all class names
+     * @param currentClass the current PsiClass
      * @return the HTML string
      */
-    // TODO: Add functionality
-    public static String allClasses(List<String> classes) {
+    public static String allClasses(@Nullable PsiClass currentClass) {
         StringBuilder html = new StringBuilder("<h2>All classes</h2><div class=\"all\">");
 
-        for (String c : classes)
+        for (PsiClass c : getAllClasses()) {
             html.append("<a id=\"c-")
-                    .append(c)
-                    .append("\">")
-                    .append(c)
-                    .append("</a><br>");
+                    .append(c.getQualifiedName())
+                    .append("\" href=\"");
 
+            // Link to the document using relative paths
+            html.append(getRelativeLink(currentClass, c));
+
+            html.append("\">")
+                    .append(c.getName())
+                    .append("</a><br>");
+        }
 
         html.append("</div>");
 
@@ -201,7 +199,16 @@ public class TemplateUtil {
             for (PsiClassType c : implList.getReferencedTypes()) {
                 PsiClass implClass = PsiTypesUtil.getPsiClass(c);
                 if (implClass != null) {
-                    impl.add(implClass.getQualifiedName());
+                    String implHTML = "<div><strong>implements</strong> " + "<a id=\"c-" +
+                            implClass.getQualifiedName() +
+                            "\" href=\"" +
+                            // Create relative link
+                            getRelativeLink(psiClass, implClass) +
+                            "\">" +
+                            implClass.getName() +
+                            "</a></div>";
+
+                    impl.add(implHTML);
                 }
             }
         }
@@ -213,11 +220,52 @@ public class TemplateUtil {
         PsiReferenceList extList = psiClass.getExtendsList();
         if (extList != null && extList.getReferencedTypes().length > 0) {
             PsiClass extClass = PsiTypesUtil.getPsiClass(extList.getReferencedTypes()[0]);
-            if (extClass != null) {
-                return extClass.getQualifiedName();
+            if (extClass != null && extClass.getQualifiedName() != null) {
+                return "<div><strong>extends</strong> " + "<a id=\"c-" +
+                        extClass.getQualifiedName() +
+                        "\" href=\"" +
+
+                        // Create relative link
+                        getRelativeLink(psiClass, extClass) +
+                        "\">" +
+                        extClass.getName() +
+                        "</a></div>";
             }
         }
         return null;
+    }
+
+    // Create relative URL between two PsiClass documents
+    private static String getRelativeLink(@Nullable PsiClass from, PsiClass to) {
+        // Check of to-class's document exists
+        if (!MdDocElementVisitor.getAllClassesSet().contains(to))
+            return ""; // Do not link to any page
+
+        StringBuilder url = new StringBuilder();
+
+        if (from != null && from.getQualifiedName() != null) {
+            String[] pkgFrom = from.getQualifiedName().split("\\.");
+            url.append("../".repeat(Math.max(0, pkgFrom.length - 1)));
+        } else {
+            url.append("./");
+
+            // TODO: Remove after files are created in a single directory
+            url.append("main/java/");
+        }
+
+        if (to.getQualifiedName() != null) {
+            String[] pkgTo = to.getQualifiedName().split("\\.");
+            for (String path : pkgTo) {
+                url.append(path)
+                        .append("/");
+            }
+
+            // Replace last path with .html
+            url.replace(url.length() - 1, url.length(), ".")
+                    .append("html");
+        }
+
+        return url.toString();
     }
 
     private static String getElementType(PsiElement element) {
