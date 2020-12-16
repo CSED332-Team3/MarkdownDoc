@@ -1,5 +1,7 @@
 package edu.postech.csed332.team3.markdowndoc;
 
+import com.intellij.notification.*;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.externalSystem.service.execution.NotSupportedException;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.roots.ModuleRootManager;
@@ -19,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.tree.TreeModel;
 import java.io.File;
+import java.io.FileNotFoundException;
 
 import static edu.postech.csed332.team3.markdowndoc.explorer.ActiveProjectModel.getActiveProject;
 
@@ -32,6 +35,9 @@ public class BrowserController implements BrowserControllerInterface {
     private final String projectPath;
     private final String baseURL;
     private TreeModel model;
+    public static final NotificationGroup GROUP_DISPLAY_ID_INFO =
+            new NotificationGroup("MarkdownDoc",
+                    NotificationDisplayType.BALLOON, true);
 
     /**
      * Create an empty browser controller instance
@@ -78,8 +84,25 @@ public class BrowserController implements BrowserControllerInterface {
             goForward();
         });
 
-        view.getSortButton().addActionListener(e -> {
-            sort("String");
+        view.getExportButton().addActionListener(e -> {
+            ApplicationManager.getApplication().invokeLater(() -> {
+                try {
+                    // Refresh all pages and make sure it's ip to date
+                    model = ProjectModel.createProjectTreeModel(getActiveProject());
+                    // Export to .zip
+                    Exporter.export("mddoc", projectPath);
+                    Notification notification = GROUP_DISPLAY_ID_INFO
+                            .createNotification("Successfully exported to project directory.",
+                                    NotificationType.INFORMATION);
+                    Notifications.Bus.notify(notification);
+                } catch (FileNotFoundException fileNotFoundException) {
+                    fileNotFoundException.printStackTrace();
+                    Notification notification = GROUP_DISPLAY_ID_INFO
+                            .createNotification("An error has occurred.",
+                                    NotificationType.ERROR);
+                    Notifications.Bus.notify(notification);
+                }
+            });
         });
     }
 

@@ -12,7 +12,7 @@ public class BrowserView {
     private final JPanel panel;
     private final JButton backButton;
     private final JButton forwardButton;
-    private final JButton sortButton;
+    private final JButton exportButton;
 
     /**
      * Creates a browser component
@@ -24,18 +24,15 @@ public class BrowserView {
         JPanel buttons = new JPanel(new GridLayout(1, 3));
         backButton = new JButton();
         forwardButton = new JButton();
-
-        // Sort Button
-        // TODO: Only for testing
-        sortButton = new JButton();
-        sortButton.setText("Sort");
+        exportButton = new JButton();
 
         // Set text
         backButton.setText("<-");
         forwardButton.setText("->");
+        exportButton.setText("Export to .zip");
 
         buttons.add(backButton);
-        buttons.add(sortButton);
+        buttons.add(exportButton);
         buttons.add(forwardButton);
         addComponent(buttons, "South"); // Add buttons
     }
@@ -59,13 +56,12 @@ public class BrowserView {
     }
 
     /**
-     * Get the response label
+     * Get the export button element
      *
-     * @return the response label
+     * @return the export button
      */
-    public JButton getSortButton() {
-        // TODO: Remove
-        return sortButton;
+    public JButton getExportButton() {
+        return exportButton;
     }
 
     /**
