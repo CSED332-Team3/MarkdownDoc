@@ -20,8 +20,6 @@ public class BrowserView {
     public BrowserView() {
         panel = new JPanel(new BorderLayout());
 
-        // TODO: Remove response label for production
-
         // Button layout
         JPanel buttons = new JPanel(new GridLayout(1, 3));
         backButton = new JButton();

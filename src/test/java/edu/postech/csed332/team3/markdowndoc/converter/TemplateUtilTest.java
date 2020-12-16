@@ -9,7 +9,6 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 
 import java.io.IOException;
-import java.util.List;
 
 public class TemplateUtilTest extends BasePlatformTestCase {
 
@@ -44,12 +43,6 @@ public class TemplateUtilTest extends BasePlatformTestCase {
         }
     }
 
-    public void testAllClasses() {
-        assertEquals("<h2>All classes</h2><div class=\"all\"><a id=\"c-Class1\">Class1</a><br><a id=\"c-Class2\">Class2</a><br><a id=\"c-Class3\">Class3</a><br></div>",
-                TemplateUtil.allClasses(List.of("Class1", "Class2", "Class3")));
-
-    }
-
     public void testAppendLast() {
         assertEquals("</table>",
                 TemplateUtil.appendLast());
@@ -65,7 +58,7 @@ public class TemplateUtilTest extends BasePlatformTestCase {
         assertNotNull(aClass);
 
         assertEquals("<div id=\"pkg\" class=\"pkg\">templateUtilTest</div>\n" +
-                        "<h1 id=\"class\">TestTemplateUtil</h1><div><strong>extends</strong> <a id=\"c-templateUtilTest.ExtendsTest\">templateUtilTest.ExtendsTest</a></div><div><strong>implements</strong> <a id=\"c-templateUtilTest.ImplementsTest\">templateUtilTest.ImplementsTest</a></div>\n" +
+                        "<h1 id=\"class\">TestTemplateUtil</h1><div><strong>extends</strong> <a id=\"c-templateUtilTest.ExtendsTest\" href=\"#\">ExtendsTest</a></div><div><strong>implements</strong> <a id=\"c-templateUtilTest.ImplementsTest\" href=\"#\">ImplementsTest</a></div>\n" +
                         "<h2>Description</h2>\n" +
                         "<table id = \"table\">\n" +
                         "<tr><td></td></tr><tr><td></td></tr>",
