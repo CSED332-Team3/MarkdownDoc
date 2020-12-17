@@ -27,17 +27,16 @@ import static edu.postech.csed332.team3.markdowndoc.explorer.ActiveProjectModel.
 
 public class BrowserController implements BrowserControllerInterface {
 
+    public static final NotificationGroup GROUP_DISPLAY_ID_INFO =
+            new NotificationGroup("MarkdownDoc",
+                    NotificationDisplayType.BALLOON, true);
     private static final String HTML = "html";
     private final JBCefBrowser browser;
     private final BrowserView view;
     private final CefBrowser cefBrowser;
     private final ProjectNavigator navigator;
     private final String projectPath;
-    private final String baseURL;
     private TreeModel model;
-    public static final NotificationGroup GROUP_DISPLAY_ID_INFO =
-            new NotificationGroup("MarkdownDoc",
-                    NotificationDisplayType.BALLOON, true);
 
     /**
      * Create an empty browser controller instance
@@ -54,7 +53,7 @@ public class BrowserController implements BrowserControllerInterface {
 
         projectPath = projectRoot.getCanonicalPath();
 
-        baseURL = "file://" + projectPath + "/html/index.html";
+        String baseURL = "file://" + projectPath + "/html/index.html";
         browser = new JBCefBrowser(baseURL);
         this.view = view;
         cefBrowser = browser.getCefBrowser();
@@ -69,6 +68,9 @@ public class BrowserController implements BrowserControllerInterface {
         File folder = new File(projectPath, HTML);
         folder.mkdirs();
 
+        //Create RearrangeMembers that is invoked by ShortCut (Ctrl + ;)
+        RearrangeMembers.setController(this);
+
         // Initialize SearchProject
         model = ProjectModel.createProjectTreeModel(getActiveProject());
         navigator = new ProjectNavigator();
@@ -76,34 +78,28 @@ public class BrowserController implements BrowserControllerInterface {
 
     private void setListeners() {
         // Set action listeners
-        view.getBackButton().addActionListener(e -> {
-            goBack();
-        });
+        view.getBackButton().addActionListener(e -> goBack());
 
-        view.getForwardButton().addActionListener(e -> {
-            goForward();
-        });
+        view.getForwardButton().addActionListener(e -> goForward());
 
-        view.getExportButton().addActionListener(e -> {
-            ApplicationManager.getApplication().invokeLater(() -> {
-                try {
-                    // Refresh all pages and make sure it's ip to date
-                    model = ProjectModel.createProjectTreeModel(getActiveProject());
-                    // Export to .zip
-                    Exporter.export("mddoc", projectPath);
-                    Notification notification = GROUP_DISPLAY_ID_INFO
-                            .createNotification("Successfully exported to project directory.",
-                                    NotificationType.INFORMATION);
-                    Notifications.Bus.notify(notification);
-                } catch (FileNotFoundException fileNotFoundException) {
-                    fileNotFoundException.printStackTrace();
-                    Notification notification = GROUP_DISPLAY_ID_INFO
-                            .createNotification("An error has occurred.",
-                                    NotificationType.ERROR);
-                    Notifications.Bus.notify(notification);
-                }
-            });
-        });
+        view.getExportButton().addActionListener(e -> ApplicationManager.getApplication().invokeLater(() -> {
+            try {
+                // Refresh all pages and make sure it's ip to date
+                model = ProjectModel.createProjectTreeModel(getActiveProject());
+                // Export to .zip
+                Exporter.export("mddoc", projectPath);
+                Notification notification = GROUP_DISPLAY_ID_INFO
+                        .createNotification("Successfully exported to project directory.",
+                                NotificationType.INFORMATION);
+                Notifications.Bus.notify(notification);
+            } catch (FileNotFoundException fileNotFoundException) {
+                fileNotFoundException.printStackTrace();
+                Notification notification = GROUP_DISPLAY_ID_INFO
+                        .createNotification("An error has occurred.",
+                                NotificationType.ERROR);
+                Notifications.Bus.notify(notification);
+            }
+        }));
     }
 
     private void setHandlers() {

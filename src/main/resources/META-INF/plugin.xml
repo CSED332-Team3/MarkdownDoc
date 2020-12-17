@@ -20,6 +20,6 @@
         <typedHandler implementation="edu.postech.csed332.team3.markdowndoc.MarkdownTypedHandler"/>
     </extensions>
     <actions>
-        <!-- Add your actions here -->
+        <action id="ShortCutAction" class="edu.postech.csed332.team3.markdowndoc.ShortCutAction" text="ShortCutAction"/>
     </actions>
 </idea-plugin>
