@@ -2,12 +2,12 @@ package edu.postech.csed332.team3.markdowndoc;
 
 import com.intellij.codeInsight.completion.CodeCompletionHandlerBase;
 import com.intellij.codeInsight.completion.CompletionType;
-import com.intellij.codeInsight.editorActions.CompletionAutoPopupHandler;
 import com.intellij.codeInsight.editorActions.TypedHandlerDelegate;
 import com.intellij.openapi.application.AppUIExecutor;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiDocumentManager;
+import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -20,6 +20,7 @@ public class MarkdownTypedHandler extends TypedHandlerDelegate {
 
     /**
      * check if input is triggered character
+     *
      * @param input to be checked
      */
     private boolean isParameter(char input) {
@@ -29,8 +30,8 @@ public class MarkdownTypedHandler extends TypedHandlerDelegate {
     /**
      * check if current location is in JavaDoc context
      */
-    private boolean isJavaDocComment(Editor editor, PsiFile file){
-            return Objects.requireNonNull(Objects.requireNonNull(file.findElementAt(editor.getCaretModel().getOffset())).getContext()).toString().equals("PsiDocComment");
+    private boolean isJavaDocComment(Editor editor, PsiFile file) {
+        return Objects.requireNonNull(Objects.requireNonNull(file.findElementAt(editor.getCaretModel().getOffset())).getContext()).toString().equals("PsiDocComment");
     }
 
     /**
@@ -66,7 +67,8 @@ public class MarkdownTypedHandler extends TypedHandlerDelegate {
         AppUIExecutor.onUiThread().later().withDocumentsCommitted(project).execute(() -> {
             if (PsiDocumentManager.getInstance(project).isCommitted(editor.getDocument())) {
                 new CodeCompletionHandlerBase(CompletionType.BASIC).invokeCompletion(project, editor, 1);
-            }});
+            }
+        });
     }
 
 }

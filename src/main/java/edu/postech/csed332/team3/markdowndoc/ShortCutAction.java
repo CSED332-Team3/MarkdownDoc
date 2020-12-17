@@ -3,19 +3,14 @@ package edu.postech.csed332.team3.markdowndoc;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.editor.CaretModel;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-
-import static java.awt.event.KeyEvent.*;
 
 /**
  * This class deals with Action about Rearranging members
@@ -23,15 +18,13 @@ import static java.awt.event.KeyEvent.*;
  * finding context where cursor is located and rearranged document by that context
  */
 public class ShortCutAction extends AnAction {
-    private ArrayList<ShortCutHandler> keyStrokes;
 
     /**
      * Constructor of ShortCutAction
      */
     public ShortCutAction() {
         super();
-        this.keyStrokes = new ArrayList<>();
-        this.AddShortcut(VK_SEMICOLON, CTRL_DOWN_MASK, false);
+        addShortcut();
     }
 
     /**
@@ -51,7 +44,7 @@ public class ShortCutAction extends AnAction {
                     Project project = editor.getProject();
                     if (project != null) {
                         PsiFile psiFile = PsiManager.getInstance(project).findFile(editor.getVirtualFile());
-                        RearrangeMembers.CallSort(psiFile, editor);
+                        RearrangeMembers.callSort(psiFile, editor);
                     }
                 }
             }
@@ -60,13 +53,9 @@ public class ShortCutAction extends AnAction {
 
     /**
      * Add ShortCut given parameter
-     * @param keyCode
-     * @param modifiers
-     * @param onKeyRelease
      */
-    private void AddShortcut(int keyCode, int modifiers, boolean onKeyRelease) {
-        ShortCutHandler shortCutHandler = new ShortCutHandler(keyCode, modifiers, onKeyRelease);
-        this.keyStrokes.add(shortCutHandler);
-        KeymapManager.getInstance().getActiveKeymap().addShortcut("ShortCutAction", shortCutHandler.GetShortcut());
+    private void addShortcut() {
+        ShortCutHandler shortCutHandler = new ShortCutHandler(KeyEvent.VK_SEMICOLON, InputEvent.CTRL_DOWN_MASK, false);
+        KeymapManager.getInstance().getActiveKeymap().addShortcut("ShortCutAction", shortCutHandler.getShortcut());
     }
 }

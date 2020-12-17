@@ -56,22 +56,21 @@ public class ProjectNavigator {
         // Get the class element
         PsiClass psiClass = JavaPsiFacade.getInstance(project).findClass(qualifiedClassName, GlobalSearchScope.projectScope(project));
         DefaultMutableTreeNode classNode = find(root, psiClass);
+        if (classNode == null)
+            return null;
 
         int overloadCounter = 1;
-
         for (int i = 0; i < classNode.getChildCount(); i++) {
-            if (elementType.equals("m") && ((DefaultMutableTreeNode) classNode.getChildAt(i)).getUserObject() instanceof PsiMethod) {
-                PsiMethod node = (PsiMethod) ((DefaultMutableTreeNode) classNode.getChildAt(i)).getUserObject();
-                if (node.getName().equals(elementName)) {
+            Object userObject = ((DefaultMutableTreeNode) classNode.getChildAt(i)).getUserObject();
+            if (elementType.equals("m") && userObject instanceof PsiMethod) {
+                if (((PsiMethod) userObject).getName().equals(elementName)) {
                     if (overloadCounter == overloadIndex)
-                        return node;
+                        return (PsiElement) userObject;
                     else
                         overloadCounter++;
                 }
-            } else if (elementType.equals("f") && ((DefaultMutableTreeNode) classNode.getChildAt(i)).getUserObject() instanceof PsiField) {
-                PsiField node = (PsiField) ((DefaultMutableTreeNode) classNode.getChildAt(i)).getUserObject();
-                if (node.getName().equals(elementName)) return node;
-            }
+            } else if (elementType.equals("f") && userObject instanceof PsiField && ((PsiField) userObject).getName().equals(elementName))
+                return ((PsiField) userObject);
         }
 
         return null;

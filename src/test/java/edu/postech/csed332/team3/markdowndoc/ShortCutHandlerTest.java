@@ -1,8 +1,7 @@
 package edu.postech.csed332.team3.markdowndoc;
 
-import org.junit.Test;
 import com.intellij.openapi.actionSystem.KeyboardShortcut;
-import com.intellij.openapi.actionSystem.Shortcut;
+import org.junit.Test;
 
 import javax.swing.*;
 
@@ -15,31 +14,31 @@ public class ShortCutHandlerTest {
     @Test
     public void TestGetKeyStroke() {
         ShortCutHandler handler = new ShortCutHandler(VK_SEMICOLON, CTRL_DOWN_MASK, false);
-        assertEquals(handler.GetKeyStroke(), KeyStroke.getKeyStroke(VK_SEMICOLON, CTRL_DOWN_MASK, false));
+        assertEquals(handler.getKeyStroke(), KeyStroke.getKeyStroke(VK_SEMICOLON, CTRL_DOWN_MASK, false));
     }
 
     @Test
     public void TestGetShortcut() {
         ShortCutHandler handler = new ShortCutHandler(VK_SEMICOLON, CTRL_DOWN_MASK, false);
-        assertEquals(handler.GetShortcut(), new KeyboardShortcut(handler.GetKeyStroke(), null));
+        assertEquals(handler.getShortcut(), new KeyboardShortcut(handler.getKeyStroke(), null));
     }
 
     @Test
     public void TestGetKeyCode() {
         ShortCutHandler handler = new ShortCutHandler(VK_SEMICOLON, CTRL_DOWN_MASK, false);
-        assertEquals(handler.GetKeyCode(), VK_SEMICOLON);
+        assertEquals(VK_SEMICOLON, handler.getKeyCode());
     }
 
     @Test
     public void TestGetModifiers() {
         ShortCutHandler handler = new ShortCutHandler(VK_SEMICOLON, CTRL_DOWN_MASK, false);
-        assertEquals(handler.GetModifiers(), CTRL_DOWN_MASK);
+        assertEquals(CTRL_DOWN_MASK, handler.getModifiers());
     }
 
     @Test
     public void TestGetOnKeyRelease() {
         ShortCutHandler handler = new ShortCutHandler(VK_SEMICOLON, CTRL_DOWN_MASK, false);
-        assertFalse(handler.GetOnKeyRelease());
+        assertFalse(handler.getOnKeyRelease());
     }
 }
 
