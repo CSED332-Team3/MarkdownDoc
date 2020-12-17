@@ -35,6 +35,8 @@ public class BrowserController implements BrowserControllerInterface {
     private final String projectPath;
     private final String baseURL;
     private TreeModel model;
+    private RearrangeMembers rearrangeMembers;
+
     public static final NotificationGroup GROUP_DISPLAY_ID_INFO =
             new NotificationGroup("MarkdownDoc",
                     NotificationDisplayType.BALLOON, true);
@@ -68,6 +70,9 @@ public class BrowserController implements BrowserControllerInterface {
         // Make html directory
         File folder = new File(projectPath, HTML);
         folder.mkdirs();
+
+        //Create RearrangeMembers that is invoked by ShortCut (Ctrl + ;)
+        rearrangeMembers = new RearrangeMembers(this);
 
         // Initialize SearchProject
         model = ProjectModel.createProjectTreeModel(getActiveProject());
