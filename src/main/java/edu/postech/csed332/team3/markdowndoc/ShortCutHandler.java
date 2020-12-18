@@ -12,9 +12,6 @@ import javax.swing.*;
 public class ShortCutHandler {
     private final KeyStroke keyStroke;
     private final Shortcut shortcut;
-    private final int keyCode;
-    private final int modifiers;
-    private final boolean onKeyRelease;
 
     /**
      * Constructor of ShortCutHandler
@@ -24,9 +21,6 @@ public class ShortCutHandler {
      * @param onKeyRelease that represents whether key is released or not
      */
     public ShortCutHandler(int keyCode, int modifiers, boolean onKeyRelease) {
-        this.keyCode = keyCode;
-        this.modifiers = modifiers;
-        this.onKeyRelease = onKeyRelease;
         this.keyStroke = KeyStroke.getKeyStroke(keyCode, modifiers, onKeyRelease);
         this.shortcut = new KeyboardShortcut(keyStroke, null);
     }
@@ -47,32 +41,5 @@ public class ShortCutHandler {
      */
     public Shortcut getShortcut() {
         return this.shortcut;
-    }
-
-    /**
-     * Get keyCode that represents of character number in this class
-     *
-     * @return keyCode
-     */
-    public int getKeyCode() {
-        return this.keyCode;
-    }
-
-    /**
-     * Get modifiers like CTRL, ALT, SHIFT in this class
-     *
-     * @return modifiers
-     */
-    public int getModifiers() {
-        return this.modifiers;
-    }
-
-    /**
-     * Get onKeyRelease that represents whether key is released or not in this class
-     *
-     * @return onKeyRelease
-     */
-    public boolean getOnKeyRelease() {
-        return this.onKeyRelease;
     }
 }
