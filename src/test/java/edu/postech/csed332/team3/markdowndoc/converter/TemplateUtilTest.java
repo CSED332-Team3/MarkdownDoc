@@ -69,7 +69,7 @@ public class TemplateUtilTest extends BasePlatformTestCase {
         // class
         PsiClass aClass = getPsiClass();
         assertEquals("<tr><td data-type=\"\"><h5>Class</h5><h3><a id=\"c-TestTemplateUtil\">\n" +
-                        " TestTemplateUtil</a></h3></td></tr>\n",
+                        "public  TestTemplateUtil</a></h3></td></tr>\n",
                 TemplateUtil.append(aClass));
 
         // method
