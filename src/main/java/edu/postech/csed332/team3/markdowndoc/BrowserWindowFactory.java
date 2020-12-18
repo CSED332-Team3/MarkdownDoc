@@ -9,6 +9,9 @@ import com.intellij.ui.content.ContentFactory;
 import edu.postech.csed332.team3.markdowndoc.explorer.UpdateListener;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Class to generate the plugin tool window
+ */
 public class BrowserWindowFactory implements ToolWindowFactory {
 
     @Override

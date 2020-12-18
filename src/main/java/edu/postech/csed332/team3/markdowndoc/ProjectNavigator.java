@@ -11,9 +11,11 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 import java.security.InvalidParameterException;
+import java.util.Objects;
 
 /**
  * Class providing methods for navigating to the code location
+ * when the user clicks on a link in MarkdownDoc.
  */
 public class ProjectNavigator {
 
@@ -71,6 +73,8 @@ public class ProjectNavigator {
                 }
             } else if (elementType.equals("f") && userObject instanceof PsiField && ((PsiField) userObject).getName().equals(elementName))
                 return ((PsiField) userObject);
+            else if (elementType.equals("c") && userObject instanceof PsiClass && Objects.equals(((PsiClass) userObject).getName(), elementName))
+                return ((PsiClass) userObject);
         }
 
         return null;
@@ -93,7 +97,7 @@ public class ProjectNavigator {
      * Navigate to the editor
      * if the clicked item is a method or a field
      *
-     * @param input the input string
+     * @param input the input string (console output from MarkdownDoc)
      */
     public void navigateToMethodField(String input) {
         ApplicationManager.getApplication().invokeLater(() -> {
@@ -106,6 +110,24 @@ public class ProjectNavigator {
             } else if (element instanceof PsiField) {
                 ((PsiField) element).navigate(true);
             }
+        });
+    }
+
+    /**
+     * Navigate to the editor
+     * if the clicked item is a class
+     * and is not invoked by a link
+     *
+     * @param input the input string (console output from MarkdownDoc)
+     */
+    public void navigateToClass(String input) {
+        ApplicationManager.getApplication().invokeLater(() -> {
+            loadModel();
+            parseInput(input);
+            PsiElement element = find();
+
+            if (element instanceof PsiClass && !elementName.contains("."))
+                    ((PsiClass) element).navigate(true);
         });
     }
 }

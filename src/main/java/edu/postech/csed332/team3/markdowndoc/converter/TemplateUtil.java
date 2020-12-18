@@ -118,6 +118,12 @@ public class TemplateUtil {
         if (element instanceof PsiMethod)
             html.append(((PsiMethod) element).getModifierList().getText())
                     .append(" ");
+        else if (element instanceof PsiClass) {
+            PsiModifierList modifierList = ((PsiClass) element).getModifierList();
+            if (modifierList != null && modifierList.getText() != null)
+                html.append(modifierList.getText())
+                        .append(" ");
+        }
 
         if (type != null)
             html.append(type)
@@ -248,9 +254,7 @@ public class TemplateUtil {
             url.append("../".repeat(Math.max(0, pkgFrom.length - 1)));
         } else {
             url.append("./");
-
-            // TODO: Remove after files are created in a single directory
-            url.append("main/java/");
+            url.append("java/");
         }
 
         if (to.getQualifiedName() != null) {
