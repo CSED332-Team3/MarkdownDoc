@@ -15,11 +15,8 @@ import org.cef.CefSettings;
 import org.cef.browser.CefBrowser;
 import org.cef.browser.CefFrame;
 import org.cef.handler.CefDisplayHandler;
-import org.cef.handler.CefLoadHandler;
-import org.cef.network.CefRequest;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.tree.TreeModel;
 import java.io.File;
 import java.io.FileNotFoundException;
 
@@ -69,7 +66,9 @@ public class BrowserController implements BrowserControllerInterface {
 
         // Make html directory
         File folder = new File(projectPath, HTML);
-        folder.mkdirs();
+        if (!folder.mkdirs()) {
+            LoggerUtil.warning("File creation failed");
+        }
 
         //Create RearrangeMembers that is invoked by ShortCut (Ctrl + ;)
         RearrangeMembers.setController(this);
