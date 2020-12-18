@@ -68,8 +68,10 @@ public class UpdateListener extends PsiTreeChangeAdapter {
         final String htmlPath = relPath.replace("src/main", "html")
                 .replace("src/test", "html")
                 .replace(".java", "");
-        if (controller.getURL().contains(htmlPath))
+        if (controller.getURL().contains(htmlPath)) {
             controller.goBack();
+            controller.reload();
+        }
         final Path path = Path.of(activeProject.getBasePath(), htmlPath + ".html");
         try {
             Files.deleteIfExists(path);
