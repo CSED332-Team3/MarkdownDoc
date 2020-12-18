@@ -1,14 +1,13 @@
 package edu.postech.csed332.team3.markdowndoc;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 
+import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
@@ -55,7 +54,8 @@ public class ShortCutAction extends AnAction {
      * Add ShortCut given parameter
      */
     private void addShortcut() {
-        ShortCutHandler shortCutHandler = new ShortCutHandler(KeyEvent.VK_SEMICOLON, InputEvent.CTRL_DOWN_MASK, false);
-        KeymapManager.getInstance().getActiveKeymap().addShortcut("ShortCutAction", shortCutHandler.getShortcut());
+        KeyStroke keyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_SEMICOLON, InputEvent.CTRL_DOWN_MASK, false);
+        final Shortcut shortcut = new KeyboardShortcut(keyStroke, null);
+        KeymapManager.getInstance().getActiveKeymap().addShortcut("ShortCutAction", shortcut);
     }
 }
