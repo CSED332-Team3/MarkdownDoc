@@ -3,13 +3,23 @@
 [![pipeline status](https://csed332.postech.ac.kr/team3-2020/MarkdownDoc/badges/master/pipeline.svg)](https://csed332.postech.ac.kr/team3-2020/MarkdownDoc/-/commits/master)
 [![coverage report](https://csed332.postech.ac.kr/team3-2020/MarkdownDoc/badges/master/coverage.svg)](https://csed332.postech.ac.kr/team3-2020/MarkdownDoc/-/commits/master)
 
-This document is currently intended for development use only.
+## Requirements
 
-## 1. Requirements
+- Java 11
+- IntelliJ 2020.2
+  (See [the link](https://jetbrains.org/intellij/sdk/docs/reference_guide/jcef.html) for details.)
 
 Supported Language: Java 11
 
-## 2. Development Guidelines
+## How to run
+
+### Testing
+To test the project, run `gradle test`.
+If errors occur, try `gradle clean test`.
+
+To run the project, run `gradle runIde`.
+
+## Development Guidelines
 
 Please adhere to the following guidelines:
 
@@ -39,7 +49,7 @@ Please adhere to the following guidelines:
       Approving your own MR does not count.
 	  > As squash merge alteres the Git history, you should not squash-merge.
 
-## 3. Notes
+## Notes
 
 - CI runners are slow. The average time required for a pipeline to be completed is 6 to 15 minutes.
 - Not all commits of master branch are deployable.
