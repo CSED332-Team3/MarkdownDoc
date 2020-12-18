@@ -17,7 +17,19 @@ Supported Language: Java 11
 To test the project, run `gradle test`.
 If errors occur, try `gradle clean test`.
 
+### Running
+
 To run the project, run `gradle runIde`.
+
+1. Make some JavaDoc.
+1. Put "!!mdDoc" on the top of the comment.
+```java
+/**
+ * !!mdDoc
+ * [content]
+ */
+```
+1. The document is parsed.
 
 ## Development Guidelines
 
@@ -48,8 +60,14 @@ Please adhere to the following guidelines:
    1. Merge requests need at least 1 appoval and test coverage over 85% to be merged.
       Approving your own MR does not count.
 	  > As squash merge alteres the Git history, you should not squash-merge.
+      
+## Useful information
 
-## Notes
+- The `testData` directory contains files for testing.
+- For a footer and header of HTML, see `src/main/resources`.
+Footer has a JavaScript code for sorting.
+
+## Notes to developers
 
 - CI runners are slow. The average time required for a pipeline to be completed is 6 to 15 minutes.
 - Not all commits of master branch are deployable.
