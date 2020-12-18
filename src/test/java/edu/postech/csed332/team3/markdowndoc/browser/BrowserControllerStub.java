@@ -1,4 +1,6 @@
-package edu.postech.csed332.team3.markdowndoc;
+package edu.postech.csed332.team3.markdowndoc.browser;
+
+import edu.postech.csed332.team3.markdowndoc.browser.BrowserControllerInterface;
 
 import java.util.ArrayList;
 import java.util.Base64;

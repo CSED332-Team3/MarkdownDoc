@@ -12,7 +12,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="MarkdownDoc" anchor="right"
-                    factoryClass="edu.postech.csed332.team3.markdowndoc.BrowserWindowFactory"/>
+                    factoryClass="edu.postech.csed332.team3.markdowndoc.browser.BrowserWindowFactory"/>
     </extensions>
     <extensions defaultExtensionNs="com.intellij">
         <defaultLiveTemplates file="/MarkdownCompletion.xml"/>

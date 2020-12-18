@@ -3,6 +3,7 @@ package edu.postech.csed332.team3.markdowndoc;
 import com.intellij.openapi.editor.CaretModel;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
+import edu.postech.csed332.team3.markdowndoc.browser.BrowserController;
 
 import java.util.Objects;
 
@@ -45,8 +46,6 @@ public class RearrangeMembers {
     public static void callSort(PsiFile current, Editor editor) {
         PsiElement context = findContext(current, editor);
         if (context != null) {
-            System.out.println(context);
-            System.out.println(context.getText());
             if (context instanceof PsiField)
                 controller.sort(((PsiField) context).getType());
             else if (context instanceof PsiMethod)
@@ -60,13 +59,11 @@ public class RearrangeMembers {
             else if (context instanceof PsiTypeElement)
                 controller.sort(((PsiTypeElement) context).getType());
             else if (context instanceof PsiLiteralExpression)
-                controller.sort(Objects.requireNonNull(((PsiLiteralExpression)context).getType()));
+                controller.sort(Objects.requireNonNull(((PsiLiteralExpression) context).getType()));
             else if (context instanceof PsiLocalVariable)
-                controller.sort(((PsiLocalVariable)context).getType());
+                controller.sort(((PsiLocalVariable) context).getType());
             else if (context instanceof PsiJavaCodeReferenceElement)
-                controller.sort(((PsiJavaCodeReferenceElement)context).getText());
+                controller.sort(context.getText());
         }
     }
-
-
 }
