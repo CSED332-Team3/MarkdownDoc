@@ -52,7 +52,7 @@ public class ShortCutAction extends AnAction {
     }
 
     /**
-     * Add ShortCut given parameter
+     * Add ShortCut CTRL + ;
      */
     private void addShortcut() {
         ShortCutHandler shortCutHandler = new ShortCutHandler(KeyEvent.VK_SEMICOLON, InputEvent.CTRL_DOWN_MASK, false);

@@ -48,31 +48,4 @@ public class ShortCutHandler {
     public Shortcut getShortcut() {
         return this.shortcut;
     }
-
-    /**
-     * Get keyCode that represents of character number in this class
-     *
-     * @return keyCode
-     */
-    public int getKeyCode() {
-        return this.keyCode;
-    }
-
-    /**
-     * Get modifiers like CTRL, ALT, SHIFT in this class
-     *
-     * @return modifiers
-     */
-    public int getModifiers() {
-        return this.modifiers;
-    }
-
-    /**
-     * Get onKeyRelease that represents whether key is released or not in this class
-     *
-     * @return onKeyRelease
-     */
-    public boolean getOnKeyRelease() {
-        return this.onKeyRelease;
-    }
 }
