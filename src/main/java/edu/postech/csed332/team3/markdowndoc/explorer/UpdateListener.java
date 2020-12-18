@@ -65,7 +65,9 @@ public class UpdateListener extends PsiTreeChangeAdapter {
         final String relPath = ProjectUtil.calcRelativeToProjectPath(virtualFile, activeProject)
                 .replace(File.separator, "/")
                 .replace(".../", "");
-        final String htmlPath = relPath.replace("src", "html").replace(".java", "");
+        final String htmlPath = relPath.replace("src/main", "html")
+                .replace("src/test", "html")
+                .replace(".java", "");
         if (controller.getURL().contains(htmlPath))
             controller.goBack();
         final Path path = Path.of(activeProject.getBasePath(), htmlPath + ".html");
