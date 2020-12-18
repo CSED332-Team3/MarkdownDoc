@@ -1,10 +1,13 @@
 package edu.postech.csed332.team3.markdowndoc;
 
+import com.intellij.openapi.util.io.FileUtil;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,6 +18,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class ExporterTest {
+    @BeforeClass
+    public static void beforeClass() throws Exception {
+        FileUtil.delete(Path.of("html"));
+    }
 
     @Test
     public void testExport() {
@@ -41,6 +48,7 @@ public class ExporterTest {
                 if (!zipEntry.isDirectory())
                     zipSet.add(zipEntry.getName());
             }
+            zipFile.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
