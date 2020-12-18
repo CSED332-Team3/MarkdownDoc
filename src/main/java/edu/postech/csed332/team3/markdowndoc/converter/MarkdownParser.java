@@ -11,6 +11,10 @@ import java.io.IOException;
 import java.io.StringReader;
 
 public class MarkdownParser {
+
+    private static final Parser parser = Parser.builder().build();
+    private static final HtmlRenderer htmlRenderer = HtmlRenderer.builder().build();
+
     private MarkdownParser() {
     }
 
@@ -27,11 +31,20 @@ public class MarkdownParser {
             comment = parseLoop(comment);
         }
 
-        final Parser parser = Parser.builder().build();
-        final Node node = parser.parse(comment);
-        final HtmlRenderer htmlRenderer = HtmlRenderer.builder().build();
+        return parseRaw(comment);
+    }
 
+    private static String parseRaw(@NotNull String string) {
+        final Node node = parser.parse(string);
         return htmlRenderer.render(node);
+    }
+
+    private static String unwrapParagraph(@NotNull String string) {
+        if (string.startsWith("<p>") && string.endsWith("</p>\n")) {
+            final int i = string.lastIndexOf("</p>\n");
+            return string.substring(3, i);
+        }
+        return string;
     }
 
     /**
@@ -72,7 +85,7 @@ public class MarkdownParser {
                             stringBuilder.append(parseTableDetails(line, columnNum));
                         }
                         stringBuilder.append("</tbody>\n");
-                        stringBuilder.append("</table>\n");
+                        stringBuilder.append("</table>\n\n");
                         if (line == null)
                             return stringBuilder.toString();
                         prevLine = line;
@@ -127,7 +140,7 @@ public class MarkdownParser {
         for (String s : header) {
             if (s.equals(""))
                 continue;
-            stringBuilder.append("<th>").append(s).append("</th>\n");
+            stringBuilder.append("<th>").append(unwrapParagraph(parseRaw(s))).append("</th>\n");
         }
         stringBuilder.append("</tr>\n");
 
@@ -155,7 +168,7 @@ public class MarkdownParser {
                 break;
 
             String detail = strings[i];
-            stringBuilder.append("<td>").append(detail).append("</td>\n");
+            stringBuilder.append("<td>").append(unwrapParagraph(parseRaw(detail))).append("</td>\n");
         }
         stringBuilder.append("</tr>\n");
 
@@ -171,10 +184,10 @@ public class MarkdownParser {
     @NotNull
     private static String parseCheckBox(@NotNull String comment) {
         if (comment.matches("^\\s*-\\s+\\[ ] [^\\s]+")) {
-            return comment.replaceFirst("\\[ ] ","<input type=\"checkbox\" disabled>");
+            return comment.replaceFirst("\\[ ] ", "<input type=\"checkbox\" disabled>");
         }
         if (comment.matches("^\\s*-\\s+\\[x] [^\\s]+")) {
-            return comment.replaceFirst("\\[x] ","<input type=\"checkbox\" checked disabled>");
+            return comment.replaceFirst("\\[x] ", "<input type=\"checkbox\" checked disabled>");
         }
         return comment;
     }
