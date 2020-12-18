@@ -125,10 +125,8 @@ public class ProjectNavigator {
             parseInput(input);
             PsiElement element = find();
 
-            if (element instanceof PsiClass) {
-                if (!elementName.contains("."))
+            if (element instanceof PsiClass && !elementName.contains("."))
                     ((PsiClass) element).navigate(true);
-            }
         });
     }
 }

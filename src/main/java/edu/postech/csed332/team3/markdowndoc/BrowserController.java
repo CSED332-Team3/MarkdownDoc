@@ -19,7 +19,6 @@ import org.cef.handler.CefLoadHandler;
 import org.cef.network.CefRequest;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.tree.TreeModel;
 import java.io.File;
 import java.io.FileNotFoundException;
 

@@ -1,6 +1,7 @@
 package edu.postech.csed332.team3.markdowndoc;
 
-import com.sun.istack.NotNull;
+
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
