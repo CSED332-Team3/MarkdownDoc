@@ -211,7 +211,7 @@ public class MarkdownParserTest {
                         "<tbody>\n" +
                         "</tbody>\n" +
                         "</table>\n" +
-                        "asdf|asdf|asdf|\n",
+                        "<p>asdf|asdf|asdf|</p>\n",
                 parseReroute("|asdf|asdf|asdf|\n" +
                         "|---|---|---|\n" +
                         "asdf|asdf|asdf|\n"));
@@ -226,7 +226,7 @@ public class MarkdownParserTest {
                         "<tbody>\n" +
                         "</tbody>\n" +
                         "</table>\n" +
-                        "|asdf|asdf|asdf\n",
+                        "<p>|asdf|asdf|asdf</p>\n",
                 parseReroute("|asdf|asdf|asdf|\n" +
                         "|---|---|---|\n" +
                         "|asdf|asdf|asdf\n"));
