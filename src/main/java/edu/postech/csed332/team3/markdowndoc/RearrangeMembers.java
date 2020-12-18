@@ -45,6 +45,8 @@ public class RearrangeMembers {
     public static void callSort(PsiFile current, Editor editor) {
         PsiElement context = findContext(current, editor);
         if (context != null) {
+            System.out.println(context);
+            System.out.println(context.getText());
             if (context instanceof PsiField)
                 controller.sort(((PsiField) context).getType());
             else if (context instanceof PsiMethod)
@@ -57,8 +59,12 @@ public class RearrangeMembers {
                 controller.sort(((PsiParameter) context).getType());
             else if (context instanceof PsiTypeElement)
                 controller.sort(((PsiTypeElement) context).getType());
+            else if (context instanceof PsiLiteralExpression)
+                controller.sort(Objects.requireNonNull(((PsiLiteralExpression)context).getType()));
+            else if (context instanceof PsiLocalVariable)
+                controller.sort(((PsiLocalVariable)context).getType());
             else if (context instanceof PsiJavaCodeReferenceElement)
-                controller.sort(context.getText());
+                controller.sort(((PsiJavaCodeReferenceElement)context).getText());
         }
     }
 
