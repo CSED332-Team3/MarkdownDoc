@@ -15,6 +15,7 @@ import java.util.Objects;
 
 /**
  * Class providing methods for navigating to the code location
+ * when the user clicks on a link in MarkdownDoc.
  */
 public class ProjectNavigator {
 
@@ -96,7 +97,7 @@ public class ProjectNavigator {
      * Navigate to the editor
      * if the clicked item is a method or a field
      *
-     * @param input the input string
+     * @param input the input string (console output from MarkdownDoc)
      */
     public void navigateToMethodField(String input) {
         ApplicationManager.getApplication().invokeLater(() -> {
@@ -117,7 +118,7 @@ public class ProjectNavigator {
      * if the clicked item is a class
      * and is not invoked by a link
      *
-     * @param input the input string
+     * @param input the input string (console output from MarkdownDoc)
      */
     public void navigateToClass(String input) {
         ApplicationManager.getApplication().invokeLater(() -> {

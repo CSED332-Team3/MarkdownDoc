@@ -27,6 +27,7 @@ import static edu.postech.csed332.team3.markdowndoc.explorer.ActiveProjectModel.
 
 /**
  * Class for controlling the browser model
+ * This class provides methods to control and respond to user actions.
  */
 public class BrowserController implements BrowserControllerInterface {
 
@@ -138,28 +139,6 @@ public class BrowserController implements BrowserControllerInterface {
                 }
 
                 return false;
-            }
-        });
-
-        cefBrowser.getClient().addLoadHandler(new CefLoadHandler() {
-            @Override
-            public void onLoadingStateChange(CefBrowser cefBrowser, boolean b, boolean b1, boolean b2) {
-
-            }
-
-            @Override
-            public void onLoadStart(CefBrowser cefBrowser, CefFrame cefFrame, CefRequest.TransitionType transitionType) {
-
-            }
-
-            @Override
-            public void onLoadEnd(CefBrowser cefBrowser, CefFrame cefFrame, int i) {
-
-            }
-
-            @Override
-            public void onLoadError(CefBrowser cefBrowser, CefFrame cefFrame, ErrorCode errorCode, String s, String s1) {
-                LoggerUtil.warning(s);
             }
         });
     }
