@@ -25,6 +25,9 @@ import java.io.FileNotFoundException;
 
 import static edu.postech.csed332.team3.markdowndoc.explorer.ActiveProjectModel.getActiveProject;
 
+/**
+ * Class for controlling the browser model
+ */
 public class BrowserController implements BrowserControllerInterface {
 
     public static final NotificationGroup GROUP_DISPLAY_ID_INFO =

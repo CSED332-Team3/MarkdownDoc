@@ -1,5 +1,8 @@
 package edu.postech.csed332.team3.markdowndoc;
 
+/**
+ * Interface for BrowserController
+ */
 public interface BrowserControllerInterface {
 
     /**
