@@ -1,4 +1,4 @@
-package edu.postech.csed332.team3.markdowndoc;
+package edu.postech.csed332.team3.markdowndoc.browser;
 
 import com.intellij.notification.*;
 import com.intellij.openapi.application.ApplicationManager;
@@ -9,7 +9,10 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiType;
 import com.intellij.ui.jcef.JBCefApp;
 import com.intellij.ui.jcef.JBCefBrowser;
+import edu.postech.csed332.team3.markdowndoc.Exporter;
+import edu.postech.csed332.team3.markdowndoc.RearrangeMembers;
 import edu.postech.csed332.team3.markdowndoc.explorer.ProjectModel;
+import edu.postech.csed332.team3.markdowndoc.explorer.ProjectNavigator;
 import edu.postech.csed332.team3.markdowndoc.util.LoggerUtil;
 import org.cef.CefSettings;
 import org.cef.browser.CefBrowser;

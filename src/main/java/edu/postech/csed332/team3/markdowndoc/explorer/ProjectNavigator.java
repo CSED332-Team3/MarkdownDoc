@@ -1,11 +1,9 @@
-package edu.postech.csed332.team3.markdowndoc;
+package edu.postech.csed332.team3.markdowndoc.explorer;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
-import edu.postech.csed332.team3.markdowndoc.explorer.ActiveProjectModel;
-import edu.postech.csed332.team3.markdowndoc.explorer.ProjectModel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.tree.DefaultMutableTreeNode;

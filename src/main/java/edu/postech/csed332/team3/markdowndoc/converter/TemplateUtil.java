@@ -25,7 +25,8 @@ import static edu.postech.csed332.team3.markdowndoc.explorer.MdDocElementVisitor
  */
 public class TemplateUtil {
 
-    private TemplateUtil() {}
+    private TemplateUtil() {
+    }
 
     /**
      * Get content of the header
@@ -196,7 +197,7 @@ public class TemplateUtil {
         return stringBuilder.toString();
     }
 
-    @org.jetbrains.annotations.Nullable
+    @Nullable
     private static List<String> getImplements(PsiClass psiClass) {
         PsiReferenceList implList = psiClass.getImplementsList();
         List<String> impl = null;
@@ -221,7 +222,7 @@ public class TemplateUtil {
         return impl;
     }
 
-    @org.jetbrains.annotations.Nullable
+    @Nullable
     private static String getExtends(PsiClass psiClass) {
         PsiReferenceList extList = psiClass.getExtendsList();
         if (extList != null && extList.getReferencedTypes().length > 0) {
