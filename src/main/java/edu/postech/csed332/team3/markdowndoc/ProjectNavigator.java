@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 import java.security.InvalidParameterException;
-import java.util.Objects;
 
 /**
  * Class providing methods for navigating to the code location
@@ -62,22 +61,27 @@ public class ProjectNavigator {
             return null;
 
         int overloadCounter = 1;
+        PsiNamedElement element;
         for (int i = 0; i < classNode.getChildCount(); i++) {
             Object userObject = ((DefaultMutableTreeNode) classNode.getChildAt(i)).getUserObject();
-            if (elementType.equals("m") && userObject instanceof PsiMethod) {
-                if (((PsiMethod) userObject).getName().equals(elementName)) {
-                    if (overloadCounter == overloadIndex)
-                        return (PsiElement) userObject;
-                    else
-                        overloadCounter++;
-                }
-            } else if (elementType.equals("f") && userObject instanceof PsiField && ((PsiField) userObject).getName().equals(elementName))
-                return ((PsiField) userObject);
-            else if (elementType.equals("c") && userObject instanceof PsiClass && Objects.equals(((PsiClass) userObject).getName(), elementName))
-                return ((PsiClass) userObject);
+            if (!(userObject instanceof PsiNamedElement))
+                continue;
+            element = checkName((PsiNamedElement) userObject, overloadCounter);
+            if (element == null)
+                overloadCounter++;
+            else
+                return element;
         }
 
         return null;
+    }
+
+    private PsiNamedElement checkName(PsiNamedElement element, int counter) {
+        if (element.getName() == null)
+            return null;
+        if (element.getName().equals(elementName) && elementType.equals("m") && counter != overloadIndex)
+            return null;
+        return element;
     }
 
     // Find PsiElement in tree
@@ -127,7 +131,7 @@ public class ProjectNavigator {
             PsiElement element = find();
 
             if (element instanceof PsiClass && !elementName.contains("."))
-                    ((PsiClass) element).navigate(true);
+                ((PsiClass) element).navigate(true);
         });
     }
 }
