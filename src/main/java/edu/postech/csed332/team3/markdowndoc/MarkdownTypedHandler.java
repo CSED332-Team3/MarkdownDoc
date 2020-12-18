@@ -14,7 +14,7 @@ import java.util.Objects;
 
 /**
  * We want to use Markdown grammar completion inside of comments,
- * so we use custom parameter(&) that triggered completion popup
+ * so we use custom parameter(/) that triggered completion popup
  */
 public class MarkdownTypedHandler extends TypedHandlerDelegate {
 
