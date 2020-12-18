@@ -1,10 +1,10 @@
 package edu.postech.csed332.team3.markdowndoc.explorer;
 
+import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.openapi.vfs.ex.temp.TempFileSystem;
-import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -60,7 +60,6 @@ public class MdDocElementVisitor extends JavaElementVisitor {
     public static Set<PsiClass> getAllClassesSet() {
         return allClasses;
     }
-
 
 
     /**
@@ -173,9 +172,12 @@ public class MdDocElementVisitor extends JavaElementVisitor {
         @NotNull VirtualFile projectRoot = ModuleRootManager.getInstance(
                 ModuleManager.getInstance(getActiveProject()).getModules()[0]
         ).getContentRoots()[0];
-        final String path = projectRoot.getCanonicalPath()
+        String path = projectRoot.getCanonicalPath()
                 + File.separator + "html"
                 + File.separator + "index.html";
+
+        if (path.startsWith("/"))
+            path = path.replaceFirst("/", "");
 
         FileManager fm = new FileManager(path);
         fm.close(null);

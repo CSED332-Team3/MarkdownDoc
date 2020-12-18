@@ -82,10 +82,16 @@ public class MdDocElementVisitorTest extends BasePlatformTestCase {
         assertEquals(Set.of(root), Set.copyOf(visitor.getStack()));
         reached.forEach(TestCase::assertTrue);
 
-        File test = new File("html/root/Subject.html");
+        File test = new File("src/root/Subject.html");
         assertTrue(test.delete());
 
-        test = new File("html/root");
+        test = new File("src/root");
+        assertTrue(test.delete());
+
+        test = new File("src/html/index.html");
+        assertTrue(test.delete());
+
+        test = new File("src/html");
         assertTrue(test.delete());
     }
 }
