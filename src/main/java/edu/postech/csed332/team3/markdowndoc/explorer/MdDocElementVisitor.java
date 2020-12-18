@@ -176,7 +176,7 @@ public class MdDocElementVisitor extends JavaElementVisitor {
                 + File.separator + "html"
                 + File.separator + "index.html";
 
-        if (path.startsWith("/"))
+        if (projectRoot.getFileSystem() instanceof TempFileSystem && path.startsWith("/"))
             path = path.replaceFirst("/", "");
 
         FileManager fm = new FileManager(path);
