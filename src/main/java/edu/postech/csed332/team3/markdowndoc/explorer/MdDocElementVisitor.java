@@ -1,10 +1,10 @@
 package edu.postech.csed332.team3.markdowndoc.explorer;
 
+import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.openapi.vfs.ex.temp.TempFileSystem;
-import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,7 +16,8 @@ import static edu.postech.csed332.team3.markdowndoc.explorer.ActiveProjectModel.
 
 public class MdDocElementVisitor extends JavaElementVisitor {
     private static final String JAVA_EXT = ".java";
-    private static final String SRC_DIR = "src";
+    private static final String SRC_MAIN_DIR = "src" + File.separator + "main";
+    private static final String SRC_TEST_DIR = "src" + File.separator + "test";
     private static final String HTML_EXT = ".html";
     private static final String HTML = "html";
     private static final Set<PsiClass> allClasses = new HashSet<>();
@@ -24,6 +25,7 @@ public class MdDocElementVisitor extends JavaElementVisitor {
     private FileManager fileManager;
     private boolean first = true;
     private boolean isParentPkg = true;
+    private boolean isSubClass = false;
 
     MdDocElementVisitor(DefaultMutableTreeNode root) {
         stack = new ArrayDeque<>(Collections.singleton(root));
@@ -60,7 +62,6 @@ public class MdDocElementVisitor extends JavaElementVisitor {
     }
 
 
-
     /**
      * Visits a package.
      * <p/>
@@ -90,12 +91,15 @@ public class MdDocElementVisitor extends JavaElementVisitor {
                 VirtualFileSystem fileSystem = virtualFile.getFileSystem();
                 if (canonicalPath == null) return;
 
-                String path = canonicalPath.replace(SRC_DIR, HTML).replace(JAVA_EXT, HTML_EXT);
+                String path = canonicalPath.replace(SRC_MAIN_DIR, HTML)
+                        .replace(SRC_TEST_DIR, HTML)
+                        .replace(JAVA_EXT, HTML_EXT);
                 if (fileSystem instanceof TempFileSystem && path.startsWith("/"))
                     path = path.replaceFirst("/", "");
 
                 fileManager = new FileManager(path);
                 first = true;
+                isSubClass = false;
                 psiClass.accept(this);
                 fileManager.close(psiClass);
             });
@@ -118,7 +122,8 @@ public class MdDocElementVisitor extends JavaElementVisitor {
         stack.push(newChild);
 
         // Add this class to the set of all classes
-        allClasses.add(aClass);
+        if (!isSubClass)
+            allClasses.add(aClass);
 
         // Write to file
         if (first) {
@@ -127,6 +132,7 @@ public class MdDocElementVisitor extends JavaElementVisitor {
         } else
             fileManager.write(aClass);
 
+        isSubClass = true;
         Arrays.stream(aClass.getInnerClasses()).forEach(psiClass -> psiClass.accept(this));
         Arrays.stream(aClass.getFields()).forEach(psiField -> psiField.accept(this));
         Arrays.stream(aClass.getMethods()).forEach(psiMethod -> psiMethod.accept(this));
@@ -166,9 +172,12 @@ public class MdDocElementVisitor extends JavaElementVisitor {
         @NotNull VirtualFile projectRoot = ModuleRootManager.getInstance(
                 ModuleManager.getInstance(getActiveProject()).getModules()[0]
         ).getContentRoots()[0];
-        final String path = projectRoot.getCanonicalPath()
+        String path = projectRoot.getCanonicalPath()
                 + File.separator + "html"
                 + File.separator + "index.html";
+
+        if (path.startsWith("/"))
+            path = path.replaceFirst("/", "");
 
         FileManager fm = new FileManager(path);
         fm.close(null);

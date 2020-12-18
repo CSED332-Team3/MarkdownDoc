@@ -1,6 +1,7 @@
 package edu.postech.csed332.team3.markdowndoc;
 
-import com.sun.istack.NotNull;
+
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -69,6 +70,7 @@ public class BrowserView {
      * Add a JComponent to BrowserView
      *
      * @param jComponent the JComponent
+     * @param location the location string in BorderLayout
      */
     public void addComponent(JComponent jComponent, String location) {
         panel.add(jComponent, location);

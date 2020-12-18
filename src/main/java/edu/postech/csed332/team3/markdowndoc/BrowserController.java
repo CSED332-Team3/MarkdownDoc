@@ -15,16 +15,17 @@ import org.cef.CefSettings;
 import org.cef.browser.CefBrowser;
 import org.cef.browser.CefFrame;
 import org.cef.handler.CefDisplayHandler;
-import org.cef.handler.CefLoadHandler;
-import org.cef.network.CefRequest;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.tree.TreeModel;
 import java.io.File;
 import java.io.FileNotFoundException;
 
 import static edu.postech.csed332.team3.markdowndoc.explorer.ActiveProjectModel.getActiveProject;
 
+/**
+ * Class for controlling the browser model
+ * This class provides methods to control and respond to user actions.
+ */
 public class BrowserController implements BrowserControllerInterface {
 
     public static final NotificationGroup GROUP_DISPLAY_ID_INFO =
@@ -36,7 +37,6 @@ public class BrowserController implements BrowserControllerInterface {
     private final CefBrowser cefBrowser;
     private final ProjectNavigator navigator;
     private final String projectPath;
-    private TreeModel model;
 
     /**
      * Create an empty browser controller instance
@@ -66,13 +66,17 @@ public class BrowserController implements BrowserControllerInterface {
 
         // Make html directory
         File folder = new File(projectPath, HTML);
-        folder.mkdirs();
+        if (!folder.mkdirs()) {
+            LoggerUtil.warning("File creation failed");
+        }
 
         //Create RearrangeMembers that is invoked by ShortCut (Ctrl + ;)
         RearrangeMembers.setController(this);
 
         // Initialize SearchProject
-        model = ProjectModel.createProjectTreeModel(getActiveProject());
+        // Call twice since extends/implements list is not built during the first run
+        for (int i = 0; i < 2; i++)
+            ProjectModel.createProjectTreeModel(getActiveProject());
         navigator = new ProjectNavigator();
     }
 
@@ -84,8 +88,8 @@ public class BrowserController implements BrowserControllerInterface {
 
         view.getExportButton().addActionListener(e -> ApplicationManager.getApplication().invokeLater(() -> {
             try {
-                // Refresh all pages and make sure it's ip to date
-                model = ProjectModel.createProjectTreeModel(getActiveProject());
+                // Refresh all pages and make sure it's up to date
+                ProjectModel.createProjectTreeModel(getActiveProject());
                 // Export to .zip
                 Exporter.export("mddoc", projectPath);
                 Notification notification = GROUP_DISPLAY_ID_INFO
@@ -129,31 +133,11 @@ public class BrowserController implements BrowserControllerInterface {
                 if (s.startsWith("m") || s.startsWith("f")) {
                     // Method or field
                     navigator.navigateToMethodField(s);
+                } else if (s.startsWith("c")) {
+                    navigator.navigateToClass(s);
                 }
 
                 return false;
-            }
-        });
-
-        cefBrowser.getClient().addLoadHandler(new CefLoadHandler() {
-            @Override
-            public void onLoadingStateChange(CefBrowser cefBrowser, boolean b, boolean b1, boolean b2) {
-
-            }
-
-            @Override
-            public void onLoadStart(CefBrowser cefBrowser, CefFrame cefFrame, CefRequest.TransitionType transitionType) {
-
-            }
-
-            @Override
-            public void onLoadEnd(CefBrowser cefBrowser, CefFrame cefFrame, int i) {
-
-            }
-
-            @Override
-            public void onLoadError(CefBrowser cefBrowser, CefFrame cefFrame, ErrorCode errorCode, String s, String s1) {
-                LoggerUtil.warning(s);
             }
         });
     }
