@@ -41,7 +41,7 @@ public class MarkdownTypedHandler extends TypedHandlerDelegate {
     @Override
     public @NotNull Result checkAutoPopup(char charTyped, @NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
         if (isParameter(charTyped) && isJavaDocComment(editor, file)) {
-            DoAutoPopup(project, editor);
+            doAutoPopup(project, editor);
             return Result.STOP;
         }
         return super.checkAutoPopup(charTyped, project, editor, file);
@@ -54,7 +54,7 @@ public class MarkdownTypedHandler extends TypedHandlerDelegate {
     @Override
     public @NotNull Result charTyped(char c, final @NotNull Project project, @NotNull final Editor editor, @NotNull PsiFile file) {
         if (isParameter(c) && isJavaDocComment(editor, file)) {
-            DoAutoPopup(project, editor);
+            doAutoPopup(project, editor);
             return Result.STOP;
         }
         return super.charTyped(c, project, editor, file);
@@ -63,7 +63,7 @@ public class MarkdownTypedHandler extends TypedHandlerDelegate {
     /**
      * When we type custom parameter like /, Completion Pop-upped automatically
      */
-    private void DoAutoPopup(final Project project, @NotNull final Editor editor) {
+    private void doAutoPopup(final Project project, @NotNull final Editor editor) {
         AppUIExecutor.onUiThread().later().withDocumentsCommitted(project).execute(() -> {
             if (PsiDocumentManager.getInstance(project).isCommitted(editor.getDocument())) {
                 new CodeCompletionHandlerBase(CompletionType.BASIC).invokeCompletion(project, editor, 1);
