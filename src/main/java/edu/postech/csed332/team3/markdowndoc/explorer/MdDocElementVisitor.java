@@ -16,8 +16,8 @@ import static edu.postech.csed332.team3.markdowndoc.explorer.ActiveProjectModel.
 
 public class MdDocElementVisitor extends JavaElementVisitor {
     private static final String JAVA_EXT = ".java";
-    private static final String SRC_MAIN_DIR = "src" + File.separator + "main";
-    private static final String SRC_TEST_DIR = "src" + File.separator + "test";
+    private static final String SRC_MAIN_DIR = "src/main";
+    private static final String SRC_TEST_DIR = "src/test";
     private static final String HTML_EXT = ".html";
     private static final String HTML = "html";
     private static final Set<PsiClass> allClasses = new HashSet<>();
