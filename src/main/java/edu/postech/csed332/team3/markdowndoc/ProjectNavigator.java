@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 import java.security.InvalidParameterException;
+import java.util.Objects;
 
 /**
  * Class providing methods for navigating to the code location
@@ -71,6 +72,8 @@ public class ProjectNavigator {
                 }
             } else if (elementType.equals("f") && userObject instanceof PsiField && ((PsiField) userObject).getName().equals(elementName))
                 return ((PsiField) userObject);
+            else if (elementType.equals("c") && userObject instanceof PsiClass && Objects.equals(((PsiClass) userObject).getName(), elementName))
+                return ((PsiClass) userObject);
         }
 
         return null;
@@ -105,6 +108,26 @@ public class ProjectNavigator {
                 ((PsiMethod) element).navigate(true);
             } else if (element instanceof PsiField) {
                 ((PsiField) element).navigate(true);
+            }
+        });
+    }
+
+    /**
+     * Navigate to the editor
+     * if the clicked item is a class
+     * and is not invoked by a link
+     *
+     * @param input the input string
+     */
+    public void navigateToClass(String input) {
+        ApplicationManager.getApplication().invokeLater(() -> {
+            loadModel();
+            parseInput(input);
+            PsiElement element = find();
+
+            if (element instanceof PsiClass) {
+                if (!elementName.contains("."))
+                    ((PsiClass) element).navigate(true);
             }
         });
     }

@@ -36,7 +36,6 @@ public class BrowserController implements BrowserControllerInterface {
     private final CefBrowser cefBrowser;
     private final ProjectNavigator navigator;
     private final String projectPath;
-    private TreeModel model;
 
     /**
      * Create an empty browser controller instance
@@ -72,7 +71,9 @@ public class BrowserController implements BrowserControllerInterface {
         RearrangeMembers.setController(this);
 
         // Initialize SearchProject
-        model = ProjectModel.createProjectTreeModel(getActiveProject());
+        // Call twice since extends/implements list is not built during the first run
+        for (int i = 0; i < 2; i++)
+            ProjectModel.createProjectTreeModel(getActiveProject());
         navigator = new ProjectNavigator();
     }
 
@@ -84,8 +85,8 @@ public class BrowserController implements BrowserControllerInterface {
 
         view.getExportButton().addActionListener(e -> ApplicationManager.getApplication().invokeLater(() -> {
             try {
-                // Refresh all pages and make sure it's ip to date
-                model = ProjectModel.createProjectTreeModel(getActiveProject());
+                // Refresh all pages and make sure it's up to date
+                ProjectModel.createProjectTreeModel(getActiveProject());
                 // Export to .zip
                 Exporter.export("mddoc", projectPath);
                 Notification notification = GROUP_DISPLAY_ID_INFO
@@ -129,6 +130,8 @@ public class BrowserController implements BrowserControllerInterface {
                 if (s.startsWith("m") || s.startsWith("f")) {
                     // Method or field
                     navigator.navigateToMethodField(s);
+                } else if (s.startsWith("c")) {
+                    navigator.navigateToClass(s);
                 }
 
                 return false;
