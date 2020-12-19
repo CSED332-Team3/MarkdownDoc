@@ -5,10 +5,7 @@ plugins {
 }
 
 group 'edu.postech.csed332.team3'
-version '0.1'
-
-sourceCompatibility = 11
-targetCompatibility = 11
+version '1.0'
 
 repositories {
     mavenCentral()
@@ -27,12 +24,6 @@ dependencies {
 intellij {
     version '2020.2.3'
     plugins 'java'
-}
-
-patchPluginXml {
-    changeNotes """
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>"""
 }
 
 test {

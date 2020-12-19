@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>edu.postech.csed332.team3.markdowndoc</id>
     <name>MarkdownDoc</name>
-    <vendor email="j.yoon@postech.ac.kr" url="https://csed332.postech.ac.kr/team3-2020/MarkdownDoc">Team3</vendor>
+    <vendor email="kdh0324@postech.ac.kr" url="https://csed332.postech.ac.kr/team3-2020/MarkdownDoc">Team3</vendor>
 
     <description>Add Markdown and live rendering capabilities to javadoc.</description>
 
