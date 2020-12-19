@@ -30,17 +30,9 @@ public class UpdateListener extends PsiTreeChangeAdapter {
      */
     @Override
     public void childrenChanged(@NotNull PsiTreeChangeEvent event) {
-        handleEvent(event);
-    }
-
-    /**
-     * Added child handler.
-     *
-     * @param event The event.
-     */
-    @Override
-    public void childAdded(@NotNull PsiTreeChangeEvent event) {
-        handleEvent(event);
+        PsiFile file = event.getFile();
+        if (file != null)
+            handleEvent(file);
     }
 
     /**
@@ -56,7 +48,23 @@ public class UpdateListener extends PsiTreeChangeAdapter {
         if (child instanceof PsiFile)
             handleFileRemoval((PsiFile) child);
 
-        handleEvent(event);
+        PsiFile file = event.getFile();
+        if (file != null)
+            handleEvent(file);
+    }
+
+    /**
+     * Handle the event as refreshing the document.
+     *
+     * @param file The file which event is happened.
+     */
+    private void handleEvent(@NotNull PsiFile file) {
+        PsiDirectory directory = file.getContainingDirectory();
+        PsiPackage psiPackage = JavaDirectoryService.getInstance().getPackage(directory);
+        if (psiPackage == null) return;
+        Project activeProject = getActiveProject();
+        psiPackage.accept(new MdDocElementVisitor(new DefaultMutableTreeNode(activeProject)));
+        controller.reload();
     }
 
     private void handleFileRemoval(PsiFile child) {
@@ -69,8 +77,8 @@ public class UpdateListener extends PsiTreeChangeAdapter {
                 .replace("src/test", "html")
                 .replace(".java", "");
         if (controller.getURL().contains(htmlPath)) {
-            controller.goBack();
-            controller.reload();
+            handleEvent(child);
+            controller.goHome();
         }
         final Path path = Path.of(activeProject.getBasePath(), htmlPath + ".html");
         try {
@@ -78,31 +86,5 @@ public class UpdateListener extends PsiTreeChangeAdapter {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Replaced child handler.
-     *
-     * @param event The event.
-     */
-    @Override
-    public void childReplaced(@NotNull PsiTreeChangeEvent event) {
-        handleEvent(event);
-    }
-
-    /**
-     * Handle the event as refreshing the document.
-     *
-     * @param event The event.
-     */
-    private void handleEvent(@NotNull PsiTreeChangeEvent event) {
-        PsiFile file = event.getFile();
-        if (file == null) return;
-        PsiDirectory directory = file.getContainingDirectory();
-        PsiPackage psiPackage = JavaDirectoryService.getInstance().getPackage(directory);
-        if (psiPackage == null) return;
-        Project activeProject = getActiveProject();
-        psiPackage.accept(new MdDocElementVisitor(new DefaultMutableTreeNode(activeProject)));
-        controller.reload();
     }
 }

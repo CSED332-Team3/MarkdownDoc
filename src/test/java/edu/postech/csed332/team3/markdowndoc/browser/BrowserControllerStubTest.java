@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class BrowserTestStub {
+public class BrowserControllerStubTest {
 
     private BrowserControllerInterface browserController;
 
@@ -74,5 +74,19 @@ public class BrowserTestStub {
         browserController.loadURL("https://youtube.com");
         assertEquals("https://youtube.com", browserController.getURL());
         assertFalse(browserController.canGoForward());
+    }
+
+    @Test
+    public void goHomeTest() {
+        browserController = new BrowserControllerStub();
+
+        browserController.loadURL("https://google.com");
+        browserController.goHome();
+        assertEquals("https://google.com", browserController.getURL());
+
+        browserController.loadURL("https://naver.com");
+        browserController.loadURL("https://yahoo.com");
+        browserController.goHome();
+        assertEquals("https://google.com", browserController.getURL());
     }
 }
