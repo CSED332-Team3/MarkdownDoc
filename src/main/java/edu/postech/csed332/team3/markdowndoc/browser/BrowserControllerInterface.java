@@ -37,6 +37,11 @@ public interface BrowserControllerInterface {
     void goForward();
 
     /**
+     * Go to index.html
+     */
+    void goHome();
+
+    /**
      * Return whether the browser can go back in history
      *
      * @return true if browser can go back

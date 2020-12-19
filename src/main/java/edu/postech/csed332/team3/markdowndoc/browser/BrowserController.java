@@ -40,6 +40,7 @@ public class BrowserController implements BrowserControllerInterface {
     private final CefBrowser cefBrowser;
     private final ProjectNavigator navigator;
     private final String projectPath;
+    private final String home;
 
     /**
      * Create an empty browser controller instance
@@ -56,8 +57,8 @@ public class BrowserController implements BrowserControllerInterface {
 
         projectPath = projectRoot.getCanonicalPath();
 
-        String baseURL = "file://" + projectPath + "/html/index.html";
-        browser = new JBCefBrowser(baseURL);
+        home = "file://" + projectPath + "/html/index.html";
+        browser = new JBCefBrowser(home);
         this.view = view;
         cefBrowser = browser.getCefBrowser();
 
@@ -200,6 +201,11 @@ public class BrowserController implements BrowserControllerInterface {
     public void goForward() {
         cefBrowser.goForward();
         updateView();
+    }
+
+    @Override
+    public void goHome() {
+        cefBrowser.loadURL(home);
     }
 
     /**

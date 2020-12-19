@@ -65,6 +65,11 @@ public class BrowserControllerStub implements BrowserControllerInterface {
     }
 
     @Override
+    public void goHome() {
+        current = 0;
+    }
+
+    @Override
     public boolean canGoBack() {
         return current > 0;
     }
