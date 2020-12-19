@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static edu.postech.csed332.team3.markdowndoc.explorer.ActiveProjectModel.getActiveProject;
+import static edu.postech.csed332.team3.markdowndoc.explorer.ProjectModel.createProjectTreeModel;
 
 public class UpdateListener extends PsiTreeChangeAdapter {
 
@@ -48,9 +49,8 @@ public class UpdateListener extends PsiTreeChangeAdapter {
         if (child instanceof PsiFile)
             handleFileRemoval((PsiFile) child);
 
-        PsiFile file = event.getFile();
-        if (file != null)
-            handleEvent(file);
+        createProjectTreeModel(getActiveProject());
+        controller.reload();
     }
 
     /**
