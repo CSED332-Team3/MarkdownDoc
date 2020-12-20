@@ -108,7 +108,7 @@ public class TemplateUtil {
         String type = getType(element);
 
         StringBuilder html = new StringBuilder("<tr><td data-type=\"");
-        html.append(type)
+        html.append(escapeString(type))
                 .append("\"><h5>")
                 .append(getElementType(element))
                 .append("</h5><h3>")
@@ -124,9 +124,8 @@ public class TemplateUtil {
                         .append(" ");
         }
 
-        if (type != null)
-            html.append(escapeString(type))
-                    .append(" ");
+        html.append(escapeString(type))
+                .append(" ");
 
         html.append(name)
                 .append("</a></h3>")
