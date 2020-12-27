@@ -3,14 +3,12 @@ package edu.postech.csed332.team3.markdowndoc.browser;
 import com.intellij.notification.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.externalSystem.service.execution.NotSupportedException;
-import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiType;
 import com.intellij.ui.jcef.JBCefApp;
 import com.intellij.ui.jcef.JBCefBrowser;
 import edu.postech.csed332.team3.markdowndoc.Exporter;
 import edu.postech.csed332.team3.markdowndoc.RearrangeMembers;
+import edu.postech.csed332.team3.markdowndoc.explorer.ActiveProjectModel;
 import edu.postech.csed332.team3.markdowndoc.explorer.ProjectModel;
 import edu.postech.csed332.team3.markdowndoc.explorer.ProjectNavigator;
 import edu.postech.csed332.team3.markdowndoc.util.LoggerUtil;
@@ -18,7 +16,6 @@ import org.cef.CefSettings;
 import org.cef.browser.CefBrowser;
 import org.cef.browser.CefFrame;
 import org.cef.handler.CefDisplayHandler;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -50,13 +47,7 @@ public class BrowserController implements BrowserControllerInterface {
             throw new NotSupportedException("This IDE version is not supported.");
         }
 
-        // Get project root directory and load it in the browser
-        @NotNull VirtualFile projectRoot = ModuleRootManager.getInstance(
-                ModuleManager.getInstance(getActiveProject()).getModules()[0]
-        ).getContentRoots()[0];
-
-        projectPath = projectRoot.getCanonicalPath();
-
+        projectPath = ActiveProjectModel.getProjectDir();
         home = "file://" + projectPath + "/html/index.html";
         browser = new JBCefBrowser(home);
         this.view = view;

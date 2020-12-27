@@ -1,23 +1,16 @@
 package edu.postech.csed332.team3.markdowndoc.explorer;
 
-import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileSystem;
-import com.intellij.openapi.vfs.ex.temp.TempFileSystem;
 import com.intellij.psi.*;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.io.File;
 import java.util.*;
 
-import static edu.postech.csed332.team3.markdowndoc.explorer.ActiveProjectModel.getActiveProject;
-
 public class MdDocElementVisitor extends JavaElementVisitor {
     private static final String JAVA_EXT = ".java";
-    private static final String SRC_MAIN_DIR = "src/main";
-    private static final String SRC_TEST_DIR = "src/test";
+    private static final String MAIN_DIR = "main";
+    private static final String TEST_DIR = "test";
     private static final String HTML_EXT = ".html";
     private static final String HTML = "html";
     private static final Set<PsiClass> allClasses = new HashSet<>();
@@ -88,14 +81,11 @@ public class MdDocElementVisitor extends JavaElementVisitor {
             Arrays.stream(aPackage.getClasses()).forEach(psiClass -> {
                 VirtualFile virtualFile = psiClass.getContainingFile().getVirtualFile();
                 final String canonicalPath = virtualFile.getCanonicalPath();
-                VirtualFileSystem fileSystem = virtualFile.getFileSystem();
                 if (canonicalPath == null) return;
 
-                String path = canonicalPath.replace(SRC_MAIN_DIR, HTML)
-                        .replace(SRC_TEST_DIR, HTML)
-                        .replace(JAVA_EXT, HTML_EXT);
-                if (fileSystem instanceof TempFileSystem && path.startsWith("/"))
-                    path = path.replaceFirst("/", "");
+                String[] rel = canonicalPath.split("src");
+                String path = ActiveProjectModel.getProjectDir()
+                        + rel[1].replace(MAIN_DIR, HTML).replace(TEST_DIR, HTML).replace(JAVA_EXT, HTML_EXT);
 
                 fileManager = new FileManager(path);
                 first = true;
@@ -169,15 +159,9 @@ public class MdDocElementVisitor extends JavaElementVisitor {
      * Create index.html
      */
     private void createIndex() {
-        @NotNull VirtualFile projectRoot = ModuleRootManager.getInstance(
-                ModuleManager.getInstance(getActiveProject()).getModules()[0]
-        ).getContentRoots()[0];
-        String path = projectRoot.getCanonicalPath()
+        String path = ActiveProjectModel.getProjectDir()
                 + File.separator + "html"
                 + File.separator + "index.html";
-
-        if (projectRoot.getFileSystem() instanceof TempFileSystem && path.startsWith("/"))
-            path = path.replaceFirst("/", "");
 
         FileManager fm = new FileManager(path);
         fm.close(null);
