@@ -203,14 +203,9 @@ public class TemplateUtil {
             for (PsiClassType c : implList.getReferencedTypes()) {
                 PsiClass implClass = PsiTypesUtil.getPsiClass(c);
                 if (implClass != null) {
-                    String implHTML = "<div><strong>implements</strong> " + "<a id=\"c-" +
-                            implClass.getQualifiedName() +
-                            "\" href=\"" +
-                            // Create relative link
-                            getRelativeLink(psiClass, implClass) +
-                            "\">" +
-                            implClass.getName() +
-                            "</a></div>";
+                    String implHTML = "<div><strong>implements</strong>" +
+                            getInheritanceTag(psiClass, implClass) +
+                            "</div>";
 
                     impl.add(implHTML);
                 }
@@ -224,19 +219,23 @@ public class TemplateUtil {
         PsiReferenceList extList = psiClass.getExtendsList();
         if (extList != null && extList.getReferencedTypes().length > 0) {
             PsiClass extClass = PsiTypesUtil.getPsiClass(extList.getReferencedTypes()[0]);
-            if (extClass != null && extClass.getQualifiedName() != null) {
-                return "<div><strong>extends</strong> " + "<a id=\"c-" +
-                        extClass.getQualifiedName() +
-                        "\" href=\"" +
-
-                        // Create relative link
-                        getRelativeLink(psiClass, extClass) +
-                        "\">" +
-                        extClass.getName() +
-                        "</a></div>";
-            }
+            if (extClass != null && extClass.getQualifiedName() != null)
+                return "<div><strong>extends</strong>" +
+                        getInheritanceTag(psiClass, extClass) +
+                        "</div>";
         }
         return null;
+    }
+
+    private static String getInheritanceTag(PsiClass parent, PsiClass psiClass) {
+        return "<a id=\"c-" +
+                psiClass.getQualifiedName() +
+                "\" href=\"" +
+                // Create relative link
+                getRelativeLink(parent, psiClass) +
+                "\">" +
+                psiClass.getName() +
+                "</a>";
     }
 
     // Create relative URL between two PsiClass documents
