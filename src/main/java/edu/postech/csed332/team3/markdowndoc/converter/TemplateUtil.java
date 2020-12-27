@@ -156,18 +156,9 @@ public class TemplateUtil {
     public static String allClasses(@Nullable PsiClass currentClass) {
         StringBuilder html = new StringBuilder("<h2>All classes</h2><div class=\"all\">");
 
-        for (PsiClass c : getAllClasses()) {
-            html.append("<a id=\"c-")
-                    .append(c.getQualifiedName())
-                    .append("\" href=\"");
-
-            // Link to the document using relative paths
-            html.append(getRelativeLink(currentClass, c));
-
-            html.append("\">")
-                    .append(c.getName())
-                    .append("</a><br>");
-        }
+        for (PsiClass c : getAllClasses())
+            html.append(getClassInfo(currentClass, c))
+                    .append("<br>");
 
         html.append("</div>");
 
@@ -204,7 +195,7 @@ public class TemplateUtil {
                 PsiClass implClass = PsiTypesUtil.getPsiClass(c);
                 if (implClass != null) {
                     String implHTML = "<div><strong>implements</strong>" +
-                            getInheritanceTag(psiClass, implClass) +
+                            getClassInfo(psiClass, implClass) +
                             "</div>";
 
                     impl.add(implHTML);
@@ -221,13 +212,13 @@ public class TemplateUtil {
             PsiClass extClass = PsiTypesUtil.getPsiClass(extList.getReferencedTypes()[0]);
             if (extClass != null && extClass.getQualifiedName() != null)
                 return "<div><strong>extends</strong>" +
-                        getInheritanceTag(psiClass, extClass) +
+                        getClassInfo(psiClass, extClass) +
                         "</div>";
         }
         return null;
     }
 
-    private static String getInheritanceTag(PsiClass parent, PsiClass psiClass) {
+    private static String getClassInfo(PsiClass parent, PsiClass psiClass) {
         return "<a id=\"c-" +
                 psiClass.getQualifiedName() +
                 "\" href=\"" +
