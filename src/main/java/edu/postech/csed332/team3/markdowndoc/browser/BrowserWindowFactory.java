@@ -6,8 +6,6 @@ import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.psi.PsiManager;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
-import edu.postech.csed332.team3.markdowndoc.browser.BrowserController;
-import edu.postech.csed332.team3.markdowndoc.browser.BrowserView;
 import edu.postech.csed332.team3.markdowndoc.explorer.UpdateListener;
 import org.jetbrains.annotations.NotNull;
 

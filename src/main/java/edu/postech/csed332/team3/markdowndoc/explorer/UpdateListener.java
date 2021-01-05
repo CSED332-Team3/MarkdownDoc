@@ -18,6 +18,7 @@ import static edu.postech.csed332.team3.markdowndoc.explorer.ProjectModel.create
 
 public class UpdateListener extends PsiTreeChangeAdapter {
 
+    private static final String MARKDOWNDOC = "mddoc";
     private final BrowserController controller;
 
     public UpdateListener(BrowserController controller) {
@@ -73,8 +74,8 @@ public class UpdateListener extends PsiTreeChangeAdapter {
         final String relPath = ProjectUtil.calcRelativeToProjectPath(virtualFile, activeProject)
                 .replace(File.separator, "/")
                 .replace(".../", "");
-        final String htmlPath = relPath.replace("src/main", "html")
-                .replace("src/test", "html")
+        final String htmlPath = relPath.replace("src/main", MARKDOWNDOC)
+                .replace("src/test", MARKDOWNDOC)
                 .replace(".java", "");
         if (controller.getURL().contains(htmlPath)) {
             handleEvent(child);

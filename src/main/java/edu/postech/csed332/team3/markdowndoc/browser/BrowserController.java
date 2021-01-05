@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 import static edu.postech.csed332.team3.markdowndoc.explorer.ActiveProjectModel.getActiveProject;
+import static edu.postech.csed332.team3.markdowndoc.explorer.MdDocElementVisitor.MARKDOWNDOC;
 
 /**
  * Class for controlling the browser model
@@ -31,7 +32,6 @@ public class BrowserController implements BrowserControllerInterface {
     public static final NotificationGroup GROUP_DISPLAY_ID_INFO =
             new NotificationGroup("MarkdownDoc",
                     NotificationDisplayType.BALLOON, true);
-    private static final String HTML = "html";
     private final JBCefBrowser browser;
     private final BrowserView view;
     private final CefBrowser cefBrowser;
@@ -48,7 +48,7 @@ public class BrowserController implements BrowserControllerInterface {
         }
 
         projectPath = ActiveProjectModel.getProjectDir();
-        home = "file://" + projectPath + "/html/index.html";
+        home = "file://" + projectPath + "/" + MARKDOWNDOC + "/index.html";
         browser = new JBCefBrowser(home);
         this.view = view;
         cefBrowser = browser.getCefBrowser();
@@ -60,7 +60,7 @@ public class BrowserController implements BrowserControllerInterface {
         setHandlers();
 
         // Make html directory
-        File folder = new File(projectPath, HTML);
+        File folder = new File(projectPath, MARKDOWNDOC);
         if (!folder.mkdirs()) {
             LoggerUtil.warning("File creation failed");
         }
@@ -86,7 +86,7 @@ public class BrowserController implements BrowserControllerInterface {
                 // Refresh all pages and make sure it's up to date
                 ProjectModel.createProjectTreeModel(getActiveProject());
                 // Export to .zip
-                Exporter.export("mddoc", projectPath);
+                Exporter.export(MARKDOWNDOC, projectPath);
                 Notification notification = GROUP_DISPLAY_ID_INFO
                         .createNotification("Successfully exported to project directory.",
                                 NotificationType.INFORMATION);
@@ -120,7 +120,6 @@ public class BrowserController implements BrowserControllerInterface {
 
             @Override
             public void onStatusMessage(CefBrowser cefBrowser, String s) {
-
             }
 
             @Override

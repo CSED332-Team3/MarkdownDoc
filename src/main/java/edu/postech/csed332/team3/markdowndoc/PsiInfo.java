@@ -7,9 +7,9 @@ import com.intellij.psi.javadoc.PsiDocToken;
 import edu.postech.csed332.team3.markdowndoc.converter.MarkdownParser;
 
 public class PsiInfo {
+
     private PsiInfo() {
     }
-
 
     /**
      * A form of Id is "type"-"name". <br>
