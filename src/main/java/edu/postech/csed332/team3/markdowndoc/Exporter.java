@@ -7,8 +7,9 @@ import java.util.Arrays;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-public class Exporter {
+import static edu.postech.csed332.team3.markdowndoc.explorer.MdDocElementVisitor.MARKDOWNDOC;
 
+public class Exporter {
     private Exporter() {
     }
 
@@ -22,7 +23,7 @@ public class Exporter {
      */
     public static void export(String name, @Nullable String directoryPath) throws FileNotFoundException {
         String actualPath = directoryPath == null ? "" : directoryPath + File.separator;
-        File file = new File( actualPath + "html");
+        File file = new File( actualPath + MARKDOWNDOC);
         if (!file.exists())
             throw new FileNotFoundException("There is no html directory.");
 

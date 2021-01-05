@@ -12,7 +12,7 @@ public class MdDocElementVisitor extends JavaElementVisitor {
     private static final String MAIN_DIR = "main";
     private static final String TEST_DIR = "test";
     private static final String HTML_EXT = ".html";
-    private static final String HTML = "html";
+    public static final String MARKDOWNDOC = "mddoc";
     private static final Set<PsiClass> allClasses = new HashSet<>();
     private final Deque<DefaultMutableTreeNode> stack;
     private FileManager fileManager;
@@ -54,7 +54,6 @@ public class MdDocElementVisitor extends JavaElementVisitor {
         return allClasses;
     }
 
-
     /**
      * Visits a package.
      * <p/>
@@ -85,7 +84,7 @@ public class MdDocElementVisitor extends JavaElementVisitor {
 
                 String[] rel = canonicalPath.split("src");
                 String path = ActiveProjectModel.getProjectDir()
-                        + rel[1].replace(MAIN_DIR, HTML).replace(TEST_DIR, HTML).replace(JAVA_EXT, HTML_EXT);
+                        + rel[1].replace(MAIN_DIR, MARKDOWNDOC).replace(TEST_DIR, MARKDOWNDOC).replace(JAVA_EXT, HTML_EXT);
 
                 fileManager = new FileManager(path);
                 first = true;
@@ -160,7 +159,7 @@ public class MdDocElementVisitor extends JavaElementVisitor {
      */
     private void createIndex() {
         String path = ActiveProjectModel.getProjectDir()
-                + File.separator + "html"
+                + File.separator + MARKDOWNDOC
                 + File.separator + "index.html";
 
         FileManager fm = new FileManager(path);
