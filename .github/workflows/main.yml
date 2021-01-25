@@ -25,10 +25,10 @@ jobs:
           java-version: 11
         
       - name: Build
-        run: ./gradlew assemble
+        run: gradle assemble
         
       - name: Test
-        run: ./gradlew check
+        run: gradle check
         
       - name: Lint
         uses: ansible/ansible-lint-action@v4.1.0.post0
