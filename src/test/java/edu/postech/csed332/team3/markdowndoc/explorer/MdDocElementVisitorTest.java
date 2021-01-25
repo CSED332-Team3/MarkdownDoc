@@ -13,6 +13,7 @@ import java.io.File;
 import java.util.*;
 
 public class MdDocElementVisitorTest extends BasePlatformTestCase {
+    private static final String MDDOC = "mddoc";
 
     @Override
     protected void setUp() throws Exception {
@@ -88,10 +89,10 @@ public class MdDocElementVisitorTest extends BasePlatformTestCase {
         test = new File("src/root");
         assertTrue(test.delete());
 
-        test = new File("src/html/index.html");
+        test = new File("src/"+ MDDOC + "/index.html");
         assertTrue(test.delete());
 
-        test = new File("src/html");
+        test = new File("src/" + MDDOC);
         assertTrue(test.delete());
     }
 }
