@@ -58,7 +58,7 @@ public class TemplateUtilTest extends BasePlatformTestCase {
         assertNotNull(aClass);
 
         assertEquals("<div id=\"pkg\" class=\"pkg\">templateUtilTest</div>\n" +
-                        "<h1 id=\"class\">TestTemplateUtil</h1><div><strong>extends</strong> <a id=\"c-templateUtilTest.ExtendsTest\" href=\"\">ExtendsTest</a></div><div><strong>implements</strong> <a id=\"c-templateUtilTest.ImplementsTest\" href=\"\">ImplementsTest</a></div>\n" +
+                        "<h1 id=\"class\">TestTemplateUtil</h1><div><strong>extends</strong><a id=\"c-templateUtilTest.ExtendsTest\" href=\"\">ExtendsTest</a></div><div><strong>implements</strong><a id=\"c-templateUtilTest.ImplementsTest\" href=\"\">ImplementsTest</a></div>\n" +
                         "<h2>Description</h2>\n" +
                         "<table id = \"table\">\n" +
                         "<tr><td></td></tr><tr><td></td></tr>",
