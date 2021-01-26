@@ -3,7 +3,12 @@
     <name>MarkdownDoc</name>
     <vendor email="kdh0324@postech.ac.kr" url="https://github.com/MarkdownDoc-POSTECH/MarkdownDoc">Team3</vendor>
 
-    <description>Add Markdown and live rendering capabilities to javadoc.</description>
+    <description>
+        Render JavaDoc in new interface.
+        You can use this plugin with `!!mddoc` in a top of comment.
+        Welcome more development. This is our github url.
+        https://github.com/MarkdownDoc-POSTECH/MarkdownDoc
+    </description>
 
     <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
