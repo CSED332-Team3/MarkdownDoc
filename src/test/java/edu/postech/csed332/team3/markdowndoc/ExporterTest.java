@@ -18,14 +18,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class ExporterTest {
+    private static final String MDDOC = "mddoc";
+
     @BeforeClass
     public static void beforeClass() throws Exception {
-        FileUtil.delete(Path.of("html"));
+        FileUtil.delete(Path.of(MDDOC));
     }
 
     @Test
     public void testExport() {
-        File file = new File("html/testExport/Test.html");
+        File file = new File(MDDOC + "/testExport/Test.html");
         assertTrue(file.getParentFile().mkdirs());
         try {
             assertTrue(file.createNewFile());
@@ -53,7 +55,7 @@ public class ExporterTest {
             e.printStackTrace();
         }
 
-        assertEquals(Set.of("html/testExport/Test.html"), zipSet);
+        assertEquals(Set.of(MDDOC + "/testExport/Test.html"), zipSet);
 
         assertTrue(file.delete());
         assertTrue(file.getParentFile().delete());
@@ -63,7 +65,7 @@ public class ExporterTest {
 
     @Test(expected = FileNotFoundException.class)
     public void testExportThrow() throws Exception {
-        File file = new File("html");
+        File file = new File(MDDOC);
         file.delete();
         Exporter.export("MarkdownDoc", null);
     }

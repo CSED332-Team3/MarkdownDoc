@@ -2,13 +2,18 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, develop ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, develop ]
+
+  workflow_dispatch:
 
 jobs:
-  ubuntu:
-    runs-on: ubuntu-latest
+  run:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
 
     steps:
       - name: Checkout
@@ -24,49 +29,3 @@ jobs:
         
       - name: Test
         run: gradle check
-        
-      - name: Lint
-        uses: ansible/ansible-lint-action@v4.1.0.post0
-        
-  windows:
-    runs-on: windows-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        
-      - name: Setup Java JDK
-        uses: actions/setup-java@v1.4.3
-        with:
-          java-version: 11
-        
-      - name: Build
-        run: gradle assemble
-        
-      - name: Test
-        run: gradle check
-        
-      - name: Lint
-        uses: ansible/ansible-lint-action@v4.1.0.post0
-        
-  macos:
-    runs-on: macos-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        
-      - name: Setup Java JDK
-        uses: actions/setup-java@v1.4.3
-        with:
-          java-version: 11
-        
-      - name: Build
-        run: gradle assemble
-        
-      - name: Test
-        run: gradle check
-        
-      - name: Lint
-        uses: ansible/ansible-lint-action@v4.1.0.post0
-        

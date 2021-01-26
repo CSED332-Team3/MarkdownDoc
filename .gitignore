@@ -242,6 +242,6 @@ gradle-app.setting
 
 # Generated files
 mdsaved
-/html/
+/mddoc/
 .idea/encodings.xml
 /mddoc.zip
